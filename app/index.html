@@ -18,10 +18,17 @@
                   url(img/bg/mountain.png),
                   url(img/bg/sky.png);
     }
+    .loading{
+      background: url(img/preloader.gif) center no-repeat,
+                  linear-gradient(to right, #fff, #fff),
+                  url(img/bg/ground.png),
+                  url(img/bg/mountain.png),
+                  url(img/bg/sky.png);
+    }
   </style>
 </head>
 <body>
-  <canvas id="game-stage" width="800" height="600" class="game-canvas">
+  <canvas id="game-stage" width="800" height="600" class="game-canvas loading">
     Sorry, but your browser doesn't support this game!
   </canvas>
 

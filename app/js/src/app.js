@@ -13,6 +13,7 @@ const app = {
     this.stage = new createjs.Stage('game-stage');
   },
   start() {
+    this.stage.canvas.classList.remove('loading');
     this.createBg();
     this.createLevel();
     this.createBird();
