@@ -30,7 +30,7 @@ const app = {
     this.shadow.graphics
       .beginFill('rgba(0,0,0,0.6)')
       .drawRect(0, 0, this.stage.canvas.width, this.stage.canvas.height);
-    this.shadowText = new createjs.Text('Hit space to start', '25px Arial', '#fff');
+    this.shadowText = new createjs.Text('Hit space to start and space to flap', '25px Arial', '#fff');
     this.shadowText.y = this.stage.canvas.height / 2;
     this.shadowText.x = this.stage.canvas.width / 2;
     this.shadowText.textAlign = 'center';
