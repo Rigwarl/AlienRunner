@@ -1,6 +1,6 @@
 {
-  "version": "0.0.1",
   "name": "flappy-monster",
+  "version": "1.0.0",
   "description": "simple endless flapper",
   "license": "MIT",
   "private": true,
