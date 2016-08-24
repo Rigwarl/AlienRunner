@@ -2,6 +2,8 @@
   "extends": "airbnb-base",
   "globals": {
       "createjs": false,
+      "window": false,
+      "ndgmr": false,
   },
   "rules": {
     "func-names": 0,
@@ -9,6 +11,6 @@
     "guard-for-in": 1,
     "max-len": 1,
     "no-use-before-define": [2, "nofunc"],
-    "id-length": [2, {"exceptions": ["e", "i", "j", "x", "y", "w", "h"]}],
-  },
+    "id-length": [2, {"exceptions": ["e", "i", "j", "x", "y", "w", "h", "a"]}],
+  }
 }
