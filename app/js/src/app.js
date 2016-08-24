@@ -1,10 +1,14 @@
 const app = {
   init() {
     this.queue = new createjs.LoadQueue();
+    this.queue.installPlugin(createjs.Sound);
     this.queue.addEventListener('complete', () => this.start());
     this.queue.loadManifest([
       { id: 'char', src: 'img/monster-sprite.png' },
       { id: 'spike', src: 'img/spike.png' },
+      { id: 'back', src: 'sound/background.mp3' },
+      { id: 'flap', src: 'sound/flap.wav' },
+      { id: 'loose', src: 'sound/loose.ogg' },
     ]);
     this.stage = new createjs.Stage('game-stage');
   },
@@ -20,9 +24,10 @@ const app = {
     this.flag = false;
 
     this.stage.update();
+    this.stage.enableMouseOver(20);
+    createjs.Sound.play('back', { loop: -1, volume: 0.5 });
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
     createjs.Ticker.addEventListener('tick', e => this.onTick(e));
-    this.stage.enableMouseOver(20);
   },
   createShadow() {
     this.paused = true;
@@ -100,6 +105,7 @@ const app = {
     if (this.dead) {
       return;
     }
+    createjs.Sound.play('flap', { volume: 0.8 });
     this.hero.gotoAndPlay('flap');
     this.hero.vY -= 7;
     this.hero.vY = Math.max(this.hero.vY, -7);
@@ -115,6 +121,7 @@ const app = {
       this.dead = true;
       this.hero.rotation = 20;
       this.hero.gotoAndStop('dead');
+      createjs.Sound.play('loose');
     }
   },
   createLevel() {
@@ -155,6 +162,7 @@ const app = {
         this.dead = true;
         this.hero.rotation = 30;
         this.hero.gotoAndStop('dead');
+        createjs.Sound.play('loose');
         return;
       }
     }
