@@ -1,7 +1,7 @@
 {
-  "name": "Alien Runner",
   "version": "0.0.1",
-  "description": "simple endless runner",
+  "name": "flappy-monster",
+  "description": "simple endless flapper",
   "license": "MIT",
   "private": true,
   "devDependencies": {
