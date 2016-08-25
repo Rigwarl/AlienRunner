@@ -44,14 +44,14 @@ const app = {
     this.shadowText.textBaseline = 'middle';
     this.stage.addChild(this.shadow, this.shadowText);
 
-    const showShadow = e => {
-      if (e.keyCode === 32) {
-        this.stage.removeChild(this.shadow, this.shadowText);
-        this.paused = false;
-      }
+    const showShadow = () => {
+      this.stage.removeChild(this.shadow, this.shadowText);
+      this.paused = false;
       window.removeEventListener('keyup', showShadow);
+      window.removeEventListener('touchend', showShadow);
     };
     window.addEventListener('keyup', showShadow);
+    window.addEventListener('touchend', showShadow);
   },
   createHud() {
     this.hudDist = new createjs.Text('Distance: 0', '25px Arial', '#000');
@@ -102,12 +102,18 @@ const app = {
       }
       this.handleAction();
     });
+    window.addEventListener('touchend', () => {
+      if (this.paused) {
+        return;
+      }
+      this.handleAction();
+    });
   },
   handleAction() {
     if (this.dead) {
       return;
     }
-    createjs.Sound.play('flap', { volume: 0.8 });
+    createjs.Sound.play('flap');
     this.hero.gotoAndPlay('flap');
     this.hero.vY -= 7;
     this.hero.vY = Math.max(this.hero.vY, -7);
@@ -194,13 +200,13 @@ const app = {
     this.stage.addChild(this.shadow, this.shadowText);
     this.stage.update();
 
-    const reset = e => {
-      if (e.keyCode === 32) {
-        this.reset();
-      }
+    const reset = () => {
+      this.reset();
       window.removeEventListener('keyup', reset);
+      window.removeEventListener('touchend', reset);
     };
     window.addEventListener('keyup', reset);
+    window.addEventListener('touchend', reset);
   },
   onTick() {
     if (this.paused) {
