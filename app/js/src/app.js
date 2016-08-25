@@ -1,14 +1,15 @@
 const app = {
   init() {
     this.queue = new createjs.LoadQueue();
+    createjs.Sound.alternateExtensions = ['ogg'];
     this.queue.installPlugin(createjs.Sound);
     this.queue.addEventListener('complete', () => this.start());
     this.queue.loadManifest([
       { id: 'char', src: 'img/monster-sprite.png' },
       { id: 'spike', src: 'img/spike.png' },
       { id: 'back', src: 'sound/background.mp3' },
-      { id: 'flap', src: 'sound/flap.wav' },
-      { id: 'loose', src: 'sound/loose.ogg' },
+      { id: 'flap', src: 'sound/flap.mp3' },
+      { id: 'loose', src: 'sound/loose.mp3' },
     ]);
     this.stage = new createjs.Stage('game-stage');
   },
@@ -26,7 +27,7 @@ const app = {
 
     this.stage.update();
     this.stage.enableMouseOver(20);
-    createjs.Sound.play('back', { loop: -1, volume: 0.5 });
+    createjs.Sound.play('back', { loop: -1, volume: 0.35 });
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
     createjs.Ticker.addEventListener('tick', e => this.onTick(e));
   },
@@ -43,14 +44,14 @@ const app = {
     this.shadowText.textBaseline = 'middle';
     this.stage.addChild(this.shadow, this.shadowText);
 
-    const showShadow = e => {
-      if (e.keyCode === 32) {
-        this.stage.removeChild(this.shadow, this.shadowText);
-        this.paused = false;
-      }
+    const showShadow = () => {
+      this.stage.removeChild(this.shadow, this.shadowText);
+      this.paused = false;
       window.removeEventListener('keyup', showShadow);
+      window.removeEventListener('touchend', showShadow);
     };
     window.addEventListener('keyup', showShadow);
+    window.addEventListener('touchend', showShadow);
   },
   createHud() {
     this.hudDist = new createjs.Text('Distance: 0', '25px Arial', '#000');
@@ -83,13 +84,13 @@ const app = {
       ground: 0,
     };
   },
-  moveBg() {
+  moveBg(delta) {
     if (this.dead) {
       return;
     }
-    this.bgPos.sky -= this.speed * 0.1;
-    this.bgPos.mountain -= this.speed * 0.4;
-    this.bgPos.ground -= this.speed;
+    this.bgPos.sky -= this.speed * 0.1 * delta;
+    this.bgPos.mountain -= this.speed * 0.4 * delta;
+    this.bgPos.ground -= this.speed * delta;
     this.stage.canvas.style.backgroundPosition = `${this.bgPos.ground}px,
                                                   ${this.bgPos.mountain}px,
                                                   ${this.bgPos.sky}px`;
@@ -101,19 +102,25 @@ const app = {
       }
       this.handleAction();
     });
+    window.addEventListener('touchend', () => {
+      if (this.paused) {
+        return;
+      }
+      this.handleAction();
+    });
   },
   handleAction() {
     if (this.dead) {
       return;
     }
-    createjs.Sound.play('flap', { volume: 0.8 });
+    createjs.Sound.play('flap');
     this.hero.gotoAndPlay('flap');
     this.hero.vY -= 7;
     this.hero.vY = Math.max(this.hero.vY, -7);
   },
-  moveHero() {
-    this.hero.vY += this.hero.a;
-    this.hero.y += this.hero.vY;
+  moveHero(delta) {
+    this.hero.vY += this.hero.a * delta;
+    this.hero.y += this.hero.vY * delta;
     if (this.hero.y < -25) {
       this.hero.vY = 0;
       this.hero.y = -25;
@@ -126,16 +133,18 @@ const app = {
     }
   },
   createLevel() {
+    this.count = 0;
     this.level = new createjs.Container();
     this.stage.addChild(this.level);
     this.distance = 0;
     this.obstacles = new Set();
   },
-  processLevel() {
+  processLevel(delta) {
     if (this.dead) {
       return;
     }
-    if (!(this.distance % 450)) {
+    if (this.distance > 450 * this.count) {
+      this.count++;
       const obstacle = new createjs.Bitmap(this.queue.getResult('spike'));
       obstacle.x = this.stage.canvas.width + obstacle.getBounds().width;
       obstacle.regX = obstacle.getBounds().width / 2;
@@ -154,7 +163,7 @@ const app = {
       this.level.addChild(obstacle);
     }
     for (const item of this.obstacles) {
-      item.x -= this.speed;
+      item.x -= this.speed * delta;
       if (item.x < -300) {
         this.obstacles.delete(item);
         this.level.removeChild(item);
@@ -167,7 +176,7 @@ const app = {
         return;
       }
     }
-    this.distance += this.speed;
+    this.distance += this.speed * delta;
     this.hudDist.text = `Distance: ${Math.floor(this.distance / 20)} m`;
   },
   reset() {
@@ -177,6 +186,7 @@ const app = {
     this.hero.gotoAndStop('fly');
     this.dead = false;
     this.distance = 0;
+    this.count = 0;
     this.obstacles.clear();
     this.level.removeAllChildren();
     this.stage.removeChild(this.shadow, this.shadowText);
@@ -193,23 +203,24 @@ const app = {
     this.stage.addChild(this.shadow, this.shadowText);
     this.stage.update();
 
-    const reset = e => {
-      if (e.keyCode === 32) {
-        this.reset();
-      }
+    const reset = () => {
+      this.reset();
       window.removeEventListener('keyup', reset);
+      window.removeEventListener('touchend', reset);
     };
     window.addEventListener('keyup', reset);
+    window.addEventListener('touchend', reset);
   },
-  onTick() {
+  onTick(e) {
     if (this.paused) {
       return;
     } else if (this.dead && !this.flag && this.hero.y > (this.stage.canvas.height + 100)) {
       this.createResetShadow();
     }
-    this.moveBg();
-    this.moveHero();
-    this.processLevel();
+    const delta = e.delta / 16;
+    this.moveBg(delta);
+    this.moveHero(delta);
+    this.processLevel(delta);
     this.stage.update();
   },
 };
