@@ -1,14 +1,15 @@
 const app = {
   init() {
     this.queue = new createjs.LoadQueue();
+    createjs.Sound.alternateExtensions = ['ogg'];
     this.queue.installPlugin(createjs.Sound);
     this.queue.addEventListener('complete', () => this.start());
     this.queue.loadManifest([
       { id: 'char', src: 'img/monster-sprite.png' },
       { id: 'spike', src: 'img/spike.png' },
       { id: 'back', src: 'sound/background.mp3' },
-      { id: 'flap', src: 'sound/flap.wav' },
-      { id: 'loose', src: 'sound/loose.ogg' },
+      { id: 'flap', src: 'sound/flap.mp3' },
+      { id: 'loose', src: 'sound/loose.mp3' },
     ]);
     this.stage = new createjs.Stage('game-stage');
   },
@@ -26,7 +27,7 @@ const app = {
 
     this.stage.update();
     this.stage.enableMouseOver(20);
-    createjs.Sound.play('back', { loop: -1, volume: 0.5 });
+    createjs.Sound.play('back', { loop: -1, volume: 0.4 });
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
     createjs.Ticker.addEventListener('tick', e => this.onTick(e));
   },
