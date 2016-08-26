@@ -1,4 +1,5 @@
 import Hero from './Hero';
+import Spike from './Spike';
 
 const app = {
   init() {
@@ -17,14 +18,16 @@ const app = {
   },
   start() {
     this.createBg();
-    this.createLevel();
+    this.createSpikes();
     this.createHero();
     this.bindEvents();
     this.createHud();
     this.createShadow();
+
     this.speed = 5;
     this.dead = false;
     this.flag = false;
+    this.distance = 0;
 
     this.stage.update();
     this.stage.enableMouseOver(20);
@@ -113,47 +116,33 @@ const app = {
       this.hero.die();
     }
   },
-  createLevel() {
-    this.count = 0;
-    this.level = new createjs.Container();
-    this.stage.addChild(this.level);
-    this.distance = 0;
-    this.obstacles = new Set();
+  createSpikes() {
+    this.spikes = [];
+    for (let i = 0; i < 2; i++) {
+      const spike = new Spike(this.queue);
+      this.spikes.push(spike);
+      this.stage.addChild(spike);
+    }
+    this.resetSpikes();
   },
-  processLevel(delta) {
+  resetSpikes() {
+    this.spikes.forEach((spike, i) => {
+      spike.reset();
+      spike.x += (this.stage.canvas.width + spike.bounds.width) * i * 0.5;
+    });
+  },
+  moveSpikes(delta) {
     if (this.dead) {
       return;
     }
-    if (this.distance > 450 * this.count) {
-      this.count++;
-      const obstacle = new createjs.Bitmap(this.queue.getResult('spike'));
-      obstacle.x = this.stage.canvas.width + obstacle.getBounds().width;
-      obstacle.regX = obstacle.getBounds().width / 2;
-      obstacle.regY = obstacle.getBounds().height;
-      obstacle.scaleY = (Math.random() + Math.random()) * 0.6;
-      if (obstacle.scaleY < 0.5) {
-        obstacle.scaleY += 0.5;
+    for (const spike of this.spikes) {
+      spike.x -= this.speed * delta;
+      if (spike.x < -spike.bounds.width / 2) {
+        spike.reset();
       }
-
-      if (Math.random() > 0.5) {
-        obstacle.y = this.stage.canvas.height - 81;
-      } else {
-        obstacle.rotation = 180;
-      }
-      this.obstacles.add(obstacle);
-      this.level.addChild(obstacle);
-    }
-    for (const item of this.obstacles) {
-      item.x -= this.speed * delta;
-      if (item.x < -300) {
-        this.obstacles.delete(item);
-        this.level.removeChild(item);
-      }
-      if (ndgmr.checkPixelCollision(this.hero, item)) {
+      if (ndgmr.checkPixelCollision(this.hero, spike)) {
         this.dead = true;
-        this.hero.rotation = 30;
-        this.hero.gotoAndStop('dead');
-        createjs.Sound.play('loose');
+        this.hero.die();
         return;
       }
     }
@@ -161,15 +150,10 @@ const app = {
     this.hudDist.text = `Distance: ${Math.floor(this.distance / 20)} m`;
   },
   reset() {
-    this.hero.y = 200;
-    this.hero.vY = 0;
-    this.hero.rotation = 0;
-    this.hero.gotoAndStop('fly');
+    this.hero.reset();
+    this.resetSpikes();
     this.dead = false;
     this.distance = 0;
-    this.count = 0;
-    this.obstacles.clear();
-    this.level.removeAllChildren();
     this.stage.removeChild(this.shadow, this.shadowText);
     this.paused = false;
     this.flag = false;
@@ -195,13 +179,13 @@ const app = {
   onTick(e) {
     if (this.paused) {
       return;
-    } else if (this.dead && !this.flag && this.hero.y > (this.stage.canvas.height + 100)) {
+    } else if (this.hero.y > (this.stage.canvas.height + 100)) {
       this.createResetShadow();
     }
     const delta = e.delta / 16;
     this.moveBg(delta);
     this.moveHero(delta);
-    this.processLevel(delta);
+    this.moveSpikes(delta);
     this.stage.update();
   },
 };
