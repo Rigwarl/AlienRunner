@@ -1,3 +1,5 @@
+import Hero from './Hero';
+
 const app = {
   init() {
     this.queue = new createjs.LoadQueue();
@@ -17,7 +19,7 @@ const app = {
     this.stage.canvas.classList.remove('loading');
     this.createBg();
     this.createLevel();
-    this.createBird();
+    this.createHero();
     this.bindEvents();
     this.createHud();
     this.createShadow();
@@ -59,22 +61,9 @@ const app = {
     this.hudDist.y = 15;
     this.stage.addChild(this.hudDist);
   },
-  createBird() {
-    const ss = new createjs.SpriteSheet({
-      images: [this.queue.getResult('char')],
-      frames: { width: 100, height: 78 },
-      animations: {
-        fly: [0],
-        flap: [1, 3, 'fly'],
-        dead: [4],
-      },
-    });
-    this.hero = new createjs.Sprite(ss, 'fly');
+  createHero() {
+    this.hero = new Hero(this.queue);
     this.hero.x = this.stage.canvas.width / 2;
-    this.hero.regX = this.hero.getBounds().width / 2;
-    this.hero.y = 200;
-    this.hero.a = 0.2;
-    this.hero.vY = 0;
     this.stage.addChild(this.hero);
   },
   createBg() {
