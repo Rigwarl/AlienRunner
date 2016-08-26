@@ -16,7 +16,6 @@ const app = {
     this.stage = new createjs.Stage('game-stage');
   },
   start() {
-    this.stage.canvas.classList.remove('loading');
     this.createBg();
     this.createLevel();
     this.createHero();
@@ -67,6 +66,7 @@ const app = {
     this.stage.addChild(this.hero);
   },
   createBg() {
+    this.stage.canvas.classList.remove('loading');
     this.bgPos = {
       sky: 0,
       mountain: 0,
@@ -99,26 +99,18 @@ const app = {
     });
   },
   handleAction() {
-    if (this.dead) {
-      return;
+    if (!this.dead) {
+      this.hero.flap();
     }
-    createjs.Sound.play('flap');
-    this.hero.gotoAndPlay('flap');
-    this.hero.vY -= 7;
-    this.hero.vY = Math.max(this.hero.vY, -7);
   },
   moveHero(delta) {
-    this.hero.vY += this.hero.a * delta;
-    this.hero.y += this.hero.vY * delta;
-    if (this.hero.y < -25) {
+    this.hero.move(delta);
+    if (this.hero.y < -20) {
       this.hero.vY = 0;
-      this.hero.y = -25;
-    }
-    if (this.hero.y > 460 && !this.dead) {
+      this.hero.y = -20;
+    } else if (this.hero.y > 460 && !this.dead) {
       this.dead = true;
-      this.hero.rotation = 20;
-      this.hero.gotoAndStop('dead');
-      createjs.Sound.play('loose');
+      this.hero.die();
     }
   },
   createLevel() {

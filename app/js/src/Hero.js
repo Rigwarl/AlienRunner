@@ -19,9 +19,17 @@ export default class extends createjs.Sprite {
     this.vY = 0;
   }
   flap() {
-
+    this.vY = Math.max(this.vY - 7, -7);
+    this.gotoAndPlay('flap');
+    createjs.Sound.play('flap');
   }
-  move() {
-
+  move(delta) {
+    this.vY += this.a * delta;
+    this.y += this.vY * delta;
+  }
+  die() {
+    this.rotation = 20;
+    this.gotoAndStop('dead');
+    createjs.Sound.play('loose');
   }
 }
