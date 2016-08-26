@@ -1,15 +1,15 @@
 const app = {
   init() {
     this.queue = new createjs.LoadQueue();
-    createjs.Sound.alternateExtensions = ['ogg'];
+    createjs.Sound.alternateExtensions = ['mp3'];
     this.queue.installPlugin(createjs.Sound);
     this.queue.addEventListener('complete', () => this.start());
     this.queue.loadManifest([
       { id: 'char', src: 'img/monster-sprite.png' },
       { id: 'spike', src: 'img/spike.png' },
-      { id: 'back', src: 'sound/background.mp3' },
-      { id: 'flap', src: 'sound/flap.mp3' },
-      { id: 'loose', src: 'sound/loose.mp3' },
+      { id: 'back', src: 'sound/background.ogg' },
+      { id: 'flap', src: 'sound/flap.ogg' },
+      { id: 'loose', src: 'sound/loose.ogg' },
     ]);
     this.stage = new createjs.Stage('game-stage');
   },
