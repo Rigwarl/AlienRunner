@@ -1,4 +1,4 @@
-export default class extends createjs.Sprite {
+export default class Hero extends createjs.Sprite {
   constructor(queue) {
     const ss = new createjs.SpriteSheet({
       images: [queue.getResult('char')],
@@ -15,8 +15,10 @@ export default class extends createjs.Sprite {
     this.reset();
   }
   reset() {
+    this.rotation = 0;
     this.y = 200;
     this.vY = 0;
+    this.gotoAndStop('fly');
   }
   flap() {
     this.vY = Math.max(this.vY - 7, -7);
