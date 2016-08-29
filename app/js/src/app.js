@@ -1,29 +1,26 @@
+import Loader from './Loader';
+import Hero from './Hero';
+import Spike from './Spike';
+import ShadowOverlay from './ShadowOverlay';
+
 const app = {
   init() {
-    this.queue = new createjs.LoadQueue();
-    createjs.Sound.alternateExtensions = ['mp3'];
-    this.queue.installPlugin(createjs.Sound);
+    this.queue = new Loader();
     this.queue.addEventListener('complete', () => this.start());
-    this.queue.loadManifest([
-      { id: 'char', src: 'img/monster-sprite.png' },
-      { id: 'spike', src: 'img/spike.png' },
-      { id: 'back', src: 'sound/background.ogg' },
-      { id: 'flap', src: 'sound/flap.ogg' },
-      { id: 'loose', src: 'sound/loose.ogg' },
-    ]);
     this.stage = new createjs.Stage('game-stage');
   },
   start() {
-    this.stage.canvas.classList.remove('loading');
     this.createBg();
-    this.createLevel();
-    this.createBird();
+    this.createSpikes();
+    this.createHero();
     this.bindEvents();
     this.createHud();
     this.createShadow();
+
     this.speed = 5;
     this.dead = false;
     this.flag = false;
+    this.distance = 0;
 
     this.stage.update();
     this.stage.enableMouseOver(20);
@@ -33,19 +30,11 @@ const app = {
   },
   createShadow() {
     this.paused = true;
-    this.shadow = new createjs.Shape();
-    this.shadow.graphics
-      .beginFill('rgba(0,0,0,0.6)')
-      .drawRect(0, 0, this.stage.canvas.width, this.stage.canvas.height);
-    this.shadowText = new createjs.Text('Hit space to start and space to flap', '25px Arial', '#fff');
-    this.shadowText.y = this.stage.canvas.height / 2;
-    this.shadowText.x = this.stage.canvas.width / 2;
-    this.shadowText.textAlign = 'center';
-    this.shadowText.textBaseline = 'middle';
-    this.stage.addChild(this.shadow, this.shadowText);
+    this.shadowOverlay = new ShadowOverlay('Hit space to start and space to flap', this.stage.canvas);
+    this.stage.addChild(this.shadowOverlay);
 
     const showShadow = () => {
-      this.stage.removeChild(this.shadow, this.shadowText);
+      this.stage.removeChild(this.shadowOverlay);
       this.paused = false;
       window.removeEventListener('keyup', showShadow);
       window.removeEventListener('touchend', showShadow);
@@ -59,25 +48,14 @@ const app = {
     this.hudDist.y = 15;
     this.stage.addChild(this.hudDist);
   },
-  createBird() {
-    const ss = new createjs.SpriteSheet({
-      images: [this.queue.getResult('char')],
-      frames: { width: 100, height: 78 },
-      animations: {
-        fly: [0],
-        flap: [1, 3, 'fly'],
-        dead: [4],
-      },
-    });
-    this.hero = new createjs.Sprite(ss, 'fly');
+  createHero() {
+    this.hero = new Hero(this.queue);
     this.hero.x = this.stage.canvas.width / 2;
-    this.hero.regX = this.hero.getBounds().width / 2;
     this.hero.y = 200;
-    this.hero.a = 0.2;
-    this.hero.vY = 0;
     this.stage.addChild(this.hero);
   },
   createBg() {
+    this.stage.canvas.classList.remove('loading');
     this.bgPos = {
       sky: 0,
       mountain: 0,
@@ -110,69 +88,47 @@ const app = {
     });
   },
   handleAction() {
-    if (this.dead) {
-      return;
+    if (!this.dead) {
+      this.hero.flap();
     }
-    createjs.Sound.play('flap');
-    this.hero.gotoAndPlay('flap');
-    this.hero.vY -= 7;
-    this.hero.vY = Math.max(this.hero.vY, -7);
   },
   moveHero(delta) {
-    this.hero.vY += this.hero.a * delta;
-    this.hero.y += this.hero.vY * delta;
-    if (this.hero.y < -25) {
+    this.hero.move(delta);
+    if (this.hero.y < -20) {
       this.hero.vY = 0;
-      this.hero.y = -25;
-    }
-    if (this.hero.y > 460 && !this.dead) {
+      this.hero.y = -20;
+    } else if (this.hero.y > 460 && !this.dead) {
       this.dead = true;
-      this.hero.rotation = 20;
-      this.hero.gotoAndStop('dead');
-      createjs.Sound.play('loose');
+      this.hero.die();
     }
   },
-  createLevel() {
-    this.count = 0;
-    this.level = new createjs.Container();
-    this.stage.addChild(this.level);
-    this.distance = 0;
-    this.obstacles = new Set();
+  createSpikes() {
+    this.spikes = [];
+    for (let i = 0; i < 2; i++) {
+      const spike = new Spike(this.queue);
+      this.spikes.push(spike);
+      this.stage.addChild(spike);
+    }
+    this.resetSpikes();
   },
-  processLevel(delta) {
+  resetSpikes() {
+    this.spikes.forEach((spike, i) => {
+      spike.reset();
+      spike.x += (this.stage.canvas.width + spike.bounds.width) * i * 0.5;
+    });
+  },
+  moveSpikes(delta) {
     if (this.dead) {
       return;
     }
-    if (this.distance > 450 * this.count) {
-      this.count++;
-      const obstacle = new createjs.Bitmap(this.queue.getResult('spike'));
-      obstacle.x = this.stage.canvas.width + obstacle.getBounds().width;
-      obstacle.regX = obstacle.getBounds().width / 2;
-      obstacle.regY = obstacle.getBounds().height;
-      obstacle.scaleY = (Math.random() + Math.random()) * 0.6;
-      if (obstacle.scaleY < 0.5) {
-        obstacle.scaleY += 0.5;
+    for (const spike of this.spikes) {
+      spike.x -= this.speed * delta;
+      if (spike.x < -spike.bounds.width / 2) {
+        spike.reset();
       }
-
-      if (Math.random() > 0.5) {
-        obstacle.y = this.stage.canvas.height - 81;
-      } else {
-        obstacle.rotation = 180;
-      }
-      this.obstacles.add(obstacle);
-      this.level.addChild(obstacle);
-    }
-    for (const item of this.obstacles) {
-      item.x -= this.speed * delta;
-      if (item.x < -300) {
-        this.obstacles.delete(item);
-        this.level.removeChild(item);
-      }
-      if (ndgmr.checkPixelCollision(this.hero, item)) {
+      if (ndgmr.checkPixelCollision(this.hero, spike)) {
         this.dead = true;
-        this.hero.rotation = 30;
-        this.hero.gotoAndStop('dead');
-        createjs.Sound.play('loose');
+        this.hero.die();
         return;
       }
     }
@@ -180,16 +136,12 @@ const app = {
     this.hudDist.text = `Distance: ${Math.floor(this.distance / 20)} m`;
   },
   reset() {
+    this.hero.reset();
     this.hero.y = 200;
-    this.hero.vY = 0;
-    this.hero.rotation = 0;
-    this.hero.gotoAndStop('fly');
+    this.resetSpikes();
     this.dead = false;
     this.distance = 0;
-    this.count = 0;
-    this.obstacles.clear();
-    this.level.removeAllChildren();
-    this.stage.removeChild(this.shadow, this.shadowText);
+    this.stage.removeChild(this.shadowOverlay);
     this.paused = false;
     this.flag = false;
   },
@@ -199,8 +151,8 @@ const app = {
     }
     this.flag = true;
     this.paused = true;
-    this.shadowText.text = 'Hit space to restart';
-    this.stage.addChild(this.shadow, this.shadowText);
+    this.shadowOverlay.setText('Hit space to restart');
+    this.stage.addChild(this.shadowOverlay);
     this.stage.update();
 
     const reset = () => {
@@ -214,13 +166,13 @@ const app = {
   onTick(e) {
     if (this.paused) {
       return;
-    } else if (this.dead && !this.flag && this.hero.y > (this.stage.canvas.height + 100)) {
+    } else if (this.hero.y > (this.stage.canvas.height + 100)) {
       this.createResetShadow();
     }
     const delta = e.delta / 16;
     this.moveBg(delta);
     this.moveHero(delta);
-    this.processLevel(delta);
+    this.moveSpikes(delta);
     this.stage.update();
   },
 };
