@@ -67,12 +67,12 @@ function createHero() {
 
 function moveHero(time) {
   hero.move(time);
-  if (hero.y < -20) {
+  if (hero.y < 0) {
     hero.vY = 0;
-    hero.y = -20;
+    hero.y = 0;
   } else if (hero.y > canvas.height + (hero.bounds.height / 2)) {
     endGame();
-  } else if (hero.y > 460) {
+  } else if (hero.y > 485) {
     hero.die();
   }
 }
