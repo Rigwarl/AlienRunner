@@ -3,6 +3,38 @@ import Hero from './Hero';
 import Spike from './Spike';
 import ShadowOverlay from './ShadowOverlay';
 
+const queue = new Loader();
+queue.addEventListener('complete', startGame);
+
+let canvas;
+let stage;
+let spikes = [];
+let shadowOverlay;
+let hero;
+
+function startGame() {
+  canvas = document.querySelector('#game-stage');
+  stage = new createjs.Stage(canvas);
+
+  createBg();
+  createSpikes();
+  stage.update();
+}
+
+function createBg() {
+  stage.canvas.classList.remove('loading');
+}
+
+function createSpikes() {
+  for (let i = 0; i < 2; i++) {
+    const spike = new Spike(queue);
+    resetSpike(spike, i);
+    spike.x += (canvas.width + spike.bounds.width) * i * 0.5;
+    spikes.push(spike);
+    stage.addChild(spike);
+  }
+}
+
 const app = {
   init() {
     this.queue = new Loader();
