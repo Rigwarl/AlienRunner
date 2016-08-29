@@ -58,6 +58,7 @@ const app = {
   createHero() {
     this.hero = new Hero(this.queue);
     this.hero.x = this.stage.canvas.width / 2;
+    this.hero.y = 200;
     this.stage.addChild(this.hero);
   },
   createBg() {
@@ -143,6 +144,7 @@ const app = {
   },
   reset() {
     this.hero.reset();
+    this.hero.y = 200;
     this.resetSpikes();
     this.dead = false;
     this.distance = 0;

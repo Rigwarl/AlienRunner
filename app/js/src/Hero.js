@@ -16,7 +16,6 @@ export default class Hero extends createjs.Sprite {
   }
   reset() {
     this.rotation = 0;
-    this.y = 200;
     this.vY = 0;
     this.gotoAndStop('fly');
   }
