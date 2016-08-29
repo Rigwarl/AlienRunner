@@ -11,7 +11,7 @@ export default class Hero extends createjs.Sprite {
     });
     super(ss);
     this.regX = this.getBounds().width / 2;
-    this.a = 0.2;
+    this.a = 375;
     this.reset();
   }
   reset() {
@@ -20,13 +20,13 @@ export default class Hero extends createjs.Sprite {
     this.gotoAndStop('fly');
   }
   flap() {
-    this.vY = Math.max(this.vY - 7, -7);
+    this.vY = Math.max(this.vY - 325, -325);
     this.gotoAndPlay('flap');
     createjs.Sound.play('flap');
   }
-  move(delta) {
-    this.y += ((this.a * delta * 0.5) + this.vY) * delta;
-    this.vY += this.a * delta;
+  move(time) {
+    this.y += ((this.a * time * 0.5) + this.vY) * time;
+    this.vY += this.a * time;
   }
   die() {
     this.rotation = 20;

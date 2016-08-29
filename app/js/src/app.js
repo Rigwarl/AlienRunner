@@ -12,7 +12,7 @@ let spikes = [];
 let shadowOverlay;
 let hero;
 
-const speed = 0.25;
+const speed = 300;
 
 function startGame() {
   canvas = document.querySelector('#game-stage');
@@ -21,6 +21,7 @@ function startGame() {
   createBg();
   createSpikes();
   createHero();
+  bindEvents();
 
   createjs.Sound.play('back', { loop: -1, volume: 0.35 });
   createjs.Ticker.timingMode = createjs.Ticker.RAF;
@@ -72,8 +73,24 @@ function createHero() {
   stage.addChild(hero);
 }
 
+function moveHero(time) {
+  hero.move(time);
+  if (hero.y < -20) {
+    hero.vY = 0;
+    hero.y = -20;
+  } else if (hero.y > 460) {
+    hero.die();
+  }
+}
+
+function bindEvents() {
+  window.addEventListener('keydown', () => hero.flap());
+}
+
 function tick(e) {
-  moveSpikes(e.delta);
+  const sec = e.delta * 0.001;
+  moveSpikes(sec);
+  moveHero(sec);
   stage.update();
 }
 
