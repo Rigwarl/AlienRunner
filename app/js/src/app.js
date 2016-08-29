@@ -1,19 +1,11 @@
+import Loader from './Loader';
 import Hero from './Hero';
 import Spike from './Spike';
 
 const app = {
   init() {
-    this.queue = new createjs.LoadQueue();
-    createjs.Sound.alternateExtensions = ['mp3'];
-    this.queue.installPlugin(createjs.Sound);
+    this.queue = new Loader();
     this.queue.addEventListener('complete', () => this.start());
-    this.queue.loadManifest([
-      { id: 'char', src: 'img/monster-sprite.png' },
-      { id: 'spike', src: 'img/spike.png' },
-      { id: 'back', src: 'sound/background.ogg' },
-      { id: 'flap', src: 'sound/flap.ogg' },
-      { id: 'loose', src: 'sound/loose.ogg' },
-    ]);
     this.stage = new createjs.Stage('game-stage');
   },
   start() {
