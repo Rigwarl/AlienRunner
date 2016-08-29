@@ -11,8 +11,10 @@ let stage;
 let spikes = [];
 let shadowOverlay;
 let hero;
+let hudDistance;
 
 const speed = 300;
+let distance = 0;
 
 function startGame() {
   canvas = document.querySelector('#game-stage');
@@ -21,6 +23,7 @@ function startGame() {
   createBg();
   createSpikes();
   createHero();
+  createHud();
   bindEvents();
 
   createjs.Sound.play('back', { loop: -1, volume: 0.35 });
@@ -39,18 +42,6 @@ function createSpikes() {
     spike.x += (canvas.width + spike.bounds.width) * i * 0.5;
     spikes.push(spike);
     stage.addChild(spike);
-  }
-}
-
-function moveSpikes(time) {
-  for (const spike of spikes) {
-    spike.x -= speed * time;
-    if (spike.x < -spike.bounds.width / 2) {
-      resetSpike(spike);
-    }
-    if (ndgmr.checkPixelCollision(hero, spike)) {
-      hero.die();
-    }
   }
 }
 
@@ -83,13 +74,34 @@ function moveHero(time) {
   }
 }
 
+function createHud() {
+  hudDistance = new createjs.Text('Distance: 0 m', '25px Arial', '#000');
+  hudDistance.x = 15;
+  hudDistance.y = 15;
+  stage.addChild(hudDistance);
+}
+
+function moveWorld(time) {
+  for (const spike of spikes) {
+    spike.x -= speed * time;
+    if (spike.x < -spike.bounds.width / 2) {
+      resetSpike(spike);
+    }
+    if (ndgmr.checkPixelCollision(hero, spike)) {
+      hero.die();
+    }
+  }
+  distance += speed * time;
+  hudDistance.text = `${Math.floor(distance / 25)} m`;
+}
+
 function bindEvents() {
   window.addEventListener('keydown', () => hero.flap());
 }
 
 function tick(e) {
   const sec = e.delta * 0.001;
-  moveSpikes(sec);
+  moveWorld(sec);
   moveHero(sec);
   stage.update();
 }
