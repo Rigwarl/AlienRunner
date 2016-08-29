@@ -15,6 +15,7 @@ let hudDistance;
 
 const speed = 300;
 let distance = 0;
+let paused = false;
 
 function startGame() {
   canvas = document.querySelector('#game-stage');
@@ -69,6 +70,8 @@ function moveHero(time) {
   if (hero.y < -20) {
     hero.vY = 0;
     hero.y = -20;
+  } else if (hero.y > canvas.height + (hero.bounds.height / 2)) {
+    endGame();
   } else if (hero.y > 460) {
     hero.die();
   }
@@ -82,6 +85,9 @@ function createHud() {
 }
 
 function moveWorld(time) {
+  if (hero.dead) {
+    return;
+  }
   for (const spike of spikes) {
     spike.x -= speed * time;
     if (spike.x < -spike.bounds.width / 2) {
@@ -95,11 +101,19 @@ function moveWorld(time) {
   hudDistance.text = `${Math.floor(distance / 25)} m`;
 }
 
+function endGame() {
+  paused = true;
+  console.log('end');
+}
+
 function bindEvents() {
   window.addEventListener('keydown', () => hero.flap());
 }
 
 function tick(e) {
+  if (paused) {
+    return;
+  }
   const sec = e.delta * 0.001;
   moveWorld(sec);
   moveHero(sec);
