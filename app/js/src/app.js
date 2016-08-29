@@ -86,8 +86,15 @@ function createHud() {
 
 function moveWorld(time) {
   if (hero.dead) {
-    return;
+    hero.x += speed * time * 0.5;
+  } else {
+    moveSpikes(time);
+    distance += speed * time;
+    hudDistance.text = `${Math.floor(distance / 25)} m`;
   }
+}
+
+function moveSpikes(time) {
   for (const spike of spikes) {
     spike.x -= speed * time;
     if (spike.x < -spike.bounds.width / 2) {
@@ -97,8 +104,6 @@ function moveWorld(time) {
       hero.die();
     }
   }
-  distance += speed * time;
-  hudDistance.text = `${Math.floor(distance / 25)} m`;
 }
 
 function endGame() {
