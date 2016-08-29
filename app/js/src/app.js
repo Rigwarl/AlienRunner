@@ -1,6 +1,7 @@
 import Loader from './Loader';
 import Hero from './Hero';
 import Spike from './Spike';
+import ShadowOverlay from './ShadowOverlay';
 
 const app = {
   init() {
@@ -29,19 +30,11 @@ const app = {
   },
   createShadow() {
     this.paused = true;
-    this.shadow = new createjs.Shape();
-    this.shadow.graphics
-      .beginFill('rgba(0,0,0,0.6)')
-      .drawRect(0, 0, this.stage.canvas.width, this.stage.canvas.height);
-    this.shadowText = new createjs.Text('Hit space to start and space to flap', '25px Arial', '#fff');
-    this.shadowText.y = this.stage.canvas.height / 2;
-    this.shadowText.x = this.stage.canvas.width / 2;
-    this.shadowText.textAlign = 'center';
-    this.shadowText.textBaseline = 'middle';
-    this.stage.addChild(this.shadow, this.shadowText);
+    this.shadowOverlay = new ShadowOverlay('Hit space to start and space to flap', this.stage.canvas);
+    this.stage.addChild(this.shadowOverlay);
 
     const showShadow = () => {
-      this.stage.removeChild(this.shadow, this.shadowText);
+      this.stage.removeChild(this.shadowOverlay);
       this.paused = false;
       window.removeEventListener('keyup', showShadow);
       window.removeEventListener('touchend', showShadow);
@@ -148,7 +141,7 @@ const app = {
     this.resetSpikes();
     this.dead = false;
     this.distance = 0;
-    this.stage.removeChild(this.shadow, this.shadowText);
+    this.stage.removeChild(this.shadowOverlay);
     this.paused = false;
     this.flag = false;
   },
@@ -158,8 +151,8 @@ const app = {
     }
     this.flag = true;
     this.paused = true;
-    this.shadowText.text = 'Hit space to restart';
-    this.stage.addChild(this.shadow, this.shadowText);
+    this.shadowOverlay.setText('Hit space to restart');
+    this.stage.addChild(this.shadowOverlay);
     this.stage.update();
 
     const reset = () => {
