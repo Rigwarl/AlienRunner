@@ -1,5 +1,5 @@
 export default class ShadowOverlay extends createjs.Container {
-  constructor(text, { width, height }) {
+  constructor(text, width, height) {
     super();
 
     this.shadow = new createjs.Shape();
@@ -12,8 +12,5 @@ export default class ShadowOverlay extends createjs.Container {
     this.shadowText.textBaseline = 'middle';
 
     this.addChild(this.shadow, this.shadowText);
-  }
-  setText(text) {
-    this.shadowText.text = text;
   }
 }
