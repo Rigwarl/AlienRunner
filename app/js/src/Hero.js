@@ -14,7 +14,6 @@ export default class Hero extends createjs.Sprite {
     this.regX = this.bounds.width / 2;
     this.regY = this.bounds.height / 2;
     this.a = 550;
-    this.reset();
   }
   reset() {
     this.dead = false;
