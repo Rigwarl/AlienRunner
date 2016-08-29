@@ -28,7 +28,7 @@ function createBg() {
 function createSpikes() {
   for (let i = 0; i < 2; i++) {
     const spike = new Spike(queue);
-    resetSpike(spike, i);
+    resetSpike(spike);
     spike.x += (canvas.width + spike.bounds.width) * i * 0.5;
     spikes.push(spike);
     stage.addChild(spike);
