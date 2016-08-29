@@ -18,6 +18,7 @@ function startGame() {
 
   createBg();
   createSpikes();
+  createHero();
   stage.update();
 }
 
@@ -45,6 +46,13 @@ function resetSpike(spike) {
     spike.y = 0;
     spike.rotation = 180;
   }
+}
+
+function createHero() {
+  hero = new Hero(queue);
+  hero.x = canvas.width / 2;
+  hero.y = 200;
+  stage.addChild(hero);
 }
 
 const app = {
