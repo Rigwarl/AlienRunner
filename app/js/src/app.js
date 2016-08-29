@@ -35,6 +35,18 @@ function createSpikes() {
   }
 }
 
+function resetSpike(spike) {
+  spike.reset();
+  spike.x = canvas.width + (spike.bounds.width / 2);
+  if (Math.random() > 0.5) {
+    spike.y = canvas.height - 81;
+    spike.rotation = 0;
+  } else {
+    spike.y = 0;
+    spike.rotation = 180;
+  }
+}
+
 const app = {
   init() {
     this.queue = new Loader();
@@ -208,5 +220,3 @@ const app = {
     this.stage.update();
   },
 };
-
-app.init();
