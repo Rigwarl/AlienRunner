@@ -26,8 +26,8 @@ export default class Hero extends createjs.Sprite {
     createjs.Sound.play('flap');
   }
   move(delta) {
+    this.y += ((this.a * delta * 0.5) + this.vY) * delta;
     this.vY += this.a * delta;
-    this.y += this.vY * delta;
   }
   die() {
     this.rotation = 20;
