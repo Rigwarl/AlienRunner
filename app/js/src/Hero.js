@@ -13,7 +13,7 @@ export default class Hero extends createjs.Sprite {
     this.bounds = this.getBounds();
     this.regX = this.bounds.width / 2;
     this.regY = this.bounds.height / 2;
-    this.a = 450;
+    this.a = 550;
     this.reset();
   }
   reset() {
@@ -26,7 +26,7 @@ export default class Hero extends createjs.Sprite {
     if (this.dead) {
       return;
     }
-    this.vY = Math.max(this.vY - 350, -350);
+    this.vY = Math.max(this.vY - 375, -375);
     this.gotoAndPlay('flap');
     createjs.Sound.play('flap');
   }
