@@ -12,6 +12,8 @@ let spikes = [];
 let shadowOverlay;
 let hero;
 
+const speed = 0.25;
+
 function startGame() {
   canvas = document.querySelector('#game-stage');
   stage = new createjs.Stage(canvas);
@@ -19,7 +21,10 @@ function startGame() {
   createBg();
   createSpikes();
   createHero();
-  stage.update();
+
+  createjs.Sound.play('back', { loop: -1, volume: 0.35 });
+  createjs.Ticker.timingMode = createjs.Ticker.RAF;
+  createjs.Ticker.addEventListener('tick', tick);
 }
 
 function createBg() {
@@ -33,6 +38,18 @@ function createSpikes() {
     spike.x += (canvas.width + spike.bounds.width) * i * 0.5;
     spikes.push(spike);
     stage.addChild(spike);
+  }
+}
+
+function moveSpikes(time) {
+  for (const spike of spikes) {
+    spike.x -= speed * time;
+    if (spike.x < -spike.bounds.width / 2) {
+      resetSpike(spike);
+    }
+    if (ndgmr.checkPixelCollision(hero, spike)) {
+      hero.die();
+    }
   }
 }
 
@@ -53,6 +70,11 @@ function createHero() {
   hero.x = canvas.width / 2;
   hero.y = 200;
   stage.addChild(hero);
+}
+
+function tick(e) {
+  moveSpikes(e.delta);
+  stage.update();
 }
 
 const app = {
