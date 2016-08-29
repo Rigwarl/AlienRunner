@@ -11,15 +11,19 @@ export default class Hero extends createjs.Sprite {
     });
     super(ss);
     this.regX = this.getBounds().width / 2;
-    this.a = 375;
+    this.a = 400;
     this.reset();
   }
   reset() {
+    this.dead = false;
     this.rotation = 0;
     this.vY = 0;
     this.gotoAndStop('fly');
   }
   flap() {
+    if (this.dead) {
+      return;
+    }
     this.vY = Math.max(this.vY - 325, -325);
     this.gotoAndPlay('flap');
     createjs.Sound.play('flap');
@@ -29,6 +33,7 @@ export default class Hero extends createjs.Sprite {
     this.vY += this.a * time;
   }
   die() {
+    this.dead = true;
     this.rotation = 20;
     this.gotoAndStop('dead');
     createjs.Sound.play('loose');
