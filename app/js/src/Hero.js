@@ -34,6 +34,9 @@ export default class Hero extends createjs.Sprite {
     this.vY += this.a * time;
   }
   die() {
+    if (this.dead) {
+      return;
+    }
     this.dead = true;
     this.rotation = 20;
     this.gotoAndStop('dead');
