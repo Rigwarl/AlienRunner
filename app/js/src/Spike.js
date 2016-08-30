@@ -7,9 +7,6 @@ export default class Spike extends createjs.Bitmap {
     this.regY = this.bounds.height;
   }
   reset() {
-    this.scaleY = (Math.random() + Math.random()) * 0.6;
-    if (this.scaleY < 0.5) {
-      this.scaleY += 0.5;
-    }
+    this.scaleY = 0.7 + (Math.random() * 0.5);
   }
 }
