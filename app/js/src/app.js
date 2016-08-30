@@ -15,7 +15,9 @@ let hudDistance;
 
 const speed = 300;
 let distance = 0;
+
 let paused = true;
+let finished = true;
 
 function startGame() {
   canvas = document.querySelector('#game-stage');
@@ -27,12 +29,12 @@ function startGame() {
   spikes = [new Spike(queue), new Spike(queue)];
   hudDistance = new createjs.Text('', '25px Arial', '#000');
   hudDistance.x = hudDistance.y = 15;
-  shadowOverlay = new ShadowOverlay('Press anykey to start, or another to leave', canvas);
+  shadowOverlay = new ShadowOverlay(canvas.width, canvas.height);
 
   stage.addChild(...spikes, hero, hudDistance, shadowOverlay);
 
   resetGame();
-  pauseGame();
+  pauseGame('Press space to start');
   bindEvents();
 
   createjs.Sound.play('back', { loop: -1, volume: 0.35 });
@@ -72,16 +74,27 @@ function moveHero(time) {
     hero.vY = 0;
     hero.y = 0;
   } else if (hero.y > canvas.height + (hero.bounds.height / 2)) {
-    pauseGame();
+    finished = true;
+    pauseGame('Press space to restart');
   } else if (hero.y > 485) {
     hero.die();
   }
 }
 
-function pauseGame() {
+function pauseGame(text) {
   paused = true;
+  shadowOverlay.setText(text);
   stage.addChild(shadowOverlay);
   stage.update();
+}
+
+function togglePause() {
+  if (paused) {
+    paused = false;
+    stage.removeChild(shadowOverlay);
+  } else {
+    pauseGame('Press esc to unpause');
+  }
 }
 
 function moveWorld(time) {
@@ -108,16 +121,26 @@ function moveSpikes(time) {
 
 function restartGame() {
   paused = false;
+  finished = false;
   resetGame();
   stage.removeChild(shadowOverlay);
 }
 
 function bindEvents() {
-  window.addEventListener('keydown', () => {
-    if (paused) {
-      restartGame();
-    } else {
-      hero.flap();
+  window.addEventListener('keydown', e => {
+    switch (e.keyCode) {
+      case 32:
+        if (finished) {
+          restartGame();
+        } else {
+          hero.flap();
+        }
+        break;
+      case 27:
+        if (!finished) {
+          togglePause();
+        }
+        break;
     }
   });
 }
