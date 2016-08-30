@@ -163,9 +163,9 @@ function moveBg(time) {
   bgPos.mountain -= time * speed * 0.3;
   bgPos.ground -= time * speed;
 
-  canvas.style.backgroundPosition = `${bgPos.ground}px,
-                                     ${bgPos.mountain}px,
-                                     ${bgPos.sky}px`;
+  canvas.style.backgroundPosition = `${bgPos.ground}px 100%,
+                                     ${bgPos.mountain}px 100%,
+                                     ${bgPos.sky}px 100%`;
 }
 
 function tick(e) {
