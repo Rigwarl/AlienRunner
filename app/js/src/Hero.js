@@ -10,25 +10,34 @@ export default class Hero extends createjs.Sprite {
       },
     });
     super(ss);
-    this.regX = this.getBounds().width / 2;
-    this.a = 0.2;
-    this.reset();
+    this.bounds = this.getBounds();
+    this.regX = this.bounds.width / 2;
+    this.regY = this.bounds.height / 2;
+    this.a = 550;
   }
   reset() {
+    this.dead = false;
     this.rotation = 0;
     this.vY = 0;
     this.gotoAndStop('fly');
   }
   flap() {
-    this.vY = Math.max(this.vY - 7, -7);
+    if (this.dead) {
+      return;
+    }
+    this.vY = Math.max(this.vY - 375, -375);
     this.gotoAndPlay('flap');
     createjs.Sound.play('flap');
   }
-  move(delta) {
-    this.y += ((this.a * delta * 0.5) + this.vY) * delta;
-    this.vY += this.a * delta;
+  move(time) {
+    this.y += ((this.a * time * 0.5) + this.vY) * time;
+    this.vY += this.a * time;
   }
   die() {
+    if (this.dead) {
+      return;
+    }
+    this.dead = true;
     this.rotation = 20;
     this.gotoAndStop('dead');
     createjs.Sound.play('loose');

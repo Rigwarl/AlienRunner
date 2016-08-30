@@ -11,13 +11,5 @@ export default class Spike extends createjs.Bitmap {
     if (this.scaleY < 0.5) {
       this.scaleY += 0.5;
     }
-    this.x = this.stage.canvas.width + (this.bounds.width / 2);
-    if (Math.random() > 0.5) {
-      this.y = this.stage.canvas.height - 81;
-      this.rotation = 0;
-    } else {
-      this.y = 0;
-      this.rotation = 180;
-    }
   }
 }
