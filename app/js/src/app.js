@@ -94,6 +94,9 @@ function pauseGame(text) {
 }
 
 function togglePause() {
+  if (finished) {
+    return;
+  }
   if (paused) {
     paused = false;
     stage.removeChild(shadowOverlay);
@@ -136,26 +139,22 @@ function bindEvents() {
   window.addEventListener('keydown', e => {
     switch (e.keyCode) {
       case 32:
-        if (finished) {
-          restartGame();
-        } else {
-          hero.flap();
-        }
+        handleAction();
         break;
       case 27:
-        if (!finished) {
-          togglePause();
-        }
+        togglePause();
         break;
     }
   });
-  window.addEventListener('touchstart', () => {
-    if (finished) {
-      restartGame();
-    } else {
-      hero.flap();
-    }
-  });
+  window.addEventListener('touchstart', handleAction);
+}
+
+function handleAction() {
+  if (finished) {
+    restartGame();
+  } else {
+    hero.flap();
+  }
 }
 
 function moveBg(time) {
