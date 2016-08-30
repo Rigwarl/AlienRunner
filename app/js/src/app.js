@@ -15,10 +15,7 @@ let hudDistance;
 
 const speed = 300;
 let distance = 0;
-
-let first = true;
 let paused = true;
-let finished = false;
 
 function startGame() {
   canvas = document.querySelector('#game-stage');
@@ -82,7 +79,7 @@ function moveHero(time) {
 }
 
 function pauseGame() {
-  finished = true;
+  paused = true;
   stage.addChild(shadowOverlay);
   stage.update();
 }
@@ -110,14 +107,14 @@ function moveSpikes(time) {
 }
 
 function restartGame() {
-  finished = false;
+  paused = false;
   resetGame();
   stage.removeChild(shadowOverlay);
 }
 
 function bindEvents() {
   window.addEventListener('keydown', () => {
-    if (finished) {
+    if (paused) {
       restartGame();
     } else {
       hero.flap();
@@ -126,7 +123,7 @@ function bindEvents() {
 }
 
 function tick(e) {
-  if (finished) {
+  if (paused) {
     return;
   }
   const sec = e.delta * 0.001;
