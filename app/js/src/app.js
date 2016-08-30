@@ -36,7 +36,7 @@ function startGame() {
   hudDistance.x = hudDistance.y = 15;
   shadowOverlay = new ShadowOverlay(canvas.width, canvas.height);
 
-  stage.addChild(...spikes, hero, hudDistance, shadowOverlay);
+  stage.addChild(...spikes, hero, hudDistance);
 
   resetGame();
   pauseGame('Press space to flap, esc to pause');
@@ -147,6 +147,13 @@ function bindEvents() {
           togglePause();
         }
         break;
+    }
+  });
+  window.addEventListener('touchstart', () => {
+    if (finished) {
+      restartGame();
+    } else {
+      hero.flap();
     }
   });
 }
