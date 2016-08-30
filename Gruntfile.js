@@ -17,14 +17,23 @@ module.exports = grunt => {
       },
     },
     copy: {
-      js: {
+      app: {
         expand: true,
         flatten: true,
         src: ['app/js/lib/*.js', 'node_modules/babel-polyfill/dist/polyfill.min.js'],
         dest: 'app/js/build/',
       },
+      docs: {
+        expand: true,
+        flatten: true,
+        src: 'app/js/build/*.js',
+        dest: 'docs/js/',
+      },
     },
-    clean: ['app/js/build'],
+    clean: {
+      app: ['app/js/build'],
+      docs: ['docs/js/'],
+    },
     connect: {
       server: {
         options: {
@@ -49,6 +58,7 @@ module.exports = grunt => {
     },
   });
 
-  grunt.registerTask('build', ['clean', 'copy', 'browserify']);
+  grunt.registerTask('build', ['clean:app', 'copy:app', 'browserify']);
+  grunt.registerTask('build:docs', ['build', 'clean:docs', 'copy:docs']);
   grunt.registerTask('default', ['build', 'connect', 'watch']);
 };
