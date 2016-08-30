@@ -10,22 +10,29 @@ let canvas;
 let stage;
 let shadowOverlay;
 let hero;
+let spikes;
 let hudDistance;
-const spikes = [];
 
 const speed = 300;
 let distance = 0;
+
+let first = true;
 let paused = true;
+let finished = false;
 
 function startGame() {
   canvas = document.querySelector('#game-stage');
   stage = new createjs.Stage(canvas);
 
-  createBg();
-  createSpikes();
-  createHero();
-  createHud();
-  createShadowOverlay();
+  canvas.classList.remove('loading');
+
+  hero = new Hero(queue);
+  spikes = [new Spike(queue), new Spike(queue)];
+  hudDistance = new createjs.Text('', '25px Arial', '#000');
+  hudDistance.x = hudDistance.y = 15;
+  shadowOverlay = new ShadowOverlay('Press anykey to start, or another to leave', canvas);
+
+  stage.addChild(...spikes, hero, hudDistance, shadowOverlay);
 
   resetGame();
   pauseGame();
@@ -34,64 +41,6 @@ function startGame() {
   createjs.Sound.play('back', { loop: -1, volume: 0.35 });
   createjs.Ticker.timingMode = createjs.Ticker.RAF;
   createjs.Ticker.addEventListener('tick', tick);
-}
-
-function createBg() {
-  stage.canvas.classList.remove('loading');
-}
-
-function createSpikes() {
-  for (let i = 0; i < 2; i++) {
-    const spike = new Spike(queue);
-    spikes.push(spike);
-    stage.addChild(spike);
-  }
-}
-
-function resetSpike(spike) {
-  spike.reset();
-  spike.x = canvas.width + (spike.bounds.width / 2);
-  if (Math.random() > 0.5) {
-    spike.y = canvas.height - 81;
-    spike.rotation = 0;
-  } else {
-    spike.y = 0;
-    spike.rotation = 180;
-  }
-}
-
-function createHero() {
-  hero = new Hero(queue);
-  stage.addChild(hero);
-}
-
-function moveHero(time) {
-  hero.move(time);
-  if (hero.y < 0) {
-    hero.vY = 0;
-    hero.y = 0;
-  } else if (hero.y > canvas.height + (hero.bounds.height / 2)) {
-    pauseGame();
-  } else if (hero.y > 485) {
-    hero.die();
-  }
-}
-
-function createHud() {
-  hudDistance = new createjs.Text('Distance: 0 m', '25px Arial', '#000');
-  hudDistance.x = 15;
-  hudDistance.y = 15;
-  stage.addChild(hudDistance);
-}
-
-function createShadowOverlay() {
-  shadowOverlay = new ShadowOverlay('Press anykey to start, or another to leave', canvas.width, canvas.height);
-}
-
-function pauseGame() {
-  paused = true;
-  stage.addChild(shadowOverlay);
-  stage.update();
 }
 
 function resetGame() {
@@ -106,6 +55,36 @@ function resetGame() {
 
   distance = 0;
   hudDistance.text = '0 m';
+}
+
+function resetSpike(spike) {
+  spike.reset();
+  spike.x = canvas.width + (spike.bounds.width / 2);
+  if (Math.random() > 0.5) {
+    spike.y = canvas.height - 81;
+    spike.rotation = 0;
+  } else {
+    spike.y = 0;
+    spike.rotation = 180;
+  }
+}
+
+function moveHero(time) {
+  hero.move(time);
+  if (hero.y < 0) {
+    hero.vY = 0;
+    hero.y = 0;
+  } else if (hero.y > canvas.height + (hero.bounds.height / 2)) {
+    pauseGame();
+  } else if (hero.y > 485) {
+    hero.die();
+  }
+}
+
+function pauseGame() {
+  finished = true;
+  stage.addChild(shadowOverlay);
+  stage.update();
 }
 
 function moveWorld(time) {
@@ -131,14 +110,14 @@ function moveSpikes(time) {
 }
 
 function restartGame() {
-  paused = false;
+  finished = false;
   resetGame();
   stage.removeChild(shadowOverlay);
 }
 
 function bindEvents() {
   window.addEventListener('keydown', () => {
-    if (paused) {
+    if (finished) {
       restartGame();
     } else {
       hero.flap();
@@ -147,7 +126,7 @@ function bindEvents() {
 }
 
 function tick(e) {
-  if (paused) {
+  if (finished) {
     return;
   }
   const sec = e.delta * 0.001;
