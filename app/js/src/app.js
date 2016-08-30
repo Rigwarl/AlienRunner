@@ -34,7 +34,7 @@ function startGame() {
   stage.addChild(...spikes, hero, hudDistance, shadowOverlay);
 
   resetGame();
-  pauseGame('Press space to start');
+  pauseGame('Press space to flap, esc to pause');
   bindEvents();
 
   createjs.Sound.play('back', { loop: -1, volume: 0.35 });
