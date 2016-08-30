@@ -14,6 +14,11 @@ let spikes;
 let hudDistance;
 
 const speed = 300;
+const bgPos = {
+  sky: 0,
+  mountain: 0,
+  ground: 0,
+};
 let distance = 0;
 
 let paused = true;
@@ -102,6 +107,7 @@ function moveWorld(time) {
     hero.x += speed * time * 0.5;
   } else {
     moveSpikes(time);
+    moveBg(time);
     distance += speed * time;
     hudDistance.text = `${Math.floor(distance / 25)} m`;
   }
@@ -143,6 +149,16 @@ function bindEvents() {
         break;
     }
   });
+}
+
+function moveBg(time) {
+  bgPos.sky -= time * speed * 0.1;
+  bgPos.mountain -= time * speed * 0.3;
+  bgPos.ground -= time * speed;
+
+  canvas.style.backgroundPosition = `${bgPos.ground}px,
+                                     ${bgPos.mountain}px,
+                                     ${bgPos.sky}px`;
 }
 
 function tick(e) {
