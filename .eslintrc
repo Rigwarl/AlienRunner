@@ -8,6 +8,7 @@
     "ndgmr": false
   },
   "rules": {
+    "default-case": 0,
     "func-names": 0,
     "no-param-reassign": 0,
     "guard-for-in": 1,
