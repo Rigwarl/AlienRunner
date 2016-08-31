@@ -13,12 +13,16 @@ let hero;
 let spikes;
 let hudDistance;
 
-const speed = 300;
-const bgPos = {
-  sky: 0,
-  mountain: 0,
-  ground: 0,
+const bg = {
+  sky: null,
+  mountain: null,
+  ground: null,
+  skyTileBounds: null,
+  mountainTileBounds: null,
+  groundTileBounds: null,
 };
+
+const speed = 300;
 let distance = 0;
 
 let paused = true;
@@ -29,6 +33,10 @@ function startGame() {
   stage = new createjs.Stage(canvas);
 
   canvas.classList.remove('loading');
+
+  createBgLayer('sky');
+  createBgLayer('mountain');
+  createBgLayer('ground');
 
   hero = new Hero(queue);
   spikes = [new Spike(queue), new Spike(queue)];
@@ -45,6 +53,31 @@ function startGame() {
   createjs.Sound.play('back', { loop: -1, volume: 0.35 });
   createjs.Ticker.timingMode = createjs.Ticker.RAF;
   createjs.Ticker.addEventListener('tick', tick);
+}
+
+function createBgLayer(name) {
+  const tile = new createjs.Bitmap(queue.getResult(name));
+  const bounds = tile.getBounds();
+
+  bg[name] = new createjs.Container();
+  bg[`${name}Bounds`] = bounds;
+
+  bg[name].y = canvas.height;
+  bg[name].regY = bounds.height;
+
+  const num = (Math.ceil(canvas.width / bounds.width) + 1);
+  for (let i = 0; i < num; i++) {
+    const newTile = tile.clone();
+    newTile.x = i * bounds.width;
+    bg[name].addChild(newTile);
+  }
+  bg[name].cache(0, 0, bounds.width * num, bounds.height);
+  stage.addChild(bg[name]);
+}
+
+function moveBgLayer(name, path) {
+  bg[name].x -= path;
+  bg[name].x %= bg[`${name}Bounds`].width;
 }
 
 function resetGame() {
@@ -110,8 +143,10 @@ function moveWorld(time) {
   if (hero.dead) {
     hero.x += path * 0.5;
   } else {
-    moveBg(time);
     moveSpikes(path);
+    moveBgLayer('sky', path * 0.1);
+    moveBgLayer('mountain', path * 0.3);
+    moveBgLayer('ground', path);
     distance += path;
     hudDistance.text = `${Math.floor(distance / 25)} m`;
   }
@@ -156,16 +191,6 @@ function handleAction() {
   } else {
     hero.flap();
   }
-}
-
-function moveBg(time) {
-  bgPos.sky -= time * speed * 0.1;
-  bgPos.mountain -= time * speed * 0.3;
-  bgPos.ground -= time * speed;
-
-  canvas.style.backgroundPosition = `${bgPos.ground}px 100%,
-                                     ${bgPos.mountain}px 100%,
-                                     ${bgPos.sky}px 100%`;
 }
 
 function tick(e) {
