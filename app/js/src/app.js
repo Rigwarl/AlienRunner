@@ -106,19 +106,20 @@ function togglePause() {
 }
 
 function moveWorld(time) {
+  const path = speed * time;
   if (hero.dead) {
-    hero.x += speed * time * 0.5;
+    hero.x += path * 0.5;
   } else {
-    moveSpikes(time);
     moveBg(time);
-    distance += speed * time;
+    moveSpikes(path);
+    distance += path;
     hudDistance.text = `${Math.floor(distance / 25)} m`;
   }
 }
 
-function moveSpikes(time) {
+function moveSpikes(path) {
   for (const spike of spikes) {
-    spike.x -= speed * time;
+    spike.x -= path;
     if (spike.x < -spike.bounds.width / 2) {
       resetSpike(spike);
     }
