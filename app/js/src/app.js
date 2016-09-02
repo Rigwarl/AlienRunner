@@ -17,9 +17,9 @@ const bg = {
   sky: null,
   mountain: null,
   ground: null,
-  skyTileBounds: null,
-  mountainTileBounds: null,
-  groundTileBounds: null,
+  skyImg: null,
+  mountainImg: null,
+  groundImg: null,
 };
 
 const speed = 300;
@@ -56,28 +56,23 @@ function startGame() {
 }
 
 function createBgLayer(name) {
-  const tile = new createjs.Bitmap(queue.getResult(name));
-  const bounds = tile.getBounds();
+  const img = queue.getResult(name);
+  const num = Math.ceil(canvas.width / img.width);
+  const width = (num * img.width) + Math.min(canvas.width, img.width);
 
-  bg[name] = new createjs.Container();
-  bg[`${name}Bounds`] = bounds;
-
+  bg[name] = new createjs.Shape();
+  bg[name].graphics.beginBitmapFill(img, 'repeat-x').drawRect(0, 0, width, img.height);
   bg[name].y = canvas.height;
-  bg[name].regY = bounds.height;
+  bg[name].regY = img.height;
+  bg[name].cache(0, 0, width, img.height);
 
-  const num = (Math.ceil(canvas.width / bounds.width) + 1);
-  for (let i = 0; i < num; i++) {
-    const newTile = tile.clone();
-    newTile.x = i * bounds.width;
-    bg[name].addChild(newTile);
-  }
-  bg[name].cache(0, 0, bounds.width * num, bounds.height);
+  bg[`${name}Img`] = img;
   stage.addChild(bg[name]);
 }
 
 function moveBgLayer(name, path) {
   bg[name].x -= path;
-  bg[name].x %= bg[`${name}Bounds`].width;
+  bg[name].x %= bg[`${name}Img`].width;
 }
 
 function resetGame() {
