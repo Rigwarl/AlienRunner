@@ -2,9 +2,9 @@ export default class Hero extends createjs.Sprite {
   constructor(queue) {
     const ss = new createjs.SpriteSheet({
       images: [queue.getResult('char')],
-      frames: { width: 100, height: 78 },
+      frames: { width: 100, height: 78, spacing: 4 },
       animations: {
-        fly: [0],
+        fly: 0,
         flap: [1, 3, 'fly'],
         dead: [4],
       },

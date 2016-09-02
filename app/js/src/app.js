@@ -13,12 +13,16 @@ let hero;
 let spikes;
 let hudDistance;
 
-const speed = 300;
-const bgPos = {
-  sky: 0,
-  mountain: 0,
-  ground: 0,
+const bg = {
+  sky: null,
+  mountain: null,
+  ground: null,
+  skyImg: null,
+  mountainImg: null,
+  groundImg: null,
 };
+
+const speed = 300;
 let distance = 0;
 
 let paused = true;
@@ -29,6 +33,10 @@ function startGame() {
   stage = new createjs.Stage(canvas);
 
   canvas.classList.remove('loading');
+
+  createBgLayer('sky');
+  createBgLayer('mountain');
+  createBgLayer('ground');
 
   hero = new Hero(queue);
   spikes = [new Spike(queue), new Spike(queue)];
@@ -45,6 +53,26 @@ function startGame() {
   createjs.Sound.play('back', { loop: -1, volume: 0.35 });
   createjs.Ticker.timingMode = createjs.Ticker.RAF;
   createjs.Ticker.addEventListener('tick', tick);
+}
+
+function createBgLayer(name) {
+  const img = queue.getResult(name);
+  const num = Math.ceil(canvas.width / img.width);
+  const width = (num * img.width) + Math.min(canvas.width, img.width);
+
+  bg[name] = new createjs.Shape();
+  bg[name].graphics.beginBitmapFill(img, 'repeat-x').drawRect(0, 0, width, img.height);
+  bg[name].y = canvas.height;
+  bg[name].regY = img.height;
+  bg[name].cache(0, 0, width, img.height);
+
+  bg[`${name}Img`] = img;
+  stage.addChild(bg[name]);
+}
+
+function moveBgLayer(name, path) {
+  bg[name].x -= path;
+  bg[name].x %= bg[`${name}Img`].width;
 }
 
 function resetGame() {
@@ -94,6 +122,9 @@ function pauseGame(text) {
 }
 
 function togglePause() {
+  if (finished) {
+    return;
+  }
   if (paused) {
     paused = false;
     stage.removeChild(shadowOverlay);
@@ -103,19 +134,22 @@ function togglePause() {
 }
 
 function moveWorld(time) {
+  const path = speed * time;
   if (hero.dead) {
-    hero.x += speed * time * 0.5;
+    hero.x += path * 0.5;
   } else {
-    moveSpikes(time);
-    moveBg(time);
-    distance += speed * time;
+    moveSpikes(path);
+    moveBgLayer('sky', path * 0.1);
+    moveBgLayer('mountain', path * 0.3);
+    moveBgLayer('ground', path);
+    distance += path;
     hudDistance.text = `${Math.floor(distance / 25)} m`;
   }
 }
 
-function moveSpikes(time) {
+function moveSpikes(path) {
   for (const spike of spikes) {
-    spike.x -= speed * time;
+    spike.x -= path;
     if (spike.x < -spike.bounds.width / 2) {
       resetSpike(spike);
     }
@@ -136,36 +170,22 @@ function bindEvents() {
   window.addEventListener('keydown', e => {
     switch (e.keyCode) {
       case 32:
-        if (finished) {
-          restartGame();
-        } else {
-          hero.flap();
-        }
+        handleAction();
         break;
       case 27:
-        if (!finished) {
-          togglePause();
-        }
+        togglePause();
         break;
     }
   });
-  window.addEventListener('touchstart', () => {
-    if (finished) {
-      restartGame();
-    } else {
-      hero.flap();
-    }
-  });
+  window.addEventListener('touchstart', handleAction);
 }
 
-function moveBg(time) {
-  bgPos.sky -= time * speed * 0.1;
-  bgPos.mountain -= time * speed * 0.3;
-  bgPos.ground -= time * speed;
-
-  canvas.style.backgroundPosition = `${bgPos.ground}px 100%,
-                                     ${bgPos.mountain}px 100%,
-                                     ${bgPos.sky}px 100%`;
+function handleAction() {
+  if (finished) {
+    restartGame();
+  } else {
+    hero.flap();
+  }
 }
 
 function tick(e) {
