@@ -6,7 +6,7 @@ export default class Hero extends createjs.Sprite {
       animations: {
         fly: 0,
         flap: [1, 3, 'fly'],
-        dead: [4],
+        dead: 4,
       },
     });
     super(ss);

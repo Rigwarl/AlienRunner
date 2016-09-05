@@ -14,6 +14,8 @@
     "guard-for-in": 1,
     "max-len": 1,
     "no-use-before-define": [2, "nofunc"],
+    "no-mixed-operators": 0,
+    "no-unused-vars": ["error", { vars: 'local', "args": "all" }],
     "id-length": [2, {"exceptions": ["e", "i", "j", "x", "y", "w", "h", "a"]}]
   }
 }
