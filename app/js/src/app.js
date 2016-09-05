@@ -10,7 +10,9 @@ queue.addEventListener('complete', startGame);
 let canvas;
 let stage;
 let shadowOverlay;
-let bg;
+let bgSky;
+let bgMountain;
+let bgGround;
 let hero;
 let spikes;
 let hudDistance;
@@ -28,14 +30,18 @@ function startGame() {
 
   canvas.classList.remove('loading');
 
-  bg = new Background(queue, canvas.width, canvas.height);
+  bgSky = new Background('sky', queue, canvas.width);
+  bgMountain = new Background('mountain', queue, canvas.width);
+  bgGround = new Background('ground', queue, canvas.width);
+  bgSky.y = bgMountain.y = bgGround.y = canvas.height;
+
   hero = new Hero(queue);
   spikes = [new Spike(queue), new Spike(queue)];
   hudDistance = new createjs.Text('', '25px Arial', '#000');
   hudDistance.x = hudDistance.y = 15;
   shadowOverlay = new ShadowOverlay(canvas.width, canvas.height);
 
-  stage.addChild(bg, ...spikes, hero, hudDistance);
+  stage.addChild(bgSky, bgMountain, bgGround, ...spikes, hero, hudDistance);
 
   resetGame();
   pauseGame('Press space to flap, esc to pause');
@@ -110,7 +116,9 @@ function moveWorld(time) {
     hero.x += path * 0.5;
   } else {
     moveSpikes(path);
-    bg.move(path);
+    bgSky.move(path * 0.1);
+    bgMountain.move(path * 0.3);
+    bgGround.move(path);
     distance += path;
     hudDistance.text = `${Math.floor(distance / 25)} m`;
   }
