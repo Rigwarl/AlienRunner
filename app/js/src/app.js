@@ -154,7 +154,10 @@ function bindEvents() {
         break;
     }
   });
-  window.addEventListener('touchstart', handleAction);
+  window.addEventListener('touchstart', e => {
+    e.preventDefault();
+    handleAction();
+  });
 }
 
 function handleAction() {
