@@ -51,8 +51,8 @@ function resetGame() {
   hero.y = 200;
 
   spikes.forEach((spike, i) => {
+    spike.x = ((canvas.width + spike.bounds.width) * i - spike.bounds.width) / 2;
     resetSpike(spike);
-    spike.x += (canvas.width + spike.bounds.width) * i * 0.5;
   });
 
   distance = 0;
@@ -61,7 +61,7 @@ function resetGame() {
 
 function resetSpike(spike) {
   spike.reset();
-  spike.x = canvas.width + (spike.bounds.width / 2);
+  spike.x += canvas.width + spike.bounds.width;
   if (Math.random() > 0.5) {
     spike.y = canvas.height - 81;
     spike.rotation = 0;
@@ -158,7 +158,7 @@ function handleAction() {
 
 function tick(e) {
   const sec = e.delta * 0.001;
-  if (paused || sec > 0.5) {
+  if (paused || sec * speed > canvas.width * 0.2) {
     return;
   }
   moveWorld(sec);
