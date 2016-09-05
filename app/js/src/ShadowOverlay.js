@@ -3,7 +3,7 @@ export default class ShadowOverlay extends createjs.Container {
     super();
 
     this.shadow = new createjs.Shape();
-    this.shadow.graphics.beginFill('rgba(0,0,0,0.6)').drawRect(0, 0, width, height);
+    this.shadow.graphics.beginFill('rgba(0, 0, 0, 0.6)').drawRect(0, 0, width, height);
 
     this.shadowText = new createjs.Text('', '25px Arial', '#fff');
     this.shadowText.y = height / 2;
