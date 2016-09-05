@@ -1,4 +1,5 @@
 import Loader from './Loader';
+import Background from './Background';
 import Hero from './Hero';
 import Spike from './Spike';
 import ShadowOverlay from './ShadowOverlay';
@@ -9,18 +10,10 @@ queue.addEventListener('complete', startGame);
 let canvas;
 let stage;
 let shadowOverlay;
+let bg;
 let hero;
 let spikes;
 let hudDistance;
-
-const bg = {
-  sky: null,
-  mountain: null,
-  ground: null,
-  skyImg: null,
-  mountainImg: null,
-  groundImg: null,
-};
 
 const speed = 300;
 let distance = 0;
@@ -34,17 +27,14 @@ function startGame() {
 
   canvas.classList.remove('loading');
 
-  createBgLayer('sky');
-  createBgLayer('mountain');
-  createBgLayer('ground');
-
+  bg = new Background(queue, canvas.width, canvas.height);
   hero = new Hero(queue);
   spikes = [new Spike(queue), new Spike(queue)];
   hudDistance = new createjs.Text('', '25px Arial', '#000');
   hudDistance.x = hudDistance.y = 15;
   shadowOverlay = new ShadowOverlay(canvas.width, canvas.height);
 
-  stage.addChild(...spikes, hero, hudDistance);
+  stage.addChild(bg, ...spikes, hero, hudDistance);
 
   resetGame();
   pauseGame('Press space to flap, esc to pause');
@@ -53,26 +43,6 @@ function startGame() {
   createjs.Sound.play('back', { loop: -1, volume: 0.35 });
   createjs.Ticker.timingMode = createjs.Ticker.RAF;
   createjs.Ticker.addEventListener('tick', tick);
-}
-
-function createBgLayer(name) {
-  const img = queue.getResult(name);
-  const num = Math.ceil(canvas.width / img.width);
-  const width = (num * img.width) + Math.min(canvas.width, img.width);
-
-  bg[name] = new createjs.Shape();
-  bg[name].graphics.beginBitmapFill(img, 'repeat-x').drawRect(0, 0, width, img.height);
-  bg[name].y = canvas.height;
-  bg[name].regY = img.height;
-  bg[name].cache(0, 0, width, img.height);
-
-  bg[`${name}Img`] = img;
-  stage.addChild(bg[name]);
-}
-
-function moveBgLayer(name, path) {
-  bg[name].x -= path;
-  bg[name].x %= bg[`${name}Img`].width;
 }
 
 function resetGame() {
@@ -139,9 +109,7 @@ function moveWorld(time) {
     hero.x += path * 0.5;
   } else {
     moveSpikes(path);
-    moveBgLayer('sky', path * 0.1);
-    moveBgLayer('mountain', path * 0.3);
-    moveBgLayer('ground', path);
+    bg.move(path);
     distance += path;
     hudDistance.text = `${Math.floor(distance / 25)} m`;
   }
@@ -189,10 +157,10 @@ function handleAction() {
 }
 
 function tick(e) {
-  if (paused) {
+  const sec = e.delta * 0.001;
+  if (paused || sec > 0.5) {
     return;
   }
-  const sec = e.delta * 0.001;
   moveWorld(sec);
   moveHero(sec);
   stage.update();
