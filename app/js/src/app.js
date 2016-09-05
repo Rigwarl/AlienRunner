@@ -27,8 +27,6 @@ function startGame() {
   canvas = document.querySelector('#game-stage');
   stage = new createjs.Stage(canvas);
 
-  canvas.classList.remove('loading');
-
   bgSky = new Background('sky', canvas.width);
   bgMountain = new Background('mountain', canvas.width);
   bgGround = new Background('ground', canvas.width);
