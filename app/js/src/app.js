@@ -15,6 +15,7 @@ let hero;
 let spikes;
 let hudDistance;
 
+const groundHeight = 82;
 const speed = 300;
 let distance = 0;
 
@@ -76,10 +77,10 @@ function moveHero(time) {
   if (hero.y < 0) {
     hero.vY = 0;
     hero.y = 0;
-  } else if (hero.y > canvas.height + (hero.bounds.height / 2)) {
+  } else if (hero.y > canvas.height + hero.bounds.height / 2) {
     finished = true;
     pauseGame('Press space to restart');
-  } else if (hero.y > 485) {
+  } else if (hero.y > canvas.height - (groundHeight + hero.bounds.height / 2)) {
     hero.die();
   }
 }
