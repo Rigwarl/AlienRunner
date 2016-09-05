@@ -12,8 +12,10 @@ export default class ShadowOverlay extends createjs.Container {
     this.shadowText.textBaseline = 'middle';
 
     this.addChild(this.shadow, this.shadowText);
+    this.cache(0, 0, width, height);
   }
   setText(text) {
     this.shadowText.text = text;
+    this.updateCache();
   }
 }
