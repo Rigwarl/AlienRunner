@@ -1,11 +1,11 @@
 import Loader from './Loader';
-import Background from './Background';
-import Hero from './Hero';
-import Spike from './Spike';
-import ShadowOverlay from './ShadowOverlay';
 
 const queue = new Loader();
 queue.addEventListener('complete', startGame);
+import Background from './display/Background';
+import Hero from './display/Hero';
+import Spike from './display/Spike';
+import ShadowOverlay from './display/ShadowOverlay';
 
 let canvas;
 let stage;
