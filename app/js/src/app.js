@@ -1,7 +1,4 @@
-import Loader from './Loader';
-
-const queue = new Loader();
-queue.addEventListener('complete', startGame);
+import assetsManager from './managers/assetsManager';
 import Background from './display/Background';
 import Hero from './display/Hero';
 import Spike from './display/Spike';
@@ -24,19 +21,21 @@ let distance = 0;
 let paused = true;
 let finished = true;
 
+assetsManager.load(startGame);
+
 function startGame() {
   canvas = document.querySelector('#game-stage');
   stage = new createjs.Stage(canvas);
 
   canvas.classList.remove('loading');
 
-  bgSky = new Background('sky', queue, canvas.width);
-  bgMountain = new Background('mountain', queue, canvas.width);
-  bgGround = new Background('ground', queue, canvas.width);
+  bgSky = new Background('sky', canvas.width);
+  bgMountain = new Background('mountain', canvas.width);
+  bgGround = new Background('ground', canvas.width);
   bgSky.y = bgMountain.y = bgGround.y = canvas.height;
 
-  hero = new Hero(queue);
-  spikes = [new Spike(queue), new Spike(queue)];
+  hero = new Hero();
+  spikes = [new Spike(), new Spike()];
   hudDistance = new createjs.Text('', '25px Arial', '#000');
   hudDistance.x = hudDistance.y = 15;
   shadowOverlay = new ShadowOverlay(canvas.width, canvas.height);

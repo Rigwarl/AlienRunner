@@ -1,9 +1,9 @@
-export default class Loader extends createjs.LoadQueue {
-  constructor() {
-    super();
+const assetsManager = {
+  load(callback) {
     createjs.Sound.alternateExtensions = ['mp3'];
-    this.installPlugin(createjs.Sound);
-    this.loadManifest([
+    this.queue = new createjs.LoadQueue();
+    this.queue.installPlugin(createjs.Sound);
+    this.queue.loadManifest([
       { id: 'char', src: 'img/monster-sprite.png' },
       { id: 'spike', src: 'img/spike.png' },
       { id: 'sky', src: 'img/bg/sky.png' },
@@ -13,5 +13,11 @@ export default class Loader extends createjs.LoadQueue {
       { id: 'flap', src: 'sound/flap.ogg' },
       { id: 'loose', src: 'sound/loose.ogg' },
     ]);
-  }
-}
+    this.queue.addEventListener('complete', callback);
+  },
+  getResult(name) {
+    return this.queue.getResult(name);
+  },
+};
+
+export default assetsManager;
