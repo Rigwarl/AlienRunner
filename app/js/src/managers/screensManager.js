@@ -1,11 +1,13 @@
-import mainScreen from '../screens/mainScreen';
+import StartScreen from '../screens/StartScreen';
+import MainScreen from '../screens/MainScreen';
 
 const screenManager = {
   init(stage) {
     this.stage = stage;
     this.currentScreen = null;
     this.screens = {
-      mainScreen,
+      StartScreen,
+      MainScreen,
     };
 
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
