@@ -1,3 +1,4 @@
+import dataManager from '../managers/dataManager';
 import Background from '../display/Background';
 import Hero from '../display/Hero';
 import Spike from '../display/Spike';
@@ -6,7 +7,7 @@ import ShadowOverlay from '../display/ShadowOverlay';
 const SPEED = 300;
 const GROUND_HEIGHT = 82;
 
-export default class mainScreen extends createjs.Container {
+export default class MainScreen extends createjs.Container {
   constructor(width, height) {
     super();
 
@@ -23,7 +24,7 @@ export default class mainScreen extends createjs.Container {
     this.bgSky.y = this.bgMountain.y = this.bgGround.y = this.height;
     this.addChild(this.bgSky, this.bgMountain, this.bgGround);
 
-    this.hero = new Hero();
+    this.hero = new Hero(dataManager.heroType);
     this.spikes = [new Spike(), new Spike()];
     this.hudDistance = new createjs.Text('', '25px Arial', '#000');
     this.hudDistance.x = this.hudDistance.y = 15;
@@ -33,8 +34,6 @@ export default class mainScreen extends createjs.Container {
     this.reset();
     this.pause('Press space to flap, esc to pause');
     this.bindEvents();
-
-    createjs.Sound.play('back', { loop: -1, volume: 0.35 });
   }
   reset() {
     this.hero.reset();
@@ -65,7 +64,7 @@ export default class mainScreen extends createjs.Container {
     this.addChild(this.shadowOverlay);
   }
   bindEvents() {
-    this.onKeyDownWrap = e => {
+    this.onKeyDown = e => {
       switch (e.keyCode) {
         case 32:
           this.handleAction();
@@ -75,13 +74,13 @@ export default class mainScreen extends createjs.Container {
           break;
       }
     };
-    this.onTouchStartWrap = e => {
+    this.onTouchStart = e => {
       e.preventDefault();
       this.handleAction();
     };
 
-    window.addEventListener('keydown', this.onKeyDownWrap);
-    window.addEventListener('touchstart', this.onTouchStartWrap);
+    window.addEventListener('keydown', this.onKeyDown);
+    window.addEventListener('touchstart', this.onTouchStart);
   }
   handleAction() {
     if (this.finished) {
@@ -152,7 +151,7 @@ export default class mainScreen extends createjs.Container {
     this.moveHero(sec);
   }
   destroy() {
-    window.removeEventListener('keydown', this.onKeyDownWrap);
-    window.removeEventListener('touchstart', this.onTouchStartWrap);
+    window.removeEventListener('keydown', this.onKeyDown);
+    window.removeEventListener('touchstart', this.onTouchStart);
   }
 }

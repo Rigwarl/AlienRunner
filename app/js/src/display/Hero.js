@@ -1,10 +1,10 @@
 import assetsManager from '../managers/assetsManager';
 
 export default class Hero extends createjs.Sprite {
-  constructor() {
+  constructor(type) {
     const ss = new createjs.SpriteSheet({
-      images: [assetsManager.getResult('char')],
-      frames: { width: 100, height: 78, spacing: 4 },
+      images: [assetsManager.getResult(type)],
+      frames: { width: 100, height: 78},
       animations: {
         fly: 0,
         flap: [1, 3, 'fly'],
@@ -12,6 +12,7 @@ export default class Hero extends createjs.Sprite {
       },
     });
     super(ss);
+    this.type = type;
     this.bounds = this.getBounds();
     this.regX = this.bounds.width / 2;
     this.regY = this.bounds.height / 2;
@@ -40,7 +41,7 @@ export default class Hero extends createjs.Sprite {
       return;
     }
     this.dead = true;
-    this.rotation = 20;
+    this.rotation = 30;
     this.gotoAndStop('dead');
     createjs.Sound.play('loose');
   }
