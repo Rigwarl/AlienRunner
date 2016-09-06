@@ -6,7 +6,7 @@ import ShadowOverlay from '../display/ShadowOverlay';
 const SPEED = 300;
 const GROUND_HEIGHT = 82;
 
-export default class mainScreen extends createjs.Container {
+export default class MainScreen extends createjs.Container {
   constructor(width, height) {
     super();
 
