@@ -7,6 +7,7 @@ const assetsManager = {
       { id: 'char', src: 'img/monster-sprite.png' },
       { id: 'spike', src: 'img/spike.png' },
       { id: 'sky', src: 'img/bg/sky.png' },
+      { id: 'start', src: 'img/bg/start.png' },
       { id: 'mountain', src: 'img/bg/mountain.png' },
       { id: 'ground', src: 'img/bg/ground.png' },
       { id: 'back', src: 'sound/background.ogg' },
