@@ -65,7 +65,7 @@ export default class MainScreen extends createjs.Container {
     this.addChild(this.shadowOverlay);
   }
   bindEvents() {
-    this.onKeyDownWrap = e => {
+    this.onKeyDown = e => {
       switch (e.keyCode) {
         case 32:
           this.handleAction();
@@ -75,13 +75,13 @@ export default class MainScreen extends createjs.Container {
           break;
       }
     };
-    this.onTouchStartWrap = e => {
+    this.onTouchStart = e => {
       e.preventDefault();
       this.handleAction();
     };
 
-    window.addEventListener('keydown', this.onKeyDownWrap);
-    window.addEventListener('touchstart', this.onTouchStartWrap);
+    window.addEventListener('keydown', this.onKeyDown);
+    window.addEventListener('touchstart', this.onTouchStart);
   }
   handleAction() {
     if (this.finished) {
@@ -152,7 +152,7 @@ export default class MainScreen extends createjs.Container {
     this.moveHero(sec);
   }
   destroy() {
-    window.removeEventListener('keydown', this.onKeyDownWrap);
-    window.removeEventListener('touchstart', this.onTouchStartWrap);
+    window.removeEventListener('keydown', this.onKeyDown);
+    window.removeEventListener('touchstart', this.onTouchStart);
   }
 }
