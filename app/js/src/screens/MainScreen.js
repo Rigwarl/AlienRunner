@@ -33,8 +33,6 @@ export default class MainScreen extends createjs.Container {
     this.reset();
     this.pause('Press space to flap, esc to pause');
     this.bindEvents();
-
-    createjs.Sound.play('back', { loop: -1, volume: 0.35 });
   }
   reset() {
     this.hero.reset();
