@@ -1,5 +1,5 @@
 const dataManager = {
-  heroType: 'monster',
+  heroType: null,
 };
 
 export default dataManager;
