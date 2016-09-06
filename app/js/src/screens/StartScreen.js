@@ -19,7 +19,7 @@ export default class StartScreen extends createjs.Container {
     this.subtitle.y = height - 120;
 
     this.createHeroes();
-    this.addChild(this.bg, this.title, this.subtitle, ...this.heroes);
+    this.addChild(this.bg, this.title, ...this.heroes);
 
     this.bindEvents();
   }
@@ -32,30 +32,50 @@ export default class StartScreen extends createjs.Container {
     this.heroes.forEach((hero, i) => {
       hero.y = 35 + this.height / 2;
       hero.x = (i + 1) * this.width / (this.heroes.length + 1);
-      hero.on('click', () => this.selectHero(hero));
+      hero.addEventListener('click', () => this.selectHero(hero));
+      hero.cache(0, 0, hero.bounds.width, hero.bounds.height);
+    });
+    this.resetHeroes();
+  }
+  resetHeroes() {
+    this.heroes.forEach(hero => {
+      hero.filters = [new createjs.ColorFilter(0.6, 0.6, 0.6)];
+      hero.updateCache();
+      hero.scaleX = 0.85;
+      hero.scaleY = 0.85;
     });
   }
-  selectHero(selectedHero) {
-    this.heroes.forEach(hero => {
-      hero.scaleX = 1;
-      hero.scaleY = 1;
-    });
+  selectHero(hero) {
+    this.resetHeroes();
 
-    selectedHero.scaleX = 1.5;
-    selectedHero.scaleY = 1.5;
-    selectedHero.flap();
+    hero.filters = [];
+    hero.updateCache();
+    hero.scaleX = 1;
+    hero.scaleY = 1;
+    hero.flap();
 
-    dataManager.heroType = selectedHero.type;
+    if (!dataManager.heroType) {
+      this.addChild(this.subtitle);
+    }
+
+    dataManager.heroType = hero.type;
   }
   bindEvents() {
     this.onKeyDown = e => {
-      if (e.keyCode === 32) {
+      if (e.keyCode === 32 && dataManager.heroType) {
+        screensManager.change('MainScreen');
+      }
+    };
+    this.onTouchStart = () => {
+      if (dataManager.heroType) {
         screensManager.change('MainScreen');
       }
     };
     window.addEventListener('keydown', this.onKeyDown);
+    window.addEventListener('touchstart', this.onTouchStart);
   }
   destroy() {
     window.removeEventListener('keydown', this.onKeyDown);
+    window.removeEventListener('touchstart', this.onTouchStart);
   }
 }
