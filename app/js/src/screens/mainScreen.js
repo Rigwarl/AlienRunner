@@ -3,6 +3,9 @@ import Hero from '../display/Hero';
 import Spike from '../display/Spike';
 import ShadowOverlay from '../display/ShadowOverlay';
 
+const SPEED = 300;
+const GROUND_HEIGHT = 82;
+
 export default class mainScreen extends createjs.Container {
   constructor(width, height) {
     super();
@@ -10,10 +13,7 @@ export default class mainScreen extends createjs.Container {
     this.width = width;
     this.height = height;
 
-    this.groundHeight = 82;
-    this.speed = 300;
     this.distance = 0;
-
     this.paused = true;
     this.finished = true;
 
@@ -52,7 +52,7 @@ export default class mainScreen extends createjs.Container {
     spike.reset();
     spike.x += this.width + spike.bounds.width;
     if (Math.random() > 0.5) {
-      spike.y = this.height - 81;
+      spike.y = this.height - GROUND_HEIGHT;
       spike.rotation = 0;
     } else {
       spike.y = 0;
@@ -65,8 +65,11 @@ export default class mainScreen extends createjs.Container {
     this.addChild(this.shadowOverlay);
   }
   bindEvents() {
-    window.addEventListener('keydown', this.onKeyDown.bind(this));
-    window.addEventListener('touchstart', this.onTouchStart.bind(this));
+    this.onKeyDownWrap = e => this.onKeyDown(e);
+    this.onTouchStartWrap = e => this.onTouchStart(e);
+
+    window.addEventListener('keydown', this.onKeyDownWrap);
+    window.addEventListener('touchstart', this.onTouchStartWrap);
   }
   onKeyDown(e) {
     switch (e.keyCode) {
@@ -77,7 +80,6 @@ export default class mainScreen extends createjs.Container {
         this.togglePause();
         break;
     }
-    console.log('down');
   }
   onTouchStart(e) {
     e.preventDefault();
@@ -107,16 +109,8 @@ export default class mainScreen extends createjs.Container {
     this.reset();
     this.removeChild(this.shadowOverlay);
   }
-  tick(e) {
-    const sec = e.delta * 0.001;
-    if (this.paused || sec * this.speed > this.width * 0.2) {
-      return;
-    }
-    this.moveWorld(sec);
-    this.moveHero(sec);
-  }
   moveWorld(time) {
-    const path = this.speed * time;
+    const path = SPEED * time;
     if (this.hero.dead) {
       this.hero.x += path * 0.5;
     } else {
@@ -147,8 +141,20 @@ export default class mainScreen extends createjs.Container {
     } else if (this.hero.y > this.height + this.hero.bounds.height / 2) {
       this.finished = true;
       this.pause('Press space to restart');
-    } else if (this.hero.y > this.height - (this.groundHeight + this.hero.bounds.height / 2)) {
+    } else if (this.hero.y > this.height - (GROUND_HEIGHT + this.hero.bounds.height / 2)) {
       this.hero.die();
     }
+  }
+  tick(e) {
+    const sec = e.delta * 0.001;
+    if (this.paused || sec * SPEED > this.width * 0.2) {
+      return;
+    }
+    this.moveWorld(sec);
+    this.moveHero(sec);
+  }
+  destroy() {
+    window.removeEventListener('keydown', this.onKeyDownWrap);
+    window.removeEventListener('touchstart', this.onTouchStartWrap);
   }
 }
