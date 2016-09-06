@@ -65,30 +65,28 @@ export default class mainScreen extends createjs.Container {
     this.addChild(this.shadowOverlay);
   }
   bindEvents() {
-    this.onKeyDownWrap = e => this.onKeyDown(e);
-    this.onTouchStartWrap = e => this.onTouchStart(e);
+    this.onKeyDownWrap = e => {
+      switch (e.keyCode) {
+        case 32:
+          this.handleAction();
+          break;
+        case 27:
+          this.togglePause();
+          break;
+      }
+    };
+    this.onTouchStartWrap = e => {
+      e.preventDefault();
+      this.handleAction();
+    };
 
     window.addEventListener('keydown', this.onKeyDownWrap);
     window.addEventListener('touchstart', this.onTouchStartWrap);
   }
-  onKeyDown(e) {
-    switch (e.keyCode) {
-      case 32:
-        this.handleAction();
-        break;
-      case 27:
-        this.togglePause();
-        break;
-    }
-  }
-  onTouchStart(e) {
-    e.preventDefault();
-    this.handleAction();
-  }
   handleAction() {
     if (this.finished) {
       this.restart();
-    } else {
+    } else if (!this.paused) {
       this.hero.flap();
     }
   }
@@ -147,7 +145,7 @@ export default class mainScreen extends createjs.Container {
   }
   tick(e) {
     const sec = e.delta * 0.001;
-    if (this.paused || sec * SPEED > this.width * 0.2) {
+    if (this.paused || sec > 0.3) {
       return;
     }
     this.moveWorld(sec);
