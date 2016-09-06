@@ -1,3 +1,4 @@
+import dataManager from '../managers/dataManager';
 import Background from '../display/Background';
 import Hero from '../display/Hero';
 import Spike from '../display/Spike';
@@ -23,7 +24,7 @@ export default class MainScreen extends createjs.Container {
     this.bgSky.y = this.bgMountain.y = this.bgGround.y = this.height;
     this.addChild(this.bgSky, this.bgMountain, this.bgGround);
 
-    this.hero = new Hero();
+    this.hero = new Hero(dataManager.heroType);
     this.spikes = [new Spike(), new Spike()];
     this.hudDistance = new createjs.Text('', '25px Arial', '#000');
     this.hudDistance.x = this.hudDistance.y = 15;
