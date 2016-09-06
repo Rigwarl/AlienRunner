@@ -1,8 +1,10 @@
+import assetsManager from '../managers/assetsManager';
+
 export default class Background extends createjs.Shape {
-  constructor(name, queue, canvasWidth) {
+  constructor(name, canvasWidth) {
     super();
 
-    this.img = queue.getResult(name);
+    this.img = assetsManager.getResult(name);
     const width = this.img.width + canvasWidth;
 
     this.graphics.beginBitmapFill(this.img, 'repeat-x').drawRect(0, 0, width, this.img.height);

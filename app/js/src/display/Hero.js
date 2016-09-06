@@ -1,7 +1,9 @@
+import assetsManager from '../managers/assetsManager';
+
 export default class Hero extends createjs.Sprite {
-  constructor(queue) {
+  constructor() {
     const ss = new createjs.SpriteSheet({
-      images: [queue.getResult('char')],
+      images: [assetsManager.getResult('char')],
       frames: { width: 100, height: 78, spacing: 4 },
       animations: {
         fly: 0,
