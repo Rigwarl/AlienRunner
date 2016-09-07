@@ -2,6 +2,7 @@ import assetsManager from '../managers/assetsManager';
 import screensManager from '../managers/screensManager';
 import dataManager from '../managers/dataManager';
 import Hero from '../display/Hero';
+import Btn from '../display/Btn';
 
 export default class StartScreen extends createjs.Container {
   constructor(width, height) {
@@ -12,16 +13,22 @@ export default class StartScreen extends createjs.Container {
 
     this.bg = new createjs.Bitmap(assetsManager.getResult('start'));
     this.title = new createjs.Text('Choose your avatar', '55px Arial', '#000');
-    this.subtitle = new createjs.Text('Hit space for start', '30px Arial', '#000');
-    this.title.textAlign = this.subtitle.textAlign = 'center';
-    this.title.x = this.subtitle.x = this.width / 2;
-    this.title.y = 120;
-    this.subtitle.y = height - 120;
+    this.title.textAlign = 'center';
+    this.title.x = this.width / 2;
+    this.title.y = 110;
+
+    this.startBtn = new Btn('Start');
+    this.startBtn.x = width / 2;
+    this.startBtn.y = 170 + this.height / 2;
 
     this.createHeroes();
     this.addChild(this.bg, this.title, ...this.heroes);
 
-    this.bindEvents();
+    this.startBtn.addEventListener('click', () => {
+      if (dataManager.heroType) {
+        screensManager.change('MainScreen');
+      }
+    });
   }
   createHeroes() {
     this.heroes = [
@@ -30,8 +37,9 @@ export default class StartScreen extends createjs.Container {
       new Hero('chicken'),
     ];
     this.heroes.forEach((hero, i) => {
-      hero.y = 35 + this.height / 2;
+      hero.y = 15 + this.height / 2;
       hero.x = (i + 1) * this.width / (this.heroes.length + 1);
+      hero.cursor = 'pointer';
       hero.addEventListener('click', () => this.selectHero(hero));
       hero.cache(0, 0, hero.bounds.width, hero.bounds.height);
     });
@@ -54,28 +62,10 @@ export default class StartScreen extends createjs.Container {
     hero.scaleY = 1;
     hero.flap();
 
-    if (!dataManager.heroType) {
-      this.addChild(this.subtitle);
+    if (!this.startBtn.parent) {
+      this.addChild(this.startBtn);
     }
 
     dataManager.heroType = hero.type;
-  }
-  bindEvents() {
-    this.onKeyDown = e => {
-      if (e.keyCode === 32 && dataManager.heroType) {
-        screensManager.change('MainScreen');
-      }
-    };
-    this.onTouchStart = () => {
-      if (dataManager.heroType) {
-        screensManager.change('MainScreen');
-      }
-    };
-    window.addEventListener('keydown', this.onKeyDown);
-    window.addEventListener('touchstart', this.onTouchStart);
-  }
-  destroy() {
-    window.removeEventListener('keydown', this.onKeyDown);
-    window.removeEventListener('touchstart', this.onTouchStart);
   }
 }
