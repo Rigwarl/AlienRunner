@@ -115,8 +115,10 @@ export default class MainScreen extends createjs.Container {
       this.bgSky.move(path * 0.1);
       this.bgMountain.move(path * 0.3);
       this.bgGround.move(path);
+
       this.distance += path;
-      this.hudDistance.text = `${Math.floor(this.distance / 25)} m`;
+      dataManager.score = Math.floor(this.distance / 25);
+      this.hudDistance.text = `${dataManager.score} m`;
     }
   }
   moveSpikes(path) {
@@ -136,6 +138,7 @@ export default class MainScreen extends createjs.Container {
       this.hero.vY = 0;
       this.hero.y = 0;
     } else if (this.hero.y > this.height + this.hero.bounds.height / 2) {
+      dataManager.maxScore = Math.max(dataManager.maxScore, dataManager.score);
       this.finished = true;
       this.pause('Press space to restart');
     } else if (this.hero.y > this.height - (GROUND_HEIGHT + this.hero.bounds.height / 2)) {
