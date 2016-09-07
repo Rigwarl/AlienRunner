@@ -41,7 +41,7 @@ export default class MainScreen extends createjs.Container {
     this.hero.y = 200;
 
     this.spikes[0].x = -this.spikes[0].bounds.width / 2;
-    this.spikes[1].x = (this.width - this.spikes[1].bounds.width) / 2;
+    this.spikes[1].x = this.width / 2;
     this.spikes.forEach(spike => this.resetSpike(spike));
 
     this.distance = 0;
