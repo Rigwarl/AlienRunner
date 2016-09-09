@@ -4,7 +4,7 @@ export default class Hero extends createjs.Sprite {
   constructor(type) {
     const ss = new createjs.SpriteSheet({
       images: [assetsManager.getResult(type)],
-      frames: { width: 100, height: 78},
+      frames: { width: 100, height: 78 },
       animations: {
         fly: 0,
         flap: [1, 3, 'fly'],

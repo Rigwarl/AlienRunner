@@ -1,3 +1,4 @@
+import screensManager from '../managers/screensManager';
 import dataManager from '../managers/dataManager';
 import Background from '../display/Background';
 import Hero from '../display/Hero';
@@ -26,7 +27,7 @@ export default class MainScreen extends createjs.Container {
 
     this.hero = new Hero(dataManager.heroType);
     this.spikes = [new Spike(), new Spike()];
-    this.hudDistance = new createjs.Text('', '25px Arial', '#000');
+    this.hudDistance = new createjs.Text('', '25px CarterOne', '#000');
     this.hudDistance.x = this.hudDistance.y = 15;
     this.shadowOverlay = new ShadowOverlay(this.width, this.height);
     this.addChild(...this.spikes, this.hero, this.hudDistance);
@@ -41,7 +42,7 @@ export default class MainScreen extends createjs.Container {
     this.hero.y = 200;
 
     this.spikes[0].x = -this.spikes[0].bounds.width / 2;
-    this.spikes[1].x = (this.width - this.spikes[1].bounds.width) / 2;
+    this.spikes[1].x = this.width / 2;
     this.spikes.forEach(spike => this.resetSpike(spike));
 
     this.distance = 0;
@@ -115,8 +116,10 @@ export default class MainScreen extends createjs.Container {
       this.bgSky.move(path * 0.1);
       this.bgMountain.move(path * 0.3);
       this.bgGround.move(path);
+
       this.distance += path;
-      this.hudDistance.text = `${Math.floor(this.distance / 25)} m`;
+      dataManager.score = Math.floor(this.distance / 25);
+      this.hudDistance.text = `${dataManager.score} m`;
     }
   }
   moveSpikes(path) {
@@ -136,6 +139,8 @@ export default class MainScreen extends createjs.Container {
       this.hero.vY = 0;
       this.hero.y = 0;
     } else if (this.hero.y > this.height + this.hero.bounds.height / 2) {
+      dataManager.maxScore = Math.max(dataManager.maxScore, dataManager.score);
+      screensManager.change('EndScreen');
       this.finished = true;
       this.pause('Press space to restart');
     } else if (this.hero.y > this.height - (GROUND_HEIGHT + this.hero.bounds.height / 2)) {
