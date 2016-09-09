@@ -13,4 +13,3 @@ assetsManager.load(() => {
     stage.enableMouseOver(20);
   }
 });
-

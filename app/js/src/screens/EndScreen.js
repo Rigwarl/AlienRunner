@@ -8,18 +8,18 @@ export default class EndScreen extends createjs.Container {
     super();
 
     this.bg = new createjs.Bitmap(assetsManager.getResult('start'));
-    this.score = new createjs.Text(`Score: ${dataManager.score}`, '40px Arial', '#000');
-    this.maxScore = new createjs.Text(`Best score: ${dataManager.maxScore}`, '40px Arial', '#00');
+    this.score = new createjs.Text(`Score: ${dataManager.score}`, '40px CarterOne', '#000');
+    this.maxScore = new createjs.Text(`Best score: ${dataManager.maxScore}`, '40px CarterOne', '#000');
     this.score.x = this.maxScore.x = width / 2;
     this.score.textAlign = this.maxScore.textAlign = 'center';
-    this.score.y = 150;
-    this.maxScore.y = 250;
+    this.score.y = 110;
+    this.maxScore.y = 180;
 
     this.replayBtn = new Btn('Restart');
     this.menuBtn = new Btn('Menu');
     this.replayBtn.x = this.menuBtn.x = width / 2;
-    this.menuBtn.y = 450;
-    this.replayBtn.y = 350;
+    this.menuBtn.y = 470;
+    this.replayBtn.y = 380;
 
     this.replayBtn.addEventListener('click', () => screensManager.change('MainScreen'));
     this.menuBtn.addEventListener('click', () => screensManager.change('StartScreen'));

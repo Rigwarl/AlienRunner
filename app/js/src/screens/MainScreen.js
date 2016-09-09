@@ -27,7 +27,7 @@ export default class MainScreen extends createjs.Container {
 
     this.hero = new Hero(dataManager.heroType);
     this.spikes = [new Spike(), new Spike()];
-    this.hudDistance = new createjs.Text('', '25px Arial', '#000');
+    this.hudDistance = new createjs.Text('', '25px CarterOne', '#000');
     this.hudDistance.x = this.hudDistance.y = 15;
     this.shadowOverlay = new ShadowOverlay(this.width, this.height);
     this.addChild(...this.spikes, this.hero, this.hudDistance);

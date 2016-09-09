@@ -12,7 +12,7 @@ export default class StartScreen extends createjs.Container {
     this.height = height;
 
     this.bg = new createjs.Bitmap(assetsManager.getResult('start'));
-    this.title = new createjs.Text('Choose your avatar', '55px Arial', '#000');
+    this.title = new createjs.Text('Choose your avatar', '45px CarterOne', '#000');
     this.title.textAlign = 'center';
     this.title.x = this.width / 2;
     this.title.y = 110;
