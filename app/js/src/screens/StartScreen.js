@@ -15,17 +15,18 @@ export default class StartScreen extends createjs.Container {
     this.title = new createjs.Text('Choose your avatar', '45px CarterOne', '#000');
     this.title.textAlign = 'center';
     this.title.x = this.width / 2;
-    this.title.y = 110;
+    this.title.y = 100;
 
     this.startBtn = new Btn('Start');
     this.startBtn.x = width / 2;
-    this.startBtn.y = 170 + this.height / 2;
+    this.startBtn.y = 175 + this.height / 2;
 
+    this.startBtn.disable();
     this.createHeroes();
-    this.addChild(this.bg, this.title, ...this.heroes);
+    this.addChild(this.bg, this.title, ...this.heroes, this.startBtn);
 
     this.startBtn.addEventListener('click', () => {
-      if (dataManager.heroType) {
+      if (this.startBtn.enabled) {
         screensManager.change('MainScreen');
       }
     });
@@ -37,7 +38,7 @@ export default class StartScreen extends createjs.Container {
       new Hero('chicken'),
     ];
     this.heroes.forEach((hero, i) => {
-      hero.y = 15 + this.height / 2;
+      hero.y = this.height / 2;
       hero.x = (i + 1) * this.width / (this.heroes.length + 1);
       hero.cursor = 'pointer';
       hero.addEventListener('click', () => this.selectHero(hero));
@@ -62,8 +63,8 @@ export default class StartScreen extends createjs.Container {
     hero.scaleY = 1;
     hero.flap();
 
-    if (!this.startBtn.parent) {
-      this.addChild(this.startBtn);
+    if (!this.startBtn.enabled) {
+      this.startBtn.enable();
     }
 
     dataManager.heroType = hero.type;
