@@ -27,6 +27,11 @@ export default class Btn extends createjs.Container {
     this.label.textBaseline = 'middle';
     this.label.y = -2;
 
+    this.addEventListener('click', () => {
+      if (this.enabled) {
+        createjs.Sound.play('flap');
+      }
+    });
     this.addChild(this.bg, this.label);
   }
   disable() {

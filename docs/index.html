@@ -14,6 +14,10 @@
   <meta name="theme-color" content="#ffffff">
 
   <style>
+    @font-face {
+      font-family: CarterOne;
+      src: url(fonts/CarterOne.ttf);
+    }
     *{
       margin: 0;
       padding: 0;
@@ -21,23 +25,12 @@
     .game-canvas{
       display: block;
       margin: 0 auto;
-      background: url(img/bg/ground.png),
-                  url(img/bg/mountain.png),
-                  url(img/bg/sky.png);
-      background-repeat: repeat-x;
-      background-position: 0 100%;
-    }
-    .loading{
-      background: url(img/preloader.gif) center no-repeat,
-                  linear-gradient(to right, #fff, #fff),
-                  url(img/bg/ground.png),
-                  url(img/bg/mountain.png),
-                  url(img/bg/sky.png);
+      background: url(img/preloader.gif) center no-repeat;
     }
   </style>
 </head>
 <body>
-  <canvas id="game-stage" width="800" height="600" class="game-canvas loading">
+  <canvas id="game-stage" width="800" height="600" class="game-canvas">
     Sorry, but your browser doesn't support this game!
   </canvas>
 
