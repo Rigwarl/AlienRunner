@@ -1,6 +1,8 @@
+import assetsManager from '../managers/assetsManager';
+
 export default class Spike extends createjs.Bitmap {
-  constructor(queue) {
-    super(queue.getResult('spike'));
+  constructor() {
+    super(assetsManager.getResult('spike'));
 
     this.bounds = this.getBounds();
     this.regX = this.bounds.width / 2;
