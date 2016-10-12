@@ -17,7 +17,7 @@ const screenManager = {
       if (this.currentScreen && this.currentScreen.tick) {
         this.currentScreen.tick(e);
       }
-      this.stage.update();
+      this.stage.update(e);
     });
   },
   change(name) {
