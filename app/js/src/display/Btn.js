@@ -4,20 +4,9 @@ export default class Btn extends createjs.Container {
   constructor(text) {
     super();
 
-    const ss = new createjs.SpriteSheet({
-      images: [assetsManager.getResult('btn')],
-      frames: { width: 210, height: 69 },
-      animations: {
-        disable: 0,
-        down: 1,
-        out: 2,
-        over: 3,
-      },
-    });
-
     this.enabled = true;
 
-    this.bg = new createjs.Sprite(ss);
+    this.bg = new createjs.Sprite(assetsManager.getSpriteSheet('btn'));
     this.bg.regX = this.bg.getBounds().width / 2;
     this.bg.regY = this.bg.getBounds().height / 2;
 

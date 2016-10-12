@@ -28,7 +28,14 @@ const spriteSheetsData = {
   monster: getHeroSpriteSheetData('monster'),
   chicken: getHeroSpriteSheetData('chicken'),
   btn: {
-
+    images: ['btn'],
+    frames: { width: 210, height: 69 },
+    animations: {
+      disable: 0,
+      down: 1,
+      out: 2,
+      over: 3,
+    },
   },
 };
 
