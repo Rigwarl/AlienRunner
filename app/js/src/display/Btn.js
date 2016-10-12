@@ -14,7 +14,9 @@ export default class Btn extends createjs.Container {
         over: 3,
       },
     });
+
     this.enabled = true;
+
     this.bg = new createjs.Sprite(ss);
     this.bg.regX = this.bg.getBounds().width / 2;
     this.bg.regY = this.bg.getBounds().height / 2;
@@ -25,6 +27,7 @@ export default class Btn extends createjs.Container {
     this.label.shadow = new createjs.Shadow('#000', 0, 1, 5);
     this.label.textAlign = 'center';
     this.label.textBaseline = 'middle';
+    this.label.mouseEnabled = false;
     this.label.y = -2;
 
     this.addEventListener('click', () => {
