@@ -28,8 +28,7 @@ export default class Btn extends createjs.Container {
 
     const h = this.label.getMeasuredHeight() + 6; // add 6 cos of shadow
     const w = this.label.getMeasuredWidth() + 6;
-    console.log(h,w);
-    this.label.cache(-w/2, -h/2, w, h);
+    this.label.cache(-w / 2, -h / 2, w, h);
 
     this.addChild(this.label);
   }
