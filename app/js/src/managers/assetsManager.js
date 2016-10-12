@@ -13,6 +13,26 @@ const manifest = [
   { id: 'loose', src: 'sound/loose.ogg' },
 ];
 
+const getHeroSpriteSheetData = name => ({
+  images: [name],
+  frames: { width: 100, height: 78 },
+  animations: {
+    fly: 0,
+    flap: [1, 3, 'fly'],
+    dead: 4,
+  },
+});
+
+const spriteSheetsData = {
+  bird: getHeroSpriteSheetData('bird'),
+  monster: getHeroSpriteSheetData('monster'),
+  chicken: getHeroSpriteSheetData('chicken'),
+  btn: {
+
+  },
+};
+
+const spriteSheets = {};
 
 const assetsManager = {
   load(callback) {
@@ -24,6 +44,20 @@ const assetsManager = {
   },
   getResult(name) {
     return this.queue.getResult(name);
+  },
+  getSpriteSheet(name) {
+    if (!spriteSheets[name]) {
+      const data = spriteSheetsData[name];
+
+      if (!data) {
+        throw new Error('invalid spriteSheet name');
+      }
+
+      data.images = data.images.map(img => this.getResult(img));
+      spriteSheets[name] = new createjs.SpriteSheet(data);
+    }
+
+    return spriteSheets[name];
   },
 };
 
