@@ -1,11 +1,11 @@
 {
   "extends": "airbnb-base",
   "env": {
-    'browser': true,
-    "ndgmr": false
+    "browser": true
   },
   "globals": {
-    "createjs": false
+    "createjs": false,
+    "ndgmr": false,
   },
   "rules": {
     "id-length": 0,

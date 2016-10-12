@@ -2,16 +2,8 @@ import assetsManager from '../managers/assetsManager';
 
 export default class Hero extends createjs.Sprite {
   constructor(type) {
-    const ss = new createjs.SpriteSheet({
-      images: [assetsManager.getResult(type)],
-      frames: { width: 100, height: 78 },
-      animations: {
-        fly: 0,
-        flap: [1, 3, 'fly'],
-        dead: 4,
-      },
-    });
-    super(ss);
+    super(assetsManager.getSpriteSheet(type));
+
     this.type = type;
     this.bounds = this.getBounds();
     this.regX = this.bounds.width / 2;
