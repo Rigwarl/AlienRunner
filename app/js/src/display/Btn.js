@@ -25,6 +25,12 @@ export default class Btn extends createjs.Container {
     this.label.textBaseline = 'middle';
     this.label.mouseEnabled = false;
     this.label.y = -2;
+
+    const h = this.label.getMeasuredHeight() + 6; // add 6 cos of shadow
+    const w = this.label.getMeasuredWidth() + 6;
+    console.log(h,w);
+    this.label.cache(-w/2, -h/2, w, h);
+
     this.addChild(this.label);
   }
   disable() {
