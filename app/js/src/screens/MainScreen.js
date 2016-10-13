@@ -19,11 +19,7 @@ export default class MainScreen extends createjs.Container {
     this.paused = true;
     this.finished = true;
 
-    this.bgSky = new Background('sky', this.width);
-    this.bgMountain = new Background('mountain', this.width);
-    this.bgGround = new Background('ground', this.width);
-    this.bgSky.y = this.bgMountain.y = this.bgGround.y = this.height;
-    this.addChild(this.bgSky, this.bgMountain, this.bgGround);
+    this.createBg();
 
     this.hero = new Hero(dataManager.heroType);
     this.spikes = [new Spike(), new Spike()];
@@ -35,6 +31,13 @@ export default class MainScreen extends createjs.Container {
     this.reset();
     this.pause('Press space to flap, esc to pause');
     this.bindEvents();
+  }
+  createBg() {
+    this.bgSky = new Background('sky', this.width);
+    this.bgMountain = new Background('mountain', this.width);
+    this.bgGround = new Background('ground', this.width);
+    this.bgSky.y = this.bgMountain.y = this.bgGround.y = this.height;
+    this.addChild(this.bgSky, this.bgMountain, this.bgGround);
   }
   reset() {
     this.hero.reset();
