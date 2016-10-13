@@ -16,15 +16,12 @@ export default class MainScreen extends createjs.Container {
     this.height = height;
 
     this.distance = 0;
-    this.paused = true;
-    this.finished = true;
+    this.shadowOverlay = new ShadowOverlay(this.width, this.height);
 
     this.createBg();
     this.createSpikes();
     this.createHero();
     this.createHud();
-
-    this.shadowOverlay = new ShadowOverlay(this.width, this.height);
 
     this.pause('Press space to flap, esc to pause');
     this.bindEvents();
@@ -90,28 +87,19 @@ export default class MainScreen extends createjs.Container {
     window.addEventListener('touchstart', this.onTouchStart);
   }
   handleAction() {
-    if (this.finished) {
-      this.restart();
-    } else if (!this.paused) {
+    if (this.paused) {
+      this.togglePause();
+    } else {
       this.hero.flap();
     }
   }
   togglePause() {
-    if (this.finished) {
-      return;
-    }
     if (this.paused) {
       this.paused = false;
       this.removeChild(this.shadowOverlay);
     } else {
-      this.pause('Press esc to unpause');
+      this.pause('Press space or esc to unpause');
     }
-  }
-  restart() {
-    this.paused = false;
-    this.finished = false;
-    this.reset();
-    this.removeChild(this.shadowOverlay);
   }
   moveWorld(time) {
     const path = SPEED * time;
@@ -147,8 +135,6 @@ export default class MainScreen extends createjs.Container {
     } else if (this.hero.y > this.height + this.hero.bounds.height / 2) {
       dataManager.maxScore = Math.max(dataManager.maxScore, dataManager.score);
       screensManager.change('EndScreen');
-      this.finished = true;
-      this.pause('Press space to restart');
     } else if (this.hero.y > this.height - (GROUND_HEIGHT + this.hero.bounds.height / 2)) {
       this.hero.die();
     }
