@@ -20,10 +20,10 @@ export default class StartScreen extends createjs.Container {
     this.startBtn = new Btn('Start');
     this.startBtn.x = width / 2;
     this.startBtn.y = 175 + this.height / 2;
-
     this.startBtn.disable();
+
+    this.addChild(this.bg, this.title, this.startBtn);
     this.createHeroes();
-    this.addChild(this.bg, this.title, ...this.heroes, this.startBtn);
 
     this.startBtn.addEventListener('click', () => {
       if (this.startBtn.enabled) {
@@ -44,11 +44,13 @@ export default class StartScreen extends createjs.Container {
       hero.addEventListener('click', () => this.selectHero(hero));
       hero.cache(0, 0, hero.bounds.width, hero.bounds.height);
     });
+    this.heroFilter = new createjs.ColorFilter(0.6, 0.6, 0.6);
     this.resetHeroes();
+    this.addChild(...this.heroes);
   }
   resetHeroes() {
-    this.heroes.forEach(hero => {
-      hero.filters = [new createjs.ColorFilter(0.6, 0.6, 0.6)];
+    this.heroes.forEach((hero) => {
+      hero.filters = [this.heroFilter];
       hero.updateCache();
       hero.scaleX = 0.85;
       hero.scaleY = 0.85;
