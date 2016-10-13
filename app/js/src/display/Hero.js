@@ -13,12 +13,9 @@ export default class Hero extends createjs.Sprite {
     this.bounds = this.getBounds();
     this.regX = this.bounds.width / 2;
     this.regY = this.bounds.height / 2;
-  }
-  reset() {
+
     this.dead = false;
-    this.rotation = 0;
     this.vY = 0;
-    this.gotoAndStop('fly');
   }
   flap() {
     if (this.dead) {
