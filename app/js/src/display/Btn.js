@@ -1,4 +1,5 @@
 import assetsManager from '../managers/assetsManager';
+import soundManager from '../managers/soundManager';
 
 export default class Btn extends createjs.Container {
   constructor(label, type = 'btn') {
@@ -9,7 +10,8 @@ export default class Btn extends createjs.Container {
     this.createBg(type);
     this.createLabel(label);
 
-    this.addEventListener('click', () => this.enabled && createjs.Sound.play('flap'));
+    this.addEventListener('click', () =>
+      this.enabled && soundManager.isEnabled() && createjs.Sound.play('flap'));
   }
   createBg(type) {
     this.bg = new createjs.Sprite(assetsManager.getSpriteSheet(type));
