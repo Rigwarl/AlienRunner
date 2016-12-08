@@ -48,7 +48,8 @@ export default class MainScreen extends createjs.Container {
   }
   createHud() {
     this.hudDistance = new createjs.Text('0 m', '25px CarterOne', '#000');
-    this.hudDistance.x = this.hudDistance.y = 15;
+    this.hudDistance.x = 20;
+    this.hudDistance.y = 15;
     this.addChild(this.hudDistance);
   }
   resetSpike(spike) {

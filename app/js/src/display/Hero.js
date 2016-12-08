@@ -1,4 +1,5 @@
 import assetsManager from '../managers/assetsManager';
+import soundManager from '../managers/soundManager';
 
 const CONFIG = {
   G: 550,
@@ -23,7 +24,9 @@ export default class Hero extends createjs.Sprite {
     }
     this.vY = Math.max(this.vY - CONFIG.A, -CONFIG.A);
     this.gotoAndPlay('flap');
-    createjs.Sound.play('flap');
+    if (soundManager.isEnabled()) {
+      createjs.Sound.play('flap');
+    }
   }
   move(time) {
     this.y += ((CONFIG.G * time * 0.5) + this.vY) * time;
@@ -36,6 +39,8 @@ export default class Hero extends createjs.Sprite {
     this.dead = true;
     this.rotation = 30;
     this.gotoAndStop('dead');
-    createjs.Sound.play('loose');
+    if (soundManager.isEnabled()) {
+      createjs.Sound.play('loose');
+    }
   }
 }

@@ -8,6 +8,8 @@ const manifest = [
   { id: 'mountain', src: 'img/bg/mountain.png' },
   { id: 'ground', src: 'img/bg/ground.png' },
   { id: 'btn', src: 'img/btn-sprite.png' },
+  { id: 'icon-btn', src: 'img/icon-btn-sprite.png' },
+  { id: 'icon', src: 'img/icon-sprite.png' },
   { id: 'back', src: 'sound/background.ogg' },
   { id: 'flap', src: 'sound/flap.ogg' },
   { id: 'loose', src: 'sound/loose.ogg' },
@@ -31,10 +33,28 @@ const spriteSheetsData = {
     images: ['btn'],
     frames: { width: 210, height: 69 },
     animations: {
-      disable: 0,
-      down: 1,
       out: 2,
       over: 3,
+      down: 1,
+      disable: 0,
+    },
+  },
+  iconBtn: {
+    images: ['icon-btn'],
+    frames: { width: 69, height: 71, spacing: 2 },
+    animations: {
+      out: 1,
+      over: 0,
+      down: 2,
+      disable: 3,
+    },
+  },
+  icon: {
+    images: ['icon'],
+    frames: { width: 40, height: 40, spacing: 2 },
+    animations: {
+      sound: 0,
+      soundOff: 1,
     },
   },
 };
