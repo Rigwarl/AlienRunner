@@ -51,7 +51,7 @@ const spriteSheetsData = {
   },
   icon: {
     images: ['icon'],
-    frames: { width: 40, height: 40, spacing: 2 },
+    frames: { width: 40, height: 40 },
     animations: {
       sound: 0,
       soundOff: 1,
