@@ -1,5 +1,5 @@
 const dataManager = {
-  heroType: null,
+  heroType: 'monster',
   score: 0,
   maxScore: 0,
 };
