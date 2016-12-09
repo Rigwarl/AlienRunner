@@ -90,7 +90,7 @@ export default class StartScreen extends createjs.Container {
       screensManager.change('MainScreen'));
 
     this.onKeyDown = e => {
-      if (e.keyCode) {
+      if (e.keyCode === 32) {
         screensManager.change('MainScreen');
         e.preventDefault();
       }
