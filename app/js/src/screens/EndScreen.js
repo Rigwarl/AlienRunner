@@ -18,15 +18,12 @@ export default class EndScreen extends createjs.Container {
     this.maxScore.y = 180;
 
     this.replayBtn = new Btn('Restart');
-    this.menuBtn = new Btn('Menu', 'orange');
-    this.replayBtn.x = this.menuBtn.x = width / 2;
-    this.menuBtn.y = 470;
+    // this.menuBtn = new Btn('Menu', 'orange');
+    this.replayBtn.x = width / 2;
+    // this.menuBtn.y = 470;
     this.replayBtn.y = 380;
 
-    this.replayBtn.addEventListener('click', () => screensManager.change('MainScreen'));
-    this.menuBtn.addEventListener('click', () => screensManager.change('StartScreen'));
-
-    this.addChild(this.bg, this.score, this.maxScore, this.replayBtn, this.menuBtn);
+    this.addChild(this.bg, this.score, this.maxScore, this.replayBtn);
 
     const soundBtn = new IconBtn(soundManager.isEnabled() ? 'sound' : 'soundOff');
     soundBtn.x = width - soundBtn.getBounds().width / 2 - 25;
@@ -37,5 +34,23 @@ export default class EndScreen extends createjs.Container {
       soundManager.toggle();
       soundBtn.changeLabel(soundManager.isEnabled() ? 'sound' : 'soundOff');
     });
+
+    this.bindEvents();
+  }
+  bindEvents() {
+    this.replayBtn.addEventListener('click', () => screensManager.change('MainScreen'));
+    // this.menuBtn.addEventListener('click', () => screensManager.change('StartScreen'));
+
+    this.onKeyDown = e => {
+      if (e.keyCode === 32) {
+        screensManager.change('MainScreen');
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener('keydown', this.onKeyDown);
+  }
+  destroy() {
+    window.removeEventListener('keydown', this.onKeyDown);
   }
 }
