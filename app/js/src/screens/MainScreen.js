@@ -69,17 +69,19 @@ export default class MainScreen extends createjs.Container {
     this.addChild(this.shadowOverlay);
   }
   bindEvents() {
-    this.onKeyDown = (e) => {
+    this.addEventListener('click', () => this.handleAction());
+    this.onKeyDown = e => {
       switch (e.keyCode) {
         case 32:
           this.handleAction();
+          e.preventDefault();
           break;
         case 27:
           this.togglePause();
           break;
       }
     };
-    this.onTouchStart = (e) => {
+    this.onTouchStart = e => {
       e.preventDefault();
       this.handleAction();
     };
@@ -118,7 +120,7 @@ export default class MainScreen extends createjs.Container {
     }
   }
   moveSpikes(path) {
-    for (const spike of this.spikes) {
+    this.spikes.forEach(spike => {
       spike.x -= path;
       if (spike.x < -spike.bounds.width / 2) {
         this.resetSpike(spike);
@@ -126,7 +128,7 @@ export default class MainScreen extends createjs.Container {
       if (ndgmr.checkPixelCollision(this.hero, spike)) {
         this.hero.die();
       }
-    }
+    });
   }
   moveHero(time) {
     this.hero.move(time);

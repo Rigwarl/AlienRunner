@@ -28,9 +28,6 @@ export default class StartScreen extends createjs.Container {
     this.addChild(this.bg, this.title, this.startBtn);
     // this.createHeroes();
 
-    this.startBtn.addEventListener('click', () =>
-      screensManager.change('MainScreen'));
-
     const hero = new Hero('monster');
     hero.x = width / 2;
     hero.y = height / 2 - 75;
@@ -45,6 +42,8 @@ export default class StartScreen extends createjs.Container {
       soundManager.toggle();
       soundBtn.changeLabel(soundManager.isEnabled() ? 'sound' : 'soundOff');
     });
+
+    this.bindEvents();
   }
   createHeroes() {
     this.heroes = [
@@ -64,7 +63,7 @@ export default class StartScreen extends createjs.Container {
     this.addChild(...this.heroes);
   }
   resetHeroes() {
-    this.heroes.forEach((hero) => {
+    this.heroes.forEach(hero => {
       hero.filters = [this.heroFilter];
       hero.updateCache();
       hero.scaleX = 0.85;
@@ -85,5 +84,21 @@ export default class StartScreen extends createjs.Container {
     }
 
     dataManager.heroType = hero.type;
+  }
+  bindEvents() {
+    this.startBtn.addEventListener('click', () =>
+      screensManager.change('MainScreen'));
+
+    this.onKeyDown = e => {
+      if (e.keyCode === 32) {
+        screensManager.change('MainScreen');
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener('keydown', this.onKeyDown);
+  }
+  destroy() {
+    window.removeEventListener('keydown', this.onKeyDown);
   }
 }
