@@ -28,7 +28,7 @@ const screenManager = {
       this.stage.removeChild(this.currentScreen);
     }
     this.currentScreen = new this.screens[name](this.stage.canvas.width, this.stage.canvas.height);
-    this.stage.addChildAt(this.currentScreen, 0);
+    this.stage.addChild(this.currentScreen);
   },
 };
 
