@@ -23,9 +23,6 @@ export default class EndScreen extends createjs.Container {
     // this.menuBtn.y = 470;
     this.replayBtn.y = 380;
 
-    this.replayBtn.addEventListener('click', () => screensManager.change('MainScreen'));
-    // this.menuBtn.addEventListener('click', () => screensManager.change('StartScreen'));
-
     this.addChild(this.bg, this.score, this.maxScore, this.replayBtn);
 
     const soundBtn = new IconBtn(soundManager.isEnabled() ? 'sound' : 'soundOff');
@@ -37,5 +34,23 @@ export default class EndScreen extends createjs.Container {
       soundManager.toggle();
       soundBtn.changeLabel(soundManager.isEnabled() ? 'sound' : 'soundOff');
     });
+
+    this.bindEvents();
+  }
+  bindEvents() {
+    this.replayBtn.addEventListener('click', () => screensManager.change('MainScreen'));
+    // this.menuBtn.addEventListener('click', () => screensManager.change('StartScreen'));
+
+    this.onKeyDown = e => {
+      if (e.keyCode === 32) {
+        screensManager.change('MainScreen');
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener('keydown', this.onKeyDown);
+  }
+  destroy() {
+    window.removeEventListener('keydown', this.onKeyDown);
   }
 }
