@@ -1,40 +1,36 @@
 import assetsManager from '../managers/assetsManager';
+import soundManager from '../managers/soundManager';
+
+const CONFIG = {
+  G: 550,
+  A: 375,
+};
 
 export default class Hero extends createjs.Sprite {
   constructor(type) {
-    const ss = new createjs.SpriteSheet({
-      images: [assetsManager.getResult(type)],
-      frames: { width: 100, height: 78 },
-      animations: {
-        fly: 0,
-        flap: [1, 3, 'fly'],
-        dead: 4,
-      },
-    });
-    super(ss);
+    super(assetsManager.getSpriteSheet(type));
+
     this.type = type;
     this.bounds = this.getBounds();
     this.regX = this.bounds.width / 2;
     this.regY = this.bounds.height / 2;
-    this.a = 550;
-  }
-  reset() {
+
     this.dead = false;
-    this.rotation = 0;
     this.vY = 0;
-    this.gotoAndStop('fly');
   }
   flap() {
     if (this.dead) {
       return;
     }
-    this.vY = Math.max(this.vY - 375, -375);
+    this.vY = Math.max(this.vY - CONFIG.A, -CONFIG.A);
     this.gotoAndPlay('flap');
-    createjs.Sound.play('flap');
+    if (soundManager.isEnabled()) {
+      createjs.Sound.play('flap');
+    }
   }
   move(time) {
-    this.y += ((this.a * time * 0.5) + this.vY) * time;
-    this.vY += this.a * time;
+    this.y += ((CONFIG.G * time * 0.5) + this.vY) * time;
+    this.vY += CONFIG.G * time;
   }
   die() {
     if (this.dead) {
@@ -43,6 +39,8 @@ export default class Hero extends createjs.Sprite {
     this.dead = true;
     this.rotation = 30;
     this.gotoAndStop('dead');
-    createjs.Sound.play('loose');
+    if (soundManager.isEnabled()) {
+      createjs.Sound.play('loose');
+    }
   }
 }

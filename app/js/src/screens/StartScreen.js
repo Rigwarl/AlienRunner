@@ -1,6 +1,8 @@
 import assetsManager from '../managers/assetsManager';
 import screensManager from '../managers/screensManager';
 import dataManager from '../managers/dataManager';
+import soundManager from '../managers/soundManager';
+import IconBtn from '../display/IconBtn';
 import Hero from '../display/Hero';
 import Btn from '../display/Btn';
 
@@ -20,15 +22,25 @@ export default class StartScreen extends createjs.Container {
     this.startBtn = new Btn('Start');
     this.startBtn.x = width / 2;
     this.startBtn.y = 175 + this.height / 2;
-
     this.startBtn.disable();
+
+    this.addChild(this.bg, this.title, this.startBtn);
     this.createHeroes();
-    this.addChild(this.bg, this.title, ...this.heroes, this.startBtn);
 
     this.startBtn.addEventListener('click', () => {
       if (this.startBtn.enabled) {
         screensManager.change('MainScreen');
       }
+    });
+
+    const soundBtn = new IconBtn(soundManager.isEnabled() ? 'sound' : 'soundOff');
+    soundBtn.x = this.width - soundBtn.getBounds().width / 2 - 25;
+    soundBtn.y = soundBtn.getBounds().height / 2 + 20;
+    this.addChild(soundBtn);
+
+    soundBtn.addEventListener('click', () => {
+      soundManager.toggle();
+      soundBtn.changeLabel(soundManager.isEnabled() ? 'sound' : 'soundOff');
     });
   }
   createHeroes() {
@@ -44,11 +56,13 @@ export default class StartScreen extends createjs.Container {
       hero.addEventListener('click', () => this.selectHero(hero));
       hero.cache(0, 0, hero.bounds.width, hero.bounds.height);
     });
+    this.heroFilter = new createjs.ColorFilter(0.6, 0.6, 0.6);
     this.resetHeroes();
+    this.addChild(...this.heroes);
   }
   resetHeroes() {
-    this.heroes.forEach(hero => {
-      hero.filters = [new createjs.ColorFilter(0.6, 0.6, 0.6)];
+    this.heroes.forEach((hero) => {
+      hero.filters = [this.heroFilter];
       hero.updateCache();
       hero.scaleX = 0.85;
       hero.scaleY = 0.85;

@@ -16,37 +16,41 @@ export default class MainScreen extends createjs.Container {
     this.height = height;
 
     this.distance = 0;
-    this.paused = true;
-    this.finished = true;
+    this.shadowOverlay = new ShadowOverlay(this.width, this.height);
 
+    this.createBg();
+    this.createSpikes();
+    this.createHero();
+    this.createHud();
+
+    this.pause('Press space to flap, esc to pause');
+    this.bindEvents();
+  }
+  createBg() {
     this.bgSky = new Background('sky', this.width);
     this.bgMountain = new Background('mountain', this.width);
     this.bgGround = new Background('ground', this.width);
     this.bgSky.y = this.bgMountain.y = this.bgGround.y = this.height;
     this.addChild(this.bgSky, this.bgMountain, this.bgGround);
-
-    this.hero = new Hero(dataManager.heroType);
-    this.spikes = [new Spike(), new Spike()];
-    this.hudDistance = new createjs.Text('', '25px CarterOne', '#000');
-    this.hudDistance.x = this.hudDistance.y = 15;
-    this.shadowOverlay = new ShadowOverlay(this.width, this.height);
-    this.addChild(...this.spikes, this.hero, this.hudDistance);
-
-    this.reset();
-    this.pause('Press space to flap, esc to pause');
-    this.bindEvents();
   }
-  reset() {
-    this.hero.reset();
-    this.hero.x = this.width / 2;
-    this.hero.y = 200;
-
+  createSpikes() {
+    this.spikes = [new Spike(), new Spike()];
     this.spikes[0].x = -this.spikes[0].bounds.width / 2;
     this.spikes[1].x = this.width / 2;
     this.spikes.forEach(spike => this.resetSpike(spike));
-
-    this.distance = 0;
-    this.hudDistance.text = '0 m';
+    this.addChild(...this.spikes);
+  }
+  createHero() {
+    this.hero = new Hero(dataManager.heroType);
+    this.hero.x = this.width / 2;
+    this.hero.y = 200;
+    this.addChild(this.hero);
+  }
+  createHud() {
+    this.hudDistance = new createjs.Text('0 m', '25px CarterOne', '#000');
+    this.hudDistance.x = 20;
+    this.hudDistance.y = 15;
+    this.addChild(this.hudDistance);
   }
   resetSpike(spike) {
     spike.reset();
@@ -65,7 +69,7 @@ export default class MainScreen extends createjs.Container {
     this.addChild(this.shadowOverlay);
   }
   bindEvents() {
-    this.onKeyDown = e => {
+    this.onKeyDown = (e) => {
       switch (e.keyCode) {
         case 32:
           this.handleAction();
@@ -75,7 +79,7 @@ export default class MainScreen extends createjs.Container {
           break;
       }
     };
-    this.onTouchStart = e => {
+    this.onTouchStart = (e) => {
       e.preventDefault();
       this.handleAction();
     };
@@ -84,28 +88,19 @@ export default class MainScreen extends createjs.Container {
     window.addEventListener('touchstart', this.onTouchStart);
   }
   handleAction() {
-    if (this.finished) {
-      this.restart();
-    } else if (!this.paused) {
+    if (this.paused) {
+      this.togglePause();
+    } else {
       this.hero.flap();
     }
   }
   togglePause() {
-    if (this.finished) {
-      return;
-    }
     if (this.paused) {
       this.paused = false;
       this.removeChild(this.shadowOverlay);
     } else {
-      this.pause('Press esc to unpause');
+      this.pause('Press space or esc to unpause');
     }
-  }
-  restart() {
-    this.paused = false;
-    this.finished = false;
-    this.reset();
-    this.removeChild(this.shadowOverlay);
   }
   moveWorld(time) {
     const path = SPEED * time;
@@ -141,8 +136,6 @@ export default class MainScreen extends createjs.Container {
     } else if (this.hero.y > this.height + this.hero.bounds.height / 2) {
       dataManager.maxScore = Math.max(dataManager.maxScore, dataManager.score);
       screensManager.change('EndScreen');
-      this.finished = true;
-      this.pause('Press space to restart');
     } else if (this.hero.y > this.height - (GROUND_HEIGHT + this.hero.bounds.height / 2)) {
       this.hero.die();
     }

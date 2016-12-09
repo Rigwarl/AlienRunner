@@ -1,6 +1,8 @@
 import assetsManager from '../managers/assetsManager';
 import screensManager from '../managers/screensManager';
 import dataManager from '../managers/dataManager';
+import soundManager from '../managers/soundManager';
+import IconBtn from '../display/IconBtn';
 import Btn from '../display/Btn';
 
 export default class EndScreen extends createjs.Container {
@@ -16,7 +18,7 @@ export default class EndScreen extends createjs.Container {
     this.maxScore.y = 180;
 
     this.replayBtn = new Btn('Restart');
-    this.menuBtn = new Btn('Menu');
+    this.menuBtn = new Btn('Menu', 'orange');
     this.replayBtn.x = this.menuBtn.x = width / 2;
     this.menuBtn.y = 470;
     this.replayBtn.y = 380;
@@ -25,5 +27,15 @@ export default class EndScreen extends createjs.Container {
     this.menuBtn.addEventListener('click', () => screensManager.change('StartScreen'));
 
     this.addChild(this.bg, this.score, this.maxScore, this.replayBtn, this.menuBtn);
+
+    const soundBtn = new IconBtn(soundManager.isEnabled() ? 'sound' : 'soundOff');
+    soundBtn.x = width - soundBtn.getBounds().width / 2 - 25;
+    soundBtn.y = soundBtn.getBounds().height / 2 + 20;
+    this.addChild(soundBtn);
+
+    soundBtn.addEventListener('click', () => {
+      soundManager.toggle();
+      soundBtn.changeLabel(soundManager.isEnabled() ? 'sound' : 'soundOff');
+    });
   }
 }
