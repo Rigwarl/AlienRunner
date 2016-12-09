@@ -5,7 +5,6 @@ import Hero from '../display/Hero';
 import Spike from '../display/Spike';
 import ShadowOverlay from '../display/ShadowOverlay';
 
-const SPEED = 300;
 const GROUND_HEIGHT = 82;
 
 export default class MainScreen extends createjs.Container {
@@ -15,6 +14,7 @@ export default class MainScreen extends createjs.Container {
     this.width = width;
     this.height = height;
 
+    this.speed = 300;
     this.distance = 0;
     this.shadowOverlay = new ShadowOverlay(this.width, this.height);
 
@@ -105,7 +105,7 @@ export default class MainScreen extends createjs.Container {
     }
   }
   moveWorld(time) {
-    const path = SPEED * time;
+    const path = this.speed * time;
     if (this.hero.dead) {
       this.hero.x += path * 0.5;
     } else {
@@ -124,6 +124,7 @@ export default class MainScreen extends createjs.Container {
       spike.x -= path;
       if (spike.x < -spike.bounds.width / 2) {
         this.resetSpike(spike);
+        this.speed += 1;
       }
       if (ndgmr.checkPixelCollision(this.hero, spike)) {
         this.hero.die();
