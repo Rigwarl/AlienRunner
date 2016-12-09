@@ -14,4 +14,8 @@ assetsManager.load(() => {
   } else {
     stage.enableMouseOver(20);
   }
+
+  if (window !== window.parent) {
+    window.addEventListener('click', () => window.focus());
+  }
 });
