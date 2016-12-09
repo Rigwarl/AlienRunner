@@ -69,6 +69,7 @@ export default class MainScreen extends createjs.Container {
     this.addChild(this.shadowOverlay);
   }
   bindEvents() {
+    this.addEventListener('click', () => this.handleAction());
     this.onKeyDown = e => {
       switch (e.keyCode) {
         case 32:
