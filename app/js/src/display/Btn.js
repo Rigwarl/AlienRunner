@@ -2,9 +2,10 @@ import assetsManager from '../managers/assetsManager';
 import soundManager from '../managers/soundManager';
 
 export default class Btn extends createjs.Container {
-  constructor(label, type = 'btn') {
+  constructor(label, color = 'green', type = 'btn') {
     super();
 
+    this.color = color;
     this.enabled = true;
 
     this.createBg(type);
@@ -17,7 +18,7 @@ export default class Btn extends createjs.Container {
     this.bg = new createjs.Sprite(assetsManager.getSpriteSheet(type));
     this.bg.regX = this.bg.getBounds().width / 2;
     this.bg.regY = this.bg.getBounds().height / 2;
-    this.helper = new createjs.ButtonHelper(this.bg);
+    this.helper = new createjs.ButtonHelper(this.bg, `${this.color}Out`, `${this.color}Over`, `${this.color}Down`);
     this.addChild(this.bg);
   }
   createLabel(label) {
@@ -42,7 +43,7 @@ export default class Btn extends createjs.Container {
     this.helper.enabled = false;
   }
   enable() {
-    this.bg.gotoAndStop('out');
+    this.bg.gotoAndStop(`${this.color}Out`);
     this.enabled = true;
     this.helper.enabled = true;
   }

@@ -1,6 +1,8 @@
 import assetsManager from '../managers/assetsManager';
 import screensManager from '../managers/screensManager';
 import dataManager from '../managers/dataManager';
+import soundManager from '../managers/soundManager';
+import IconBtn from '../display/IconBtn';
 import Hero from '../display/Hero';
 import Btn from '../display/Btn';
 
@@ -29,6 +31,16 @@ export default class StartScreen extends createjs.Container {
       if (this.startBtn.enabled) {
         screensManager.change('MainScreen');
       }
+    });
+
+    const soundBtn = new IconBtn(soundManager.isEnabled() ? 'sound' : 'soundOff');
+    soundBtn.x = this.width - soundBtn.getBounds().width / 2 - 25;
+    soundBtn.y = soundBtn.getBounds().height / 2 + 20;
+    this.addChild(soundBtn);
+
+    soundBtn.addEventListener('click', () => {
+      soundManager.toggle();
+      soundBtn.changeLabel(soundManager.isEnabled() ? 'sound' : 'soundOff');
     });
   }
   createHeroes() {
