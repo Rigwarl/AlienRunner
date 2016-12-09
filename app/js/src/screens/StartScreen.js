@@ -64,7 +64,7 @@ export default class StartScreen extends createjs.Container {
     this.addChild(...this.heroes);
   }
   resetHeroes() {
-    this.heroes.forEach((hero) => {
+    this.heroes.forEach(hero => {
       hero.filters = [this.heroFilter];
       hero.updateCache();
       hero.scaleX = 0.85;
