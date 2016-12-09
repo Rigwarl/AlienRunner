@@ -18,7 +18,7 @@ export default class EndScreen extends createjs.Container {
     this.maxScore.y = 180;
 
     this.replayBtn = new Btn('Restart');
-    this.menuBtn = new Btn('Menu');
+    this.menuBtn = new Btn('Menu', 'orange');
     this.replayBtn.x = this.menuBtn.x = width / 2;
     this.menuBtn.y = 470;
     this.replayBtn.y = 380;
