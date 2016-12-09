@@ -6,8 +6,8 @@ const stage = new createjs.Stage('game-stage');
 
 screensManager.init(stage);
 assetsManager.load(() => {
-  screensManager.change('StartScreen');
   soundManager.init(true);
+  screensManager.change('StartScreen');
 
   if (createjs.Touch.isSupported()) {
     createjs.Touch.enable(stage, true);

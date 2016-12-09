@@ -33,7 +33,7 @@ export default class StartScreen extends createjs.Container {
       }
     });
 
-    const soundBtn = new IconBtn('sound');
+    const soundBtn = new IconBtn(soundManager.isEnabled() ? 'sound' : 'soundOff');
     soundBtn.x = this.width - soundBtn.getBounds().width / 2 - 25;
     soundBtn.y = soundBtn.getBounds().height / 2 + 20;
     this.addChild(soundBtn);

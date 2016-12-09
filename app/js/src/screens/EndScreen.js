@@ -28,7 +28,7 @@ export default class EndScreen extends createjs.Container {
 
     this.addChild(this.bg, this.score, this.maxScore, this.replayBtn, this.menuBtn);
 
-    const soundBtn = new IconBtn('sound');
+    const soundBtn = new IconBtn(soundManager.isEnabled() ? 'sound' : 'soundOff');
     soundBtn.x = width - soundBtn.getBounds().width / 2 - 25;
     soundBtn.y = soundBtn.getBounds().height / 2 + 20;
     this.addChild(soundBtn);
