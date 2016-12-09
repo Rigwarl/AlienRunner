@@ -27,11 +27,8 @@ export default class StartScreen extends createjs.Container {
     this.addChild(this.bg, this.title, this.startBtn);
     this.createHeroes();
 
-    this.startBtn.addEventListener('click', () => {
-      if (this.startBtn.enabled) {
-        screensManager.change('MainScreen');
-      }
-    });
+    this.startBtn.addEventListener('click', () =>
+      screensManager.change('MainScreen'));
 
     const soundBtn = new IconBtn(soundManager.isEnabled() ? 'sound' : 'soundOff');
     soundBtn.x = this.width - soundBtn.getBounds().width / 2 - 25;
