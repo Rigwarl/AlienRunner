@@ -40,11 +40,11 @@ export default class Btn extends createjs.Container {
   disable() {
     this.bg.gotoAndStop('disable');
     this.enabled = false;
-    this.helper.enabled = false;
+    this.mouseEnabled = false;
   }
   enable() {
     this.bg.gotoAndStop(`${this.color}Out`);
     this.enabled = true;
-    this.helper.enabled = true;
+    this.mouseEnabled = true;
   }
 }

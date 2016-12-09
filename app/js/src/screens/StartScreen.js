@@ -14,24 +14,27 @@ export default class StartScreen extends createjs.Container {
     this.height = height;
 
     this.bg = new createjs.Bitmap(assetsManager.getResult('start'));
-    this.title = new createjs.Text('Choose your avatar', '45px CarterOne', '#000');
-    this.title.textAlign = 'center';
-    this.title.x = this.width / 2;
-    this.title.y = 100;
+    // for better times
+    // this.title = new createjs.Text('Choose your avatar', '45px CarterOne', '#000');
+    // this.title.textAlign = 'center';
+    // this.title.x = this.width / 2;
+    // this.title.y = 100;
 
     this.startBtn = new Btn('Start');
     this.startBtn.x = width / 2;
-    this.startBtn.y = 175 + this.height / 2;
-    this.startBtn.disable();
+    this.startBtn.y = 175 + this.height / 2 - 80;
+    // this.startBtn.disable();
 
     this.addChild(this.bg, this.title, this.startBtn);
-    this.createHeroes();
+    // this.createHeroes();
 
-    this.startBtn.addEventListener('click', () => {
-      if (this.startBtn.enabled) {
-        screensManager.change('MainScreen');
-      }
-    });
+    this.startBtn.addEventListener('click', () =>
+      screensManager.change('MainScreen'));
+
+    const hero = new Hero('monster');
+    hero.x = width / 2;
+    hero.y = height / 2 - 75;
+    this.addChild(hero);
 
     const soundBtn = new IconBtn(soundManager.isEnabled() ? 'sound' : 'soundOff');
     soundBtn.x = this.width - soundBtn.getBounds().width / 2 - 25;
