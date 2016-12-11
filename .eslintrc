@@ -6,6 +6,7 @@
   "globals": {
     "createjs": false,
     "ndgmr": false,
+    "VK": false,
   },
   "rules": {
     "id-length": 0,
