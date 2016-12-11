@@ -2,6 +2,8 @@ const serverManager = {
   init(server) {
     this.server = server;
 
+    // todo use localstorage if not vk env
+
     return new Promise((resolve, reject) => {
       if (server === 'vk') {
         VK.init(
