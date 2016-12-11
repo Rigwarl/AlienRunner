@@ -1,5 +1,6 @@
 import assetsManager from '../managers/assetsManager';
 import screensManager from '../managers/screensManager';
+import serverManager from '../managers/serverManager';
 import dataManager from '../managers/dataManager';
 import soundManager from '../managers/soundManager';
 import IconBtn from '../display/IconBtn';
@@ -33,6 +34,7 @@ export default class EndScreen extends createjs.Container {
     soundBtn.addEventListener('click', () => {
       soundManager.toggle();
       soundBtn.changeLabel(soundManager.isEnabled() ? 'sound' : 'soundOff');
+      serverManager.set('sound', soundManager.isEnabled());
     });
 
     this.bindEvents();

@@ -1,3 +1,4 @@
+import serverManager from '../managers/serverManager';
 import assetsManager from '../managers/assetsManager';
 import screensManager from '../managers/screensManager';
 import dataManager from '../managers/dataManager';
@@ -41,6 +42,7 @@ export default class StartScreen extends createjs.Container {
     soundBtn.addEventListener('click', () => {
       soundManager.toggle();
       soundBtn.changeLabel(soundManager.isEnabled() ? 'sound' : 'soundOff');
+      serverManager.set('sound', soundManager.isEnabled());
     });
 
     this.bindEvents();
