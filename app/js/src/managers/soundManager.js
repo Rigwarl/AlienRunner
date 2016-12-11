@@ -1,6 +1,6 @@
 const soundManager = {
-  init(enabled) {
-    this.enabled = enabled;
+  init(enable) {
+    this.enabled = enable;
     this.bg = createjs.Sound.play('back', { loop: -1, volume: 0.3 });
     this.bg.paused = !this.enabled;
   },
