@@ -16,15 +16,9 @@ const serverManager = {
   get(key) {
     return new Promise(resolve => {
       if (this.server === 'vk') {
-        VK.api('storage.get', { key }, r => {
-          if (r.response === '') {
-            resolve(null);
-          } else {
-            resolve(JSON.parse(r.response));
-          }
-        });
+        VK.api('storage.get', { key }, r => resolve(r.response));
       }
-    });
+    }).then(JSON.parse);
   },
   set(key, value) {
     if (this.server === 'vk') {
