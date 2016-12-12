@@ -10,7 +10,7 @@ screensManager.init(stage);
 let server = 'local';
 
 if (window !== window.parent) {
-  if (document.referrer.includes('vk.com')) {
+  if (document.referrer.includes('://vk.com')) {
     server = 'vk';
   }
   // createjs stage click dosnt trigger window.focus
