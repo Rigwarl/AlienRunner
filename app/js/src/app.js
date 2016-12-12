@@ -19,12 +19,24 @@ if (window !== window.parent) {
 
 Promise.all([
   assetsManager.init(),
-  serverManager.init(server)
-    .then(() => serverManager.get('maxScore'))
-    .then(r => dataManager.init(r || 0)),
-]).then(() => serverManager.get('sound'))
-  .then(r => soundManager.init(r || false))
-  .then(() => screensManager.change('StartScreen'));
+  serverManager.init(server),
+])
+  .catch(() => alert('init error, reload page'))
+  .then(() => Promise.all([
+    serverManager.get('maxScore')
+      .then(
+        r => dataManager.init(+r),
+        // todo on error dont set maxScore to 0, only on new player
+        () => dataManager.init(0),
+      ),
+    serverManager.get('sound')
+      .then(
+        r => soundManager.init(!!r),
+        () => soundManager.init(true),
+      ),
+  ]))
+  .then(() => screensManager.change('StartScreen'))
+  .catch(() => alert('unknown error'));
 
 if (createjs.Touch.isSupported()) {
   createjs.Touch.enable(stage, true);
