@@ -21,22 +21,18 @@ Promise.all([
   assetsManager.init(),
   serverManager.init(server),
 ])
-  .catch(() => alert('init error, reload page'))
   .then(() => Promise.all([
     serverManager.get('maxScore')
-      .then(
-        r => dataManager.init(+r),
-        // todo on error dont set maxScore to 0, only on new player
-        () => dataManager.init(0),
-      ),
+      .then(r => dataManager.init(+r)),
     serverManager.get('sound')
       .then(
-        r => soundManager.init(!!r),
+        // sound on by default and on server error
+        r => soundManager.init(r === '' ? true : !!r),
         () => soundManager.init(true),
       ),
   ]))
   .then(() => screensManager.change('StartScreen'))
-  .catch(() => alert('unknown error'));
+  .catch(e => console.error('init error, reload page', e));
 
 if (createjs.Touch.isSupported()) {
   createjs.Touch.enable(stage, true);
