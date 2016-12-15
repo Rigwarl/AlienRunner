@@ -137,7 +137,6 @@ export default class MainScreen extends createjs.Container {
       this.hero.vY = 0;
       this.hero.y = 0;
     } else if (this.hero.y > this.height + this.hero.bounds.height / 2) {
-      dataManager.maxScore = Math.max(dataManager.maxScore, dataManager.score);
       screensManager.change('EndScreen');
     } else if (this.hero.y > this.height - (GROUND_HEIGHT + this.hero.bounds.height / 2)) {
       this.hero.die();
