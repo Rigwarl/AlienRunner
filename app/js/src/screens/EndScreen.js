@@ -11,12 +11,17 @@ export default class EndScreen extends createjs.Container {
     super();
 
     this.bg = new createjs.Bitmap(assetsManager.getResult('start'));
-    this.score = new createjs.Text(`Score: ${dataManager.score}`, '40px CarterOne', '#000');
-    this.maxScore = new createjs.Text(`Best score: ${dataManager.maxScore}`, '40px CarterOne', '#000');
-    this.score.x = this.maxScore.x = width / 2;
-    this.score.textAlign = this.maxScore.textAlign = 'center';
+    this.score = new createjs.Text(`Score: ${dataManager.score} m\n\nBest score: ${dataManager.maxScore} m`, '40px CarterOne', '#000');
+    this.score.x = width / 2;
+    this.score.textAlign = 'center';
     this.score.y = 110;
-    this.maxScore.y = 180;
+
+    if (dataManager.score > dataManager.maxScore) {
+      dataManager.maxScore = dataManager.score;
+      serverManager.set('maxScore', dataManager.maxScore);
+      this.score.text = `New Best Score: ${dataManager.maxScore} m`;
+      this.score.y += 50;
+    }
 
     this.replayBtn = new Btn('Restart');
     // this.menuBtn = new Btn('Menu', 'orange');
@@ -24,7 +29,7 @@ export default class EndScreen extends createjs.Container {
     // this.menuBtn.y = 470;
     this.replayBtn.y = 380;
 
-    this.addChild(this.bg, this.score, this.maxScore, this.replayBtn);
+    this.addChild(this.bg, this.score, this.replayBtn);
 
     const soundBtn = new IconBtn(soundManager.isEnabled() ? 'sound' : 'soundOff');
     soundBtn.x = width - soundBtn.getBounds().width / 2 - 25;
