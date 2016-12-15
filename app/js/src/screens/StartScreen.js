@@ -21,6 +21,7 @@ export default class StartScreen extends createjs.Container {
     // this.title.x = this.width / 2;
     // this.title.y = 100;
 
+
     this.startBtn = new Btn('Start');
     this.startBtn.x = width / 2;
     this.startBtn.y = 175 + this.height / 2 - 80;
@@ -28,6 +29,13 @@ export default class StartScreen extends createjs.Container {
 
     this.addChild(this.bg, this.title, this.startBtn);
     // this.createHeroes();
+
+    if (dataManager.maxScore) {
+      this.score = new createjs.Text(`Best Score: ${dataManager.maxScore} m`, '25px CarterOne', '#000');
+      this.score.x = 35;
+      this.score.y = 25;
+      this.addChild(this.score);
+    }
 
     const hero = new Hero('monster');
     hero.x = width / 2;
