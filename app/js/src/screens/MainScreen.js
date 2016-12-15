@@ -14,7 +14,7 @@ export default class MainScreen extends createjs.Container {
     this.width = width;
     this.height = height;
 
-    this.speed = 300;
+    this.speed = 285;
     this.distance = 0;
     this.shadowOverlay = new ShadowOverlay(this.width, this.height);
 
