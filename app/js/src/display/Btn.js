@@ -22,12 +22,12 @@ export default class Btn extends createjs.Container {
     this.addChild(this.bg);
   }
   createLabel(label) {
-    this.label = new createjs.Text(label, '30px CarterOne', '#fff');
+    this.label = new createjs.Text(label, '30px Guerilla', '#fff');
     this.label.shadow = new createjs.Shadow('#000', 0, 1, 5);
     this.label.textAlign = 'center';
     this.label.textBaseline = 'middle';
     this.label.mouseEnabled = false;
-    this.label.y = -2;
+    this.label.y = -3;
 
     // todo cache
     // now it cache before font load (

@@ -11,7 +11,7 @@ export default class EndScreen extends createjs.Container {
     super();
 
     this.bg = new createjs.Bitmap(assetsManager.getResult('start'));
-    this.score = new createjs.Text(`Score: ${dataManager.score} m\n\nBest score: ${dataManager.maxScore} m`, '40px CarterOne', '#000');
+    this.score = new createjs.Text(`Результат: ${dataManager.score} м\n\nРекорд: ${dataManager.maxScore} м`, '40px Guerilla', '#000');
     this.score.x = width / 2;
     this.score.textAlign = 'center';
     this.score.y = 110;
@@ -19,11 +19,11 @@ export default class EndScreen extends createjs.Container {
     if (dataManager.score > dataManager.maxScore) {
       dataManager.maxScore = dataManager.score;
       serverManager.set('maxScore', dataManager.maxScore);
-      this.score.text = `New Best Score: ${dataManager.maxScore} m`;
-      this.score.y += 50;
+      this.score.text = `Новый рекорд: ${dataManager.maxScore} м!`;
+      this.score.y += 60;
     }
 
-    this.replayBtn = new Btn('Restart');
+    this.replayBtn = new Btn('Еще раз');
     // this.menuBtn = new Btn('Menu', 'orange');
     this.replayBtn.x = width / 2;
     // this.menuBtn.y = 470;
