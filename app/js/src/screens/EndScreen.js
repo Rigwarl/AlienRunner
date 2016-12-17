@@ -14,22 +14,29 @@ export default class EndScreen extends createjs.Container {
     this.score = new createjs.Text(`Результат: ${dataManager.score} м\n\nРекорд: ${dataManager.maxScore} м`, '40px Guerilla', '#000');
     this.score.x = width / 2;
     this.score.textAlign = 'center';
-    this.score.y = 110;
+    this.score.y = 125;
 
-    if (dataManager.score > dataManager.maxScore) {
-      dataManager.maxScore = dataManager.score;
-      serverManager.set('maxScore', dataManager.maxScore);
-      this.score.text = `Новый рекорд: ${dataManager.maxScore} м!`;
-      this.score.y += 60;
-    }
 
     this.replayBtn = new Btn('Еще раз');
     // this.menuBtn = new Btn('Menu', 'orange');
     this.replayBtn.x = width / 2;
     // this.menuBtn.y = 470;
-    this.replayBtn.y = 380;
+    this.replayBtn.y = 390;
 
     this.addChild(this.bg, this.score, this.replayBtn);
+
+    if (dataManager.score > dataManager.maxScore) {
+      dataManager.maxScore = dataManager.score;
+      serverManager.set('maxScore', dataManager.maxScore);
+      this.score.text = `Новый рекорд: ${dataManager.maxScore} м!`;
+      // this.score.y += 60;
+      this.shareBtn = new Btn('Поделиться', 'orange');
+      this.shareBtn.x = width / 2;
+      this.shareBtn.y = 290;
+      this.addChild(this.shareBtn);
+
+      this.shareBtn.addEventListener('click', () => serverManager.share(dataManager.score));
+    }
 
     const soundBtn = new IconBtn(soundManager.isEnabled() ? 'sound' : 'soundOff');
     soundBtn.x = width - soundBtn.getBounds().width / 2 - 25;
