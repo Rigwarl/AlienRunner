@@ -5,18 +5,34 @@ const serverManager = {
     // todo use localstorage if not vk env
 
     return new Promise((resolve, reject) => {
-      if (server === 'vk') {
-        VK.init(
-          () => resolve(),
-          () => reject(),
-        '5.60');
+      switch (server) {
+        case 'local':
+          resolve();
+          break;
+        case 'vk':
+          VK.init(
+            () => resolve(),
+            e => reject('vk init error', e),
+          '5.60');
+          break;
+        default:
+          reject('wrong server name');
+          break;
       }
     });
   },
   get(key) {
-    return new Promise(resolve => {
-      if (this.server === 'vk') {
-        VK.api('storage.get', { key }, resolve);
+    return new Promise((resolve, reject) => {
+      switch (this.server) {
+        case 'local':
+          resolve({ response: '' });
+          break;
+        case 'vk':
+          VK.api('storage.get', { key }, resolve);
+          break;
+        default:
+          reject('wrong server name');
+          break;
       }
     }).then(r => {
       if (r.error) {
