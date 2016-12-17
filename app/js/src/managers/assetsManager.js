@@ -74,12 +74,16 @@ const spriteSheetsData = {
 const spriteSheets = {};
 
 const assetsManager = {
-  load(callback) {
+  init() {
     createjs.Sound.alternateExtensions = ['mp3'];
     this.queue = new createjs.LoadQueue();
     this.queue.installPlugin(createjs.Sound);
     this.queue.loadManifest(manifest);
-    this.queue.addEventListener('complete', callback);
+
+    return new Promise((resolve, reject) => {
+      this.queue.addEventListener('complete', () => resolve());
+      this.queue.addEventListener('error', () => reject());
+    });
   },
   getResult(name) {
     return this.queue.getResult(name);
