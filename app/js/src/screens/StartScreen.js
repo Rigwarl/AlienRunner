@@ -1,3 +1,4 @@
+import serverManager from '../managers/serverManager';
 import assetsManager from '../managers/assetsManager';
 import screensManager from '../managers/screensManager';
 import dataManager from '../managers/dataManager';
@@ -20,13 +21,21 @@ export default class StartScreen extends createjs.Container {
     // this.title.x = this.width / 2;
     // this.title.y = 100;
 
-    this.startBtn = new Btn('Start');
+
+    this.startBtn = new Btn('Играть');
     this.startBtn.x = width / 2;
     this.startBtn.y = 175 + this.height / 2 - 80;
     // this.startBtn.disable();
 
     this.addChild(this.bg, this.title, this.startBtn);
     // this.createHeroes();
+
+    if (dataManager.maxScore) {
+      this.score = new createjs.Text(`Лучший счет: ${dataManager.maxScore} м`, '25px Guerilla', '#000');
+      this.score.x = 35;
+      this.score.y = 25;
+      this.addChild(this.score);
+    }
 
     const hero = new Hero('monster');
     hero.x = width / 2;
@@ -41,6 +50,7 @@ export default class StartScreen extends createjs.Container {
     soundBtn.addEventListener('click', () => {
       soundManager.toggle();
       soundBtn.changeLabel(soundManager.isEnabled() ? 'sound' : 'soundOff');
+      serverManager.set('sound', soundManager.isEnabled());
     });
 
     this.bindEvents();

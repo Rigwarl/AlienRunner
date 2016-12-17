@@ -1,5 +1,6 @@
 import assetsManager from '../managers/assetsManager';
 import screensManager from '../managers/screensManager';
+import serverManager from '../managers/serverManager';
 import dataManager from '../managers/dataManager';
 import soundManager from '../managers/soundManager';
 import IconBtn from '../display/IconBtn';
@@ -10,20 +11,32 @@ export default class EndScreen extends createjs.Container {
     super();
 
     this.bg = new createjs.Bitmap(assetsManager.getResult('start'));
-    this.score = new createjs.Text(`Score: ${dataManager.score}`, '40px CarterOne', '#000');
-    this.maxScore = new createjs.Text(`Best score: ${dataManager.maxScore}`, '40px CarterOne', '#000');
-    this.score.x = this.maxScore.x = width / 2;
-    this.score.textAlign = this.maxScore.textAlign = 'center';
-    this.score.y = 110;
-    this.maxScore.y = 180;
+    this.score = new createjs.Text(`Результат: ${dataManager.score} м\n\nРекорд: ${dataManager.maxScore} м`, '40px Guerilla', '#000');
+    this.score.x = width / 2;
+    this.score.textAlign = 'center';
+    this.score.y = 125;
 
-    this.replayBtn = new Btn('Restart');
+
+    this.replayBtn = new Btn('Еще раз');
     // this.menuBtn = new Btn('Menu', 'orange');
     this.replayBtn.x = width / 2;
     // this.menuBtn.y = 470;
-    this.replayBtn.y = 380;
+    this.replayBtn.y = 390;
 
-    this.addChild(this.bg, this.score, this.maxScore, this.replayBtn);
+    this.addChild(this.bg, this.score, this.replayBtn);
+
+    if (dataManager.score > dataManager.maxScore) {
+      dataManager.maxScore = dataManager.score;
+      serverManager.set('maxScore', dataManager.maxScore);
+      this.score.text = `Новый рекорд: ${dataManager.maxScore} м!`;
+      // this.score.y += 60;
+      this.shareBtn = new Btn('Поделиться', 'orange');
+      this.shareBtn.x = width / 2;
+      this.shareBtn.y = 290;
+      this.addChild(this.shareBtn);
+
+      this.shareBtn.addEventListener('click', () => serverManager.share(dataManager.score));
+    }
 
     const soundBtn = new IconBtn(soundManager.isEnabled() ? 'sound' : 'soundOff');
     soundBtn.x = width - soundBtn.getBounds().width / 2 - 25;
@@ -33,6 +46,7 @@ export default class EndScreen extends createjs.Container {
     soundBtn.addEventListener('click', () => {
       soundManager.toggle();
       soundBtn.changeLabel(soundManager.isEnabled() ? 'sound' : 'soundOff');
+      serverManager.set('sound', soundManager.isEnabled());
     });
 
     this.bindEvents();

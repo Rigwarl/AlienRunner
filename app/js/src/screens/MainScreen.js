@@ -14,7 +14,7 @@ export default class MainScreen extends createjs.Container {
     this.width = width;
     this.height = height;
 
-    this.speed = 300;
+    this.speed = 285;
     this.distance = 0;
     this.shadowOverlay = new ShadowOverlay(this.width, this.height);
 
@@ -23,7 +23,7 @@ export default class MainScreen extends createjs.Container {
     this.createHero();
     this.createHud();
 
-    this.pause('Press space to flap, esc to pause');
+    this.pause('Пробел - взмах крыльями, esc - пауза');
     this.bindEvents();
   }
   createBg() {
@@ -47,7 +47,7 @@ export default class MainScreen extends createjs.Container {
     this.addChild(this.hero);
   }
   createHud() {
-    this.hudDistance = new createjs.Text('0 m', '25px CarterOne', '#000');
+    this.hudDistance = new createjs.Text('0 м', '25px Guerilla', '#000');
     this.hudDistance.x = 20;
     this.hudDistance.y = 15;
     this.addChild(this.hudDistance);
@@ -101,7 +101,7 @@ export default class MainScreen extends createjs.Container {
       this.paused = false;
       this.removeChild(this.shadowOverlay);
     } else {
-      this.pause('Press space or esc to unpause');
+      this.pause('Нажмите пробел или esc');
     }
   }
   moveWorld(time) {
@@ -116,7 +116,7 @@ export default class MainScreen extends createjs.Container {
 
       this.distance += path;
       dataManager.score = Math.floor(this.distance / 25);
-      this.hudDistance.text = `${dataManager.score} m`;
+      this.hudDistance.text = `${dataManager.score} м`;
     }
   }
   moveSpikes(path) {
@@ -137,7 +137,6 @@ export default class MainScreen extends createjs.Container {
       this.hero.vY = 0;
       this.hero.y = 0;
     } else if (this.hero.y > this.height + this.hero.bounds.height / 2) {
-      dataManager.maxScore = Math.max(dataManager.maxScore, dataManager.score);
       screensManager.change('EndScreen');
     } else if (this.hero.y > this.height - (GROUND_HEIGHT + this.hero.bounds.height / 2)) {
       this.hero.die();

@@ -40,6 +40,8 @@ module.exports = grunt => {
           port: 9001,
           open: true,
           base: 'app',
+          protocol: 'https',
+          host: '*',
         },
       },
     },
