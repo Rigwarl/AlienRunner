@@ -60,6 +60,9 @@ const serverManager = {
       });
     }
   },
+  isSocial() {
+    return this.server === 'vk';
+  },
 };
 
 export default serverManager;
