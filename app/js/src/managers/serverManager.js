@@ -54,7 +54,8 @@ const serverManager = {
       VK.api('wall.post', {
         message: `Я пролетел ${score}м в игре Flappy Monster!
                   A сколько сможешь ты?`,
-        attachments: 'photo-135563388_456239017',
+        attachments: 'photo-135563388_456239017, https://vk.com/app5782118',
+        services: 'twitter',
 
       });
     }
