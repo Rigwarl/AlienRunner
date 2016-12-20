@@ -43,7 +43,7 @@ export default class MainScreen extends createjs.Container {
   createHero() {
     this.hero = new Hero(dataManager.heroType);
     this.hero.x = this.width / 2;
-    this.hero.y = 200;
+    this.hero.y = 190;
     this.addChild(this.hero);
   }
   createHud() {
