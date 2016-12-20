@@ -24,10 +24,13 @@ export default class StartScreen extends createjs.Container {
 
     this.startBtn = new Btn('Играть');
     this.startBtn.x = width / 2;
-    this.startBtn.y = 175 + this.height / 2 - 80;
-    // this.startBtn.disable();
+    this.startBtn.y = 350;
 
-    this.addChild(this.bg, this.title, this.startBtn);
+    this.inviteBtn = new Btn('Позвать бро', 'orange');
+    this.inviteBtn.x = width / 2;
+    this.inviteBtn.y = 450;
+
+    this.addChild(this.bg, this.title, this.startBtn, this.inviteBtn);
     // this.createHeroes();
 
     if (dataManager.maxScore) {
@@ -39,7 +42,7 @@ export default class StartScreen extends createjs.Container {
 
     const hero = new Hero('monster');
     hero.x = width / 2;
-    hero.y = height / 2 - 75;
+    hero.y = 190;
     this.addChild(hero);
 
     const soundBtn = new IconBtn(soundManager.isEnabled() ? 'sound' : 'soundOff');
@@ -98,6 +101,8 @@ export default class StartScreen extends createjs.Container {
   bindEvents() {
     this.startBtn.addEventListener('click', () =>
       screensManager.change('MainScreen'));
+    this.inviteBtn.addEventListener('click', () =>
+      serverManager.invite());
 
     this.onKeyDown = e => {
       if (e.keyCode === 32) {
