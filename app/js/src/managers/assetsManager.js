@@ -67,6 +67,7 @@ const spriteSheetsData = {
     animations: {
       sound: 0,
       soundOff: 1,
+      rating: 2,
     },
   },
 };
