@@ -1,6 +1,7 @@
 import StartScreen from '../screens/StartScreen';
 import MainScreen from '../screens/MainScreen';
 import EndScreen from '../screens/EndScreen';
+import RatingScreen from '../screens/RatingScreen';
 
 const screenManager = {
   init(stage) {
@@ -10,6 +11,7 @@ const screenManager = {
       StartScreen,
       MainScreen,
       EndScreen,
+      RatingScreen,
     };
 
     createjs.Ticker.timingMode = createjs.Ticker.RAF;

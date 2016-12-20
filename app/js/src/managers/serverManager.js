@@ -65,6 +65,15 @@ const serverManager = {
       VK.callMethod('showInviteBox');
     }
   },
+  loadRating() {
+    return Promise.resolve(
+      Array.from({ length: 6 }, (el, i) => ({
+        id: i,
+        name: `игрок${i}`,
+        score: Math.floor(Math.random() * 300),
+      }))
+    );
+  },
   isSocial() {
     return this.server === 'vk';
   },
