@@ -34,52 +34,52 @@ export default class StartScreen extends createjs.Container {
       this.score = new createjs.Text(`Лучший счет: ${dataManager.maxScore} м`, '25px Guerilla', '#000');
       this.score.textAlign = 'center';
       this.score.x = this.width / 2;
-      this.score.y = 38;
+      this.score.y = 40;
       this.addChild(this.score);
     }
 
     this.bindEvents();
   }
-  createHeroes() {
-    this.heroes = [
-      new Hero('bird'),
-      new Hero('monster'),
-      new Hero('chicken'),
-    ];
-    this.heroes.forEach((hero, i) => {
-      hero.y = this.height / 2;
-      hero.x = (i + 1) * this.width / (this.heroes.length + 1);
-      hero.cursor = 'pointer';
-      hero.addEventListener('click', () => this.selectHero(hero));
-      hero.cache(0, 0, hero.bounds.width, hero.bounds.height);
-    });
-    this.heroFilter = new createjs.ColorFilter(0.6, 0.6, 0.6);
-    this.resetHeroes();
-    this.addChild(...this.heroes);
-  }
-  resetHeroes() {
-    this.heroes.forEach(hero => {
-      hero.filters = [this.heroFilter];
-      hero.updateCache();
-      hero.scaleX = 0.85;
-      hero.scaleY = 0.85;
-    });
-  }
-  selectHero(hero) {
-    this.resetHeroes();
+  // createHeroes() {
+  //   this.heroes = [
+  //     new Hero('bird'),
+  //     new Hero('monster'),
+  //     new Hero('chicken'),
+  //   ];
+  //   this.heroes.forEach((hero, i) => {
+  //     hero.y = this.height / 2;
+  //     hero.x = (i + 1) * this.width / (this.heroes.length + 1);
+  //     hero.cursor = 'pointer';
+  //     hero.addEventListener('click', () => this.selectHero(hero));
+  //     hero.cache(0, 0, hero.bounds.width, hero.bounds.height);
+  //   });
+  //   this.heroFilter = new createjs.ColorFilter(0.6, 0.6, 0.6);
+  //   this.resetHeroes();
+  //   this.addChild(...this.heroes);
+  // }
+  // resetHeroes() {
+  //   this.heroes.forEach(hero => {
+  //     hero.filters = [this.heroFilter];
+  //     hero.updateCache();
+  //     hero.scaleX = 0.85;
+  //     hero.scaleY = 0.85;
+  //   });
+  // }
+  // selectHero(hero) {
+  //   this.resetHeroes();
 
-    hero.filters = [];
-    hero.updateCache();
-    hero.scaleX = 1;
-    hero.scaleY = 1;
-    hero.flap();
+  //   hero.filters = [];
+  //   hero.updateCache();
+  //   hero.scaleX = 1;
+  //   hero.scaleY = 1;
+  //   hero.flap();
 
-    if (!this.startBtn.enabled) {
-      this.startBtn.enable();
-    }
+  //   if (!this.startBtn.enabled) {
+  //     this.startBtn.enable();
+  //   }
 
-    dataManager.heroType = hero.type;
-  }
+  //   dataManager.heroType = hero.type;
+  // }
   bindEvents() {
     this.startBtn.addEventListener('click', () =>
       screensManager.change('MainScreen'));
