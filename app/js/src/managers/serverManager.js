@@ -60,6 +60,11 @@ const serverManager = {
       });
     }
   },
+  invite() {
+    if (this.sever === 'vk') {
+      VK.callMethod('showInviteBox');
+    }
+  },
   isSocial() {
     return this.server === 'vk';
   },
