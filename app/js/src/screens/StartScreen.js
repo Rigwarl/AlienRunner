@@ -2,8 +2,7 @@ import serverManager from '../managers/serverManager';
 import assetsManager from '../managers/assetsManager';
 import screensManager from '../managers/screensManager';
 import dataManager from '../managers/dataManager';
-import soundManager from '../managers/soundManager';
-import IconBtn from '../display/IconBtn';
+import Gui from '../display/Gui';
 import Hero from '../display/Hero';
 import Btn from '../display/Btn';
 
@@ -15,12 +14,7 @@ export default class StartScreen extends createjs.Container {
     this.height = height;
 
     this.bg = new createjs.Bitmap(assetsManager.getResult('start'));
-    // for better times
-    // this.title = new createjs.Text('Choose your avatar', '45px CarterOne', '#000');
-    // this.title.textAlign = 'center';
-    // this.title.x = this.width / 2;
-    // this.title.y = 100;
-
+    this.gui = new Gui(width);
 
     this.startBtn = new Btn('Играть');
     this.startBtn.x = width / 2;
@@ -30,31 +24,19 @@ export default class StartScreen extends createjs.Container {
     this.inviteBtn.x = width / 2;
     this.inviteBtn.y = 450;
 
-    this.addChild(this.bg, this.title, this.startBtn, this.inviteBtn);
-    // this.createHeroes();
+    this.hero = new Hero('monster');
+    this.hero.x = width / 2;
+    this.hero.y = 190;
+
+    this.addChild(this.bg, this.gui, this.hero, this.startBtn, this.inviteBtn);
 
     if (dataManager.maxScore) {
       this.score = new createjs.Text(`Лучший счет: ${dataManager.maxScore} м`, '25px Guerilla', '#000');
-      this.score.x = 35;
-      this.score.y = 25;
+      this.score.textAlign = 'center';
+      this.score.x = this.width / 2;
+      this.score.y = 38;
       this.addChild(this.score);
     }
-
-    const hero = new Hero('monster');
-    hero.x = width / 2;
-    hero.y = 190;
-    this.addChild(hero);
-
-    const soundBtn = new IconBtn(soundManager.isEnabled() ? 'sound' : 'soundOff');
-    soundBtn.x = this.width - soundBtn.getBounds().width / 2 - 25;
-    soundBtn.y = soundBtn.getBounds().height / 2 + 20;
-    this.addChild(soundBtn);
-
-    soundBtn.addEventListener('click', () => {
-      soundManager.toggle();
-      soundBtn.changeLabel(soundManager.isEnabled() ? 'sound' : 'soundOff');
-      serverManager.set('sound', soundManager.isEnabled());
-    });
 
     this.bindEvents();
   }
