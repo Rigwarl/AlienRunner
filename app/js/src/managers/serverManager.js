@@ -61,7 +61,7 @@ const serverManager = {
     }
   },
   invite() {
-    if (this.sever === 'vk') {
+    if (this.server === 'vk') {
       VK.callMethod('showInviteBox');
     }
   },
