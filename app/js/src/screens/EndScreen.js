@@ -35,9 +35,7 @@ export default class EndScreen extends createjs.Container {
       this.score.text = `Новый рекорд: ${dataManager.maxScore} м!`;
       this.score.y += 35;
 
-      if (dataManager.ratingTable[dataManager.ratingTable.length - 1].score < dataManager.maxScore) {
-        serverManager.get('ratingTable', 1).then(recalcRatingTable);
-      }
+      recalcRatingTable();
     }
 
     this.bindEvents();
@@ -59,29 +57,34 @@ export default class EndScreen extends createjs.Container {
   }
 }
 
-function recalcRatingTable(ratingTable) {
-  if (ratingTable[ratingTable.length - 1] < dataManager.maxScore) {
+function recalcRatingTable() {
+  if (dataManager.ratingTable[dataManager.ratingTable.length - 1].score >= dataManager.maxScore) {
     return;
   }
-
-  const userRating = ratingTable.find(el => el.id === dataManager.user.id);
-
-  if (userRating) {
-    userRating.score = dataManager.maxScore;
-  } else {
-    const newRating = {
-      id: dataManager.user.id,
-      name: dataManager.user.name,
-      score: dataManager.maxScore,
-    };
-    if (ratingTable.length < 10) {
-      ratingTable.push(newRating);
-    } else {
-      ratingTable[ratingTable.length - 1] = newRating;
+  serverManager.get('ratingTable', 1).then(ratingTable => {
+    if (ratingTable[ratingTable.length - 1].score < dataManager.maxScore) {
+      return;
     }
-  }
 
-  ratingTable.sort((a, b) => b.score - a.score);
-  dataManager.ratingTable = ratingTable;
-  serverManager.set('ratingTable', ratingTable, 1);
+    const userRating = ratingTable.find(el => el.id === dataManager.user.id);
+
+    if (userRating) {
+      userRating.score = dataManager.maxScore;
+    } else {
+      const newRating = {
+        id: dataManager.user.id,
+        name: dataManager.user.name,
+        score: dataManager.maxScore,
+      };
+      if (ratingTable.length < 10) {
+        ratingTable.push(newRating);
+      } else {
+        ratingTable[ratingTable.length - 1] = newRating;
+      }
+    }
+
+    ratingTable.sort((a, b) => b.score - a.score);
+    dataManager.ratingTable = ratingTable;
+    serverManager.set('ratingTable', ratingTable, 1);
+  });
 }
