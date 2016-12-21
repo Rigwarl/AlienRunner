@@ -1,8 +1,15 @@
 const dataManager = {
-  init(maxScore) {
-    this.maxScore = maxScore;
-    this.score = 0;
-    this.heroType = 'monster';
+  score: 0,
+  maxScore: null,
+  ratingTable: null,
+  heroType: 'monster',
+  user: {
+    id: null,
+    name: null,
+    sex: null,
+  },
+  set(key, value) {
+    this[key] = value;
   },
 };
 
