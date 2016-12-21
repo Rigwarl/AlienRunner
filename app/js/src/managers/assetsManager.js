@@ -68,6 +68,7 @@ const spriteSheetsData = {
       sound: 0,
       soundOff: 1,
       rating: 2,
+      menu: 3,
     },
   },
 };
