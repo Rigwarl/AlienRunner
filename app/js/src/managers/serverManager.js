@@ -22,6 +22,17 @@ const serverManager = {
     });
   },
   get(key) {
+  getUser() {
+    return new Promise((resolve, reject) => {
+      VK.api('users.get', { fields: 'sex' }, r => {
+        if (r.error) {
+          reject(r.error);
+          return;
+        }
+        resolve(r.response[0]);
+      });
+    });
+  },
     return new Promise((resolve, reject) => {
       switch (this.server) {
         case 'local':
