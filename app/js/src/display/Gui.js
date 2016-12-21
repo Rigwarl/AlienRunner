@@ -21,6 +21,9 @@ export default class Gui extends createjs.Container {
     this.soundBtn.x = this.width - this.soundBtn.getBounds().width / 2 - 20;
     this.soundBtn.y = this.soundBtn.getBounds().height / 2 + 20;
 
+    // todo: fix spritesheet later
+    this.ratingBtn.label.x = this.soundBtn.label.x = 1;
+
     this.addChild(this.menuBtn, this.ratingBtn, this.soundBtn);
 
     this.soundBtn.addEventListener('click', () => {
