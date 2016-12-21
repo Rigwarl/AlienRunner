@@ -21,7 +21,6 @@ const serverManager = {
       }
     });
   },
-  get(key) {
   getUser() {
     return new Promise((resolve, reject) => {
       VK.api('users.get', { fields: 'sex' }, r => {
@@ -33,13 +32,14 @@ const serverManager = {
       });
     });
   },
+  get(key, global = 0) {
     return new Promise((resolve, reject) => {
       switch (this.server) {
         case 'local':
           resolve({ response: '' });
           break;
         case 'vk':
-          VK.api('storage.get', { key }, resolve);
+          VK.api('storage.get', { key, global }, resolve);
           break;
         default:
           reject('wrong server name');
@@ -55,9 +55,9 @@ const serverManager = {
       return JSON.parse(r.response);
     });
   },
-  set(key, value) {
+  set(key, value, global = 0) {
     if (this.server === 'vk') {
-      VK.api('storage.set', { key, value });
+      VK.api('storage.set', { key, value: JSON.stringify(value), global });
     }
   },
   share(score) {
