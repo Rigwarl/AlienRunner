@@ -34,6 +34,10 @@ export default class EndScreen extends createjs.Container {
       serverManager.set('maxScore', dataManager.maxScore);
       this.score.text = `Новый рекорд: ${dataManager.maxScore} м!`;
       this.score.y += 35;
+
+      if (dataManager.ratingTable[dataManager.ratingTable.length - 1].score < dataManager.maxScore) {
+        serverManager.get('ratingTable', 1).then(recalcRatingTable);
+      }
     }
 
     this.bindEvents();
@@ -53,4 +57,30 @@ export default class EndScreen extends createjs.Container {
   destroy() {
     window.removeEventListener('keydown', this.onKeyDown);
   }
+}
+
+function recalcRatingTable(ratingTable) {
+  if (ratingTable[ratingTable.length - 1] < dataManager.maxScore) {
+    return;
+  }
+
+  const userRating = ratingTable.find(el => el.id === dataManager.user.id);
+
+  if (userRating) {
+    userRating.score = dataManager.maxScore;
+  } else {
+    const newRating = {
+      id: dataManager.user.id,
+      name: dataManager.user.name,
+      score: dataManager.maxScore,
+    };
+    if (ratingTable.length < 10) {
+      ratingTable.push(newRating);
+    }
+    ratingTable[ratingTable.length - 1] = newRating;
+  }
+
+  ratingTable.sort((a, b) => b.score - a.score);
+  dataManager.ratingTable = ratingTable;
+  serverManager.set('ratingTable', ratingTable, 1);
 }
