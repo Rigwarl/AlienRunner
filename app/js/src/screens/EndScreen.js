@@ -76,8 +76,9 @@ function recalcRatingTable(ratingTable) {
     };
     if (ratingTable.length < 10) {
       ratingTable.push(newRating);
+    } else {
+      ratingTable[ratingTable.length - 1] = newRating;
     }
-    ratingTable[ratingTable.length - 1] = newRating;
   }
 
   ratingTable.sort((a, b) => b.score - a.score);
