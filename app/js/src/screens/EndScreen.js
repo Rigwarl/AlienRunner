@@ -21,15 +21,13 @@ export default class EndScreen extends createjs.Container {
     this.replayBtn.x = width / 2;
     this.replayBtn.y = 350;
 
-    this.addChild(this.bg, this.gui, this.score, this.replayBtn);
+    this.shareBtn = new Btn('Поделиться', 'orange');
+    this.shareBtn.x = width / 2;
+    this.shareBtn.y = 450;
+    this.shareBtn.addEventListener('click', () => serverManager.share(dataManager.score, dataManager.user.sex));
 
-    if (serverManager.isSocial()) {
-      this.shareBtn = new Btn('Поделиться', 'orange');
-      this.shareBtn.x = width / 2;
-      this.shareBtn.y = 450;
-      this.shareBtn.addEventListener('click', () => serverManager.share(dataManager.score));
-      this.addChild(this.shareBtn);
-    }
+    this.addChild(this.bg, this.gui, this.score, this.replayBtn, this.shareBtn);
+
 
     if (dataManager.score > dataManager.maxScore) {
       dataManager.maxScore = dataManager.score;
