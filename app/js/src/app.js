@@ -7,19 +7,14 @@ import dataManager from './managers/dataManager';
 const stage = new createjs.Stage('game-stage');
 screensManager.init(stage);
 
-let server = 'local';
-
 if (window !== window.parent) {
-  if (document.referrer.includes('://vk.com')) {
-    server = 'vk';
-  }
   // createjs stage click dosnt trigger window.focus
   window.addEventListener('click', () => window.focus());
 }
 
 Promise.all([
   assetsManager.init(),
-  serverManager.init(server),
+  serverManager.init(),
 ])
   .then(() => Promise.all([
     serverManager.get('maxScore')
