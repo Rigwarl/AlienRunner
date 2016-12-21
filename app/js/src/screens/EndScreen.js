@@ -62,7 +62,7 @@ function recalcRatingTable() {
     return;
   }
   serverManager.get('ratingTable', 1).then(ratingTable => {
-    if (ratingTable[ratingTable.length - 1].score < dataManager.maxScore) {
+    if (ratingTable[ratingTable.length - 1].score >= dataManager.maxScore) {
       return;
     }
 
