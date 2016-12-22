@@ -6,13 +6,11 @@ export default class Btn extends createjs.Container {
     super();
 
     this.color = color;
-    this.enabled = true;
 
     this.createBg(type);
     this.createLabel(label);
 
-    this.addEventListener('click', () =>
-      this.enabled && soundManager.isEnabled() && createjs.Sound.play('flap'));
+    this.addEventListener('click', () => soundManager.play('flap'));
   }
   createBg(type) {
     this.bg = new createjs.Sprite(assetsManager.getSpriteSheet(type));
@@ -39,12 +37,10 @@ export default class Btn extends createjs.Container {
   }
   disable() {
     this.bg.gotoAndStop('disable');
-    this.enabled = false;
     this.mouseEnabled = false;
   }
   enable() {
     this.bg.gotoAndStop(`${this.color}Out`);
-    this.enabled = true;
     this.mouseEnabled = true;
   }
 }
