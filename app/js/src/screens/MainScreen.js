@@ -14,7 +14,7 @@ export default class MainScreen extends createjs.Container {
     this.width = width;
     this.height = height;
 
-    this.speed = 285;
+    this.speed = 300;
     this.distance = 0;
     this.shadowOverlay = new ShadowOverlay(this.width, this.height);
 
@@ -124,7 +124,7 @@ export default class MainScreen extends createjs.Container {
       spike.x -= path;
       if (spike.x < -spike.bounds.width / 2) {
         this.resetSpike(spike);
-        this.speed += 1;
+        this.speed += 0.5;
       }
       if (ndgmr.checkPixelCollision(this.hero, spike)) {
         this.hero.die();
