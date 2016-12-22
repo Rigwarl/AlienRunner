@@ -35,7 +35,7 @@ export default class EndScreen extends createjs.Container {
       this.score.text = `Новый рекорд: ${dataManager.maxScore} м!`;
       this.score.y += 35;
 
-      recalcRatingTable();
+      serverManager.get('ratingTable', 1).then(recalcRatingTable);
     }
 
     this.bindEvents();
@@ -57,34 +57,28 @@ export default class EndScreen extends createjs.Container {
   }
 }
 
-function recalcRatingTable() {
-  if (dataManager.ratingTable[dataManager.ratingTable.length - 1].score >= dataManager.maxScore) {
+function recalcRatingTable(ratingTable) {
+  if (ratingTable[ratingTable.length - 1].score >= dataManager.maxScore) {
     return;
   }
-  serverManager.get('ratingTable', 1).then(ratingTable => {
-    if (ratingTable[ratingTable.length - 1].score >= dataManager.maxScore) {
-      return;
-    }
 
-    const userRating = ratingTable.find(el => el.id === dataManager.user.id);
+  const userRating = ratingTable.find(el => el.id === dataManager.user.id);
 
-    if (userRating) {
-      userRating.score = dataManager.maxScore;
+  if (userRating) {
+    userRating.score = dataManager.maxScore;
+  } else {
+    const newRating = {
+      id: dataManager.user.id,
+      name: dataManager.user.name,
+      score: dataManager.maxScore,
+    };
+    if (ratingTable.length < 10) {
+      ratingTable.push(newRating);
     } else {
-      const newRating = {
-        id: dataManager.user.id,
-        name: dataManager.user.name,
-        score: dataManager.maxScore,
-      };
-      if (ratingTable.length < 10) {
-        ratingTable.push(newRating);
-      } else {
-        ratingTable[ratingTable.length - 1] = newRating;
-      }
+      ratingTable[ratingTable.length - 1] = newRating;
     }
+  }
 
-    ratingTable.sort((a, b) => b.score - a.score);
-    dataManager.ratingTable = ratingTable;
-    serverManager.set('ratingTable', ratingTable, 1);
-  });
+  ratingTable.sort((a, b) => b.score - a.score);
+  serverManager.set('ratingTable', ratingTable, 1);
 }

@@ -1,7 +1,6 @@
 const dataManager = {
   score: 0,
   maxScore: null,
-  ratingTable: null,
   heroType: 'monster',
   user: {
     id: null,

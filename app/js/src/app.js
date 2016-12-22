@@ -14,7 +14,6 @@ Promise.all([
       name: `${user.first_name} ${user.last_name}`,
       sex: user.sex,
     })),
-    serverManager.get('ratingTable', 1).then(r => dataManager.set('ratingTable', r)),
     serverManager.get('maxScore').then(r => dataManager.set('maxScore', +r)),
     serverManager.get('sound').then(r => soundManager.init(r === '' ? true : !!r)),
   ]))

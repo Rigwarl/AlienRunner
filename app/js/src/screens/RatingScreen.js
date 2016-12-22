@@ -1,5 +1,6 @@
 import assetsManager from '../managers/assetsManager';
 import dataManager from '../managers/dataManager';
+import serverManager from '../managers/serverManager';
 import Gui from '../display/Gui';
 
 export default class RatingScreen extends createjs.Container {
@@ -18,12 +19,21 @@ export default class RatingScreen extends createjs.Container {
 
     this.addChild(this.bg, this.gui, this.title);
 
-    this.showRating();
+    serverManager.get('ratingTable', 1).then(
+      r => this.showRating(r),
+      () => {
+        const text = new createjs.Text('Рейтинг временно недоступен :(', '25px Guerilla', '#000');
+        text.textAlign = 'center';
+        text.x = this.width / 2;
+        text.y = 150;
+        this.addChild(text);
+      }
+    );
   }
-  showRating() {
+  showRating(ratingTable) {
     let winner = false;
 
-    dataManager.ratingTable.forEach((el, i) => {
+    ratingTable.forEach((el, i) => {
       const text = new createjs.Text(`${i + 1} ${el.name} ${el.score}`, '25px Guerilla', '#000');
       text.y = 120 + i * 40;
       text.x = 120;
@@ -37,9 +47,13 @@ export default class RatingScreen extends createjs.Container {
 
     if (!winner) {
       const text = new createjs.Text(`- ${dataManager.user.name} ${dataManager.maxScore}`, '25px Guerilla', '#7ECE2E');
-      text.y = 120 + dataManager.ratingTable.length * 40;
+      text.y = 120 + ratingTable.length * 40;
       text.x = 120;
       this.addChild(text);
+
+      if (dataManager.maxScore > ratingTable[ratingTable.length - 1].score) {
+        text.text = 'Для отображения в рейтинге побейте свой рекорд';
+      }
     }
   }
 }
