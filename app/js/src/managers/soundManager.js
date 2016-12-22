@@ -13,6 +13,11 @@ const soundManager = {
   isEnabled() {
     return this.enabled;
   },
+  play(sound) {
+    if (this.enabled) {
+      createjs.Sound.play(sound);
+    }
+  },
 };
 
 export default soundManager;

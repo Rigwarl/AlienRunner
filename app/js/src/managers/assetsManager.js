@@ -1,7 +1,7 @@
 const manifest = [
   { id: 'monster', src: 'img/monster-sprite.png' },
-  { id: 'bird', src: 'img/bird-sprite.png' },
-  { id: 'chicken', src: 'img/chicken-sprite.png' },
+  // { id: 'bird', src: 'img/bird-sprite.png' },
+  // { id: 'chicken', src: 'img/chicken-sprite.png' },
   { id: 'spike', src: 'img/spike.png' },
   { id: 'sky', src: 'img/bg/sky.png' },
   { id: 'start', src: 'img/bg/start.png' },
@@ -67,6 +67,8 @@ const spriteSheetsData = {
     animations: {
       sound: 0,
       soundOff: 1,
+      rating: 2,
+      menu: 3,
     },
   },
 };

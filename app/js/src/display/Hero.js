@@ -24,9 +24,7 @@ export default class Hero extends createjs.Sprite {
     }
     this.vY = Math.max(this.vY - CONFIG.A, -CONFIG.A);
     this.gotoAndPlay('flap');
-    if (soundManager.isEnabled()) {
-      createjs.Sound.play('flap');
-    }
+    soundManager.play('flap');
   }
   move(time) {
     this.y += ((CONFIG.G * time * 0.5) + this.vY) * time;
@@ -39,8 +37,6 @@ export default class Hero extends createjs.Sprite {
     this.dead = true;
     this.rotation = 30;
     this.gotoAndStop('dead');
-    if (soundManager.isEnabled()) {
-      createjs.Sound.play('loose');
-    }
+    soundManager.play('loose');
   }
 }
