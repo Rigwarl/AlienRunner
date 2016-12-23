@@ -81,13 +81,8 @@ export default class MainScreen extends createjs.Container {
           break;
       }
     };
-    this.onTouchStart = e => {
-      e.preventDefault();
-      this.handleAction();
-    };
 
     window.addEventListener('keydown', this.onKeyDown);
-    window.addEventListener('touchstart', this.onTouchStart);
   }
   handleAction() {
     if (this.paused) {
@@ -152,6 +147,5 @@ export default class MainScreen extends createjs.Container {
   }
   destroy() {
     window.removeEventListener('keydown', this.onKeyDown);
-    window.removeEventListener('touchstart', this.onTouchStart);
   }
 }
