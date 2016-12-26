@@ -28,7 +28,6 @@ export default class EndScreen extends createjs.Container {
 
     this.addChild(this.bg, this.gui, this.score, this.replayBtn, this.shareBtn);
 
-
     if (dataManager.score > dataManager.maxScore) {
       dataManager.maxScore = dataManager.score;
       serverManager.set('maxScore', dataManager.maxScore);
@@ -37,6 +36,8 @@ export default class EndScreen extends createjs.Container {
 
       serverManager.get('ratingTable', 1).then(recalcRatingTable);
     }
+
+    // serverManager.set('pvp0', dataManager.pvpRecord, 1);
 
     this.bindEvents();
   }

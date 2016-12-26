@@ -12,6 +12,7 @@ export default class MainScreen extends createjs.Container {
   constructor(width, height) {
     super();
 
+    this.step = 0;
     this.width = width;
     this.height = height;
 
@@ -54,13 +55,21 @@ export default class MainScreen extends createjs.Container {
     this.addChild(this.hudDistance);
   }
   resetSpike(spike) {
-    spike.scaleY = 0.7 + (Math.random() * 0.45);
+    // spike.scaleY = 0.7 + (Math.random() * 0.45);
+    // spike.x += this.width + spike.bounds.width;
+    // if (Math.random() > 0.5) {
+    //   spike.y = this.height - GROUND_HEIGHT;
+    // } else {
+    //   spike.y = 0;
+    //   spike.scaleY = -spike.scaleY;
+    // }
+    // dataManager.pvpRecord.spikes.push(spike.scaleY);
     spike.x += this.width + spike.bounds.width;
-    if (Math.random() > 0.5) {
+    spike.scaleY = dataManager.pvpRecord.spikes.shift();
+    if (spike.scaleY > 0) {
       spike.y = this.height - GROUND_HEIGHT;
     } else {
       spike.y = 0;
-      spike.scaleY = -spike.scaleY;
     }
   }
   pause(text) {
@@ -89,6 +98,7 @@ export default class MainScreen extends createjs.Container {
       this.togglePause();
     } else {
       this.hero.flap();
+      // dataManager.pvpRecord.actions[this.step] = true;
     }
   }
   togglePause() {
@@ -140,8 +150,12 @@ export default class MainScreen extends createjs.Container {
     if (this.paused) {
       return;
     }
+    this.step += 1;
     this.moveWorld();
     this.moveHero();
+    if (dataManager.pvpRecord.actions[this.step]) {
+      this.hero.flap();
+    }
   }
   destroy() {
     window.removeEventListener('keydown', this.onKeyDown);
