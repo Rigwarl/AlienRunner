@@ -54,14 +54,13 @@ export default class MainScreen extends createjs.Container {
     this.addChild(this.hudDistance);
   }
   resetSpike(spike) {
-    spike.reset();
+    spike.scaleY = 0.7 + (Math.random() * 0.45);
     spike.x += this.width + spike.bounds.width;
     if (Math.random() > 0.5) {
       spike.y = this.height - GROUND_HEIGHT;
-      spike.rotation = 0;
     } else {
       spike.y = 0;
-      spike.rotation = 180;
+      spike.scaleY = -spike.scaleY;
     }
   }
   pause(text) {
@@ -119,7 +118,7 @@ export default class MainScreen extends createjs.Container {
       spike.x -= this.speed;
       if (spike.x < -spike.bounds.width / 2) {
         this.resetSpike(spike);
-        this.speed += 0.03;
+        this.speed += 0.02;
       }
       if (ndgmr.checkPixelCollision(this.hero, spike)) {
         this.hero.die();
