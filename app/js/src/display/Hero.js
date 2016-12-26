@@ -2,8 +2,8 @@ import assetsManager from '../managers/assetsManager';
 import soundManager from '../managers/soundManager';
 
 const CONFIG = {
-  G: 550,
-  A: 375,
+  G: 0.16,
+  A: 7,
 };
 
 export default class Hero extends createjs.Sprite {
@@ -26,9 +26,9 @@ export default class Hero extends createjs.Sprite {
     this.gotoAndPlay('flap');
     soundManager.play('flap');
   }
-  move(time) {
-    this.y += ((CONFIG.G * time * 0.5) + this.vY) * time;
-    this.vY += CONFIG.G * time;
+  move() {
+    this.vY += CONFIG.G;
+    this.y += this.vY;
   }
   die() {
     if (this.dead) {

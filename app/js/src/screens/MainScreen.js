@@ -6,6 +6,7 @@ import Spike from '../display/Spike';
 import ShadowOverlay from '../display/ShadowOverlay';
 
 const GROUND_HEIGHT = 82;
+const START_SPEED = 5;
 
 export default class MainScreen extends createjs.Container {
   constructor(width, height) {
@@ -14,7 +15,7 @@ export default class MainScreen extends createjs.Container {
     this.width = width;
     this.height = height;
 
-    this.speed = 290;
+    this.speed = START_SPEED;
     this.distance = 0;
     this.shadowOverlay = new ShadowOverlay(this.width, this.height);
 
@@ -99,35 +100,34 @@ export default class MainScreen extends createjs.Container {
       this.pause('Нажмите пробел или esc');
     }
   }
-  moveWorld(time) {
-    const path = this.speed * time;
+  moveWorld() {
     if (this.hero.dead) {
-      this.hero.x += path * 0.5;
+      this.hero.x += this.speed * 0.5;
     } else {
-      this.moveSpikes(path);
-      this.bgSky.move(path * 0.1);
-      this.bgMountain.move(path * 0.3);
-      this.bgGround.move(path);
+      this.moveSpikes(this.speed);
+      this.bgSky.move(this.speed * 0.1);
+      this.bgMountain.move(this.speed * 0.3);
+      this.bgGround.move(this.speed);
 
-      this.distance += path;
+      this.distance += this.speed;
       dataManager.score = Math.floor(this.distance / 25);
       this.hudDistance.text = `${dataManager.score} м`;
     }
   }
-  moveSpikes(path) {
+  moveSpikes() {
     this.spikes.forEach(spike => {
-      spike.x -= path;
+      spike.x -= this.speed;
       if (spike.x < -spike.bounds.width / 2) {
         this.resetSpike(spike);
-        this.speed += 1;
+        this.speed += 0.03;
       }
       if (ndgmr.checkPixelCollision(this.hero, spike)) {
         this.hero.die();
       }
     });
   }
-  moveHero(time) {
-    this.hero.move(time);
+  moveHero() {
+    this.hero.move();
     if (this.hero.y < 0) {
       this.hero.vY = 0;
       this.hero.y = 0;
@@ -137,13 +137,12 @@ export default class MainScreen extends createjs.Container {
       this.hero.die();
     }
   }
-  tick(e) {
-    const sec = e.delta * 0.001;
-    if (this.paused || sec > 0.3) {
+  tick() {
+    if (this.paused) {
       return;
     }
-    this.moveWorld(sec);
-    this.moveHero(sec);
+    this.moveWorld();
+    this.moveHero();
   }
   destroy() {
     window.removeEventListener('keydown', this.onKeyDown);
