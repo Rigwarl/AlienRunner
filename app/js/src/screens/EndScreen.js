@@ -54,6 +54,18 @@ export default class EndScreen extends createjs.Container {
       } else {
         this.pvpText.text += `${enemy.name} поверг${enemy.sex !== 2 ? 'ла' : ''} Вас`;
       }
+
+      const record = {
+        user: dataManager.user,
+        spikes: dataManager.pvp.spikes,
+        actions: dataManager.pvp.actions,
+      };
+
+      if (dataManager.pvp.pos === 1) {
+        serverManager.set('pvp100', record, 1);
+      } else {
+        serverManager.set('pvp0', record, 1);
+      }
     }
 
     this.bindEvents();

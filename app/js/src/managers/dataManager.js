@@ -12,8 +12,8 @@ const dataManager = {
     win: null,
     pos: null,
     enemy: null,
-    spikes: [],
-    actions: {},
+    spikes: null,
+    actions: null,
   },
   set(key, value) {
     this[key] = value;

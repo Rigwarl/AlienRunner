@@ -12,7 +12,9 @@ export default class MainScreen extends createjs.Container {
   constructor(width, height) {
     super();
 
-    serverManager.get('pvp0', 1).then(r => this.init(r));
+    dataManager.pvp.pos = Math.floor(Math.random() * 2);
+    const recordIndex = !!dataManager.pvp.pos ? 'pvp0' : 'pvp100';
+    serverManager.get(recordIndex, 1).then(r => this.init(r));
 
     this.width = width;
     this.height = height;
@@ -25,11 +27,13 @@ export default class MainScreen extends createjs.Container {
   }
   init(record) {
     this.record = record;
-    dataManager.pvp.enemy = record.user;
-
     if (dataManager.user.id === record.user.id) {
       record.user.name = 'Призрачный птиц';
     }
+
+    dataManager.pvp.enemy = record.user;
+    dataManager.pvp.spikes = [...record.spikes];
+    dataManager.pvp.actions = {};
 
     this.spikeIndex = 0;
     this.step = 0;
@@ -40,8 +44,8 @@ export default class MainScreen extends createjs.Container {
     this.createSpikes();
     this.createHud();
 
-    this.enemy = this.createHero(0);
-    this.hero = this.createHero(1);
+    this.enemy = this.createHero(dataManager.pvp.pos);
+    this.hero = this.createHero(1 - dataManager.pvp.pos);
 
     this.bindEvents();
   }
@@ -93,6 +97,7 @@ export default class MainScreen extends createjs.Container {
         spike.y = 0;
         spike.scaleY = -spike.scaleY;
       }
+      dataManager.pvp.spikes.push(spike.scaleY);
     }
   }
   bindEvents() {
@@ -106,6 +111,7 @@ export default class MainScreen extends createjs.Container {
   }
   handleAction() {
     this.hero.flap();
+    dataManager.pvp.actions[this.step] = true;
   }
   moveWorld() {
     this.moveSpikes(this.speed);
