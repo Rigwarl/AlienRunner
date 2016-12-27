@@ -59,7 +59,6 @@ export default class EndScreen extends createjs.Container {
 
     const range = dataManager.fields.normal[dataManager.pos];
     const field = `pvp${randomInt(range[0], range[1])}`;
-    console.warn(field);
     const record = {
       user: dataManager.user,
       spikes: dataManager.spikes,
@@ -68,10 +67,7 @@ export default class EndScreen extends createjs.Container {
 
     serverManager.get(field, 1).then(r => {
       if (r.spikes.length * 0.5 < record.spikes.length) {
-        console.log(r.spikes.length, record.spikes.length, true);
         serverManager.set(field, record, 1);
-      } else {
-        console.log(r.spikes.length, record.spikes.length, false);
       }
     });
 

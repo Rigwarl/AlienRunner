@@ -180,7 +180,7 @@ export default class MainScreen extends createjs.Container {
       spike.x -= this.speed;
       if (spike.x < -spike.bounds.width / 2) {
         this.resetSpike(spike);
-        this.speed += 0.02;
+        this.speed += 0.03;
       }
     });
   }
