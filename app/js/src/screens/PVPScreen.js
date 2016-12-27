@@ -42,6 +42,8 @@ export default class MainScreen extends createjs.Container {
     ]).then(() => {
       this.init();
       this.removeChild(watingText, cancelBtn);
+    }).catch(() => {
+      watingText.text = 'PVP временно недоступно :(';
     });
 
     this.bindEvents();
@@ -65,7 +67,7 @@ export default class MainScreen extends createjs.Container {
     this.createSpikes();
     this.createHud();
 
-    const counter = new createjs.Text(3, '115px Guerilla', '#000');
+    const counter = new createjs.Text(3, '125px Guerilla', '#000');
     counter.textAlign = 'center';
     counter.x = this.width / 2;
     counter.y = 310;
@@ -83,7 +85,7 @@ export default class MainScreen extends createjs.Container {
 
     this.hero = this.createHero(1 - dataManager.pvp.pos, dataManager.user.name);
     this.enemy = this.createHero(dataManager.pvp.pos, this.record.user.name);
-    this.enemy.alpha = 0.6;
+    this.enemy.alpha = 0.5;
   }
   createBg() {
     this.bgSky = new Background('sky', this.width);
