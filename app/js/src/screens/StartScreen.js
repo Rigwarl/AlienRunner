@@ -35,7 +35,7 @@ export default class StartScreen extends createjs.Container {
     this.addChild(this.bg, this.gui, this.hero, this.startBtn, this.pvpBtn, this.inviteBtn);
 
     if (dataManager.maxScore) {
-      this.score = new createjs.Text(`Лучший счет: ${dataManager.maxScore} м`, '25px Guerilla', '#000');
+      this.score = new createjs.Text(`Рекорд: ${dataManager.maxScore} м`, '25px Guerilla', '#000');
       this.score.textAlign = 'center';
       this.score.x = this.width / 2;
       this.score.y = 40;

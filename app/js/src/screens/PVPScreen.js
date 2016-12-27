@@ -19,9 +19,13 @@ export default class MainScreen extends createjs.Container {
 
     this.speed = START_SPEED;
     this.started = false;
+
+    dataManager.gameType = 'pvp';
+    dataManager.pvp.win = false;
   }
   init(record) {
     this.record = record;
+    dataManager.pvp.enemy = record.user;
 
     this.spikeIndex = 0;
     this.step = 0;
@@ -124,7 +128,11 @@ export default class MainScreen extends createjs.Container {
       hero.vY = 0;
       hero.y = 0;
     } else if (hero.y > this.height + hero.bounds.height / 2) {
-      screensManager.change('EndScreen');
+      if (hero === this.hero) {
+        screensManager.change('EndScreen');
+      } else {
+        dataManager.pvp.win = true;
+      }
     } else if (hero.y > this.height - (GROUND_HEIGHT + hero.bounds.height / 2)) {
       hero.die();
     }

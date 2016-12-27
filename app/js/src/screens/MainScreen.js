@@ -26,6 +26,8 @@ export default class MainScreen extends createjs.Container {
 
     this.pause('Пробел - взмах крыльями, esc - пауза');
     this.bindEvents();
+
+    dataManager.gameType = 'single';
   }
   createBg() {
     this.bgSky = new Background('sky', this.width);

@@ -1,4 +1,5 @@
 const dataManager = {
+  gameType: null,
   score: null,
   maxScore: null,
   heroType: 'monster',
@@ -6,6 +7,13 @@ const dataManager = {
     id: null,
     name: null,
     sex: null,
+  },
+  pvp: {
+    win: null,
+    pos: null,
+    enemy: null,
+    spikes: [],
+    actions: {},
   },
   set(key, value) {
     this[key] = value;
