@@ -55,17 +55,25 @@ export default class EndScreen extends createjs.Container {
       } else {
         this.pvpText.text += `${enemy.name} поверг${enemy.sex !== 2 ? 'ла' : ''} Вас`;
       }
-
-      const record = {
-        user: dataManager.user,
-        spikes: dataManager.spikes,
-        actions: dataManager.actions,
-      };
-      const range = dataManager.fields.normal[dataManager.pos];
-      const pos = randomInt(range[0], range[1]);
-
-      serverManager.set(`pvp${pos}`, record, 1);
     }
+
+    const range = dataManager.fields.normal[dataManager.pos];
+    const field = `pvp${randomInt(range[0], range[1])}`;
+    console.warn(field);
+    const record = {
+      user: dataManager.user,
+      spikes: dataManager.spikes,
+      actions: dataManager.actions,
+    };
+
+    serverManager.get(field, 1).then(r => {
+      if (r.spikes.length * 0.5 < record.spikes.length) {
+        console.log(r.spikes.length, record.spikes.length, true);
+        serverManager.set(field, record, 1);
+      } else {
+        console.log(r.spikes.length, record.spikes.length, false);
+      }
+    });
 
     this.bindEvents();
   }

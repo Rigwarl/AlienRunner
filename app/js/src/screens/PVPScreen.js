@@ -35,11 +35,11 @@ export default class MainScreen extends createjs.Container {
     this.addChild(watingText, cancelBtn);
 
     dataManager.pos = randomInt(1);
-    const range = dataManager.fields.normal[dataManager.pos];
-    const pos = randomInt(range[0], range[1]);
+    const enemyRange = dataManager.fields.normal[1 - dataManager.pos];
+    const enemyPos = randomInt(enemyRange[0], enemyRange[1]);
 
     Promise.all([
-      serverManager.get(`pvp${pos}`, 1).then(r => this.initData(r)),
+      serverManager.get(`pvp${enemyPos}`, 1).then(r => this.initData(r)),
       new Promise(resolve => setTimeout(resolve, Math.random() * 2000 + 500)),
     ]).then(() => {
       this.init();
@@ -54,8 +54,10 @@ export default class MainScreen extends createjs.Container {
   initData(record) {
     dataManager.gameType = 'pvp';
     dataManager.win = false;
+    dataManager.actions = {};
+    dataManager.spikes = record.spikes;
+    dataManager.enemyActions = record.actions;
     dataManager.enemy = record.user;
-    dataManager.spikes = [...record.spikes];
     if (dataManager.user.id === record.user.id) {
       dataManager.enemy.name = 'Призрачный птиц';
     }
@@ -84,8 +86,8 @@ export default class MainScreen extends createjs.Container {
       }
     }, 1000);
 
-    this.hero = this.createHero(1 - dataManager.pos, dataManager.user.name);
-    this.enemy = this.createHero(dataManager.pos, dataManager.enemy.name);
+    this.hero = this.createHero(dataManager.pos, dataManager.user.name);
+    this.enemy = this.createHero(1 - dataManager.pos, dataManager.enemy.name);
     this.enemy.alpha = 0.5;
   }
   createBg() {
@@ -209,7 +211,7 @@ export default class MainScreen extends createjs.Container {
     this.moveHero(this.enemy);
 
     this.step += 1;
-    if (dataManager.actions[this.step]) {
+    if (dataManager.enemyActions[this.step]) {
       this.enemy.flap();
     }
   }

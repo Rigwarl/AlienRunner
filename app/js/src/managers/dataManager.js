@@ -5,8 +5,9 @@ const dataManager = {
   heroType: 'monster',
   pos: null,
   win: null,
-  spikes: [],
-  actions: {},
+  spikes: null,
+  actions: null,
+  enemyActions: null,
   user: {
     id: null,
     name: null,

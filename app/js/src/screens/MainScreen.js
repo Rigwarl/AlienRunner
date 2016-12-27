@@ -16,8 +16,14 @@ export default class MainScreen extends createjs.Container {
     this.height = height;
 
     this.speed = START_SPEED;
+    this.step = 0;
     this.distance = 0;
     this.shadowOverlay = new ShadowOverlay(this.width, this.height);
+
+    dataManager.gameType = 'single';
+    dataManager.actions = {};
+    dataManager.spikes = [];
+    dataManager.pos = 0;
 
     this.createBg();
     this.createSpikes();
@@ -26,8 +32,6 @@ export default class MainScreen extends createjs.Container {
 
     this.pause('Пробел - взмах крыльями, esc - пауза');
     this.bindEvents();
-
-    dataManager.gameType = 'single';
   }
   createBg() {
     this.bgSky = new Background('sky', this.width);
@@ -64,6 +68,7 @@ export default class MainScreen extends createjs.Container {
       spike.y = 0;
       spike.scaleY = -spike.scaleY;
     }
+    dataManager.spikes.push(spike.scaleY);
   }
   pause(text) {
     this.paused = true;
@@ -91,6 +96,7 @@ export default class MainScreen extends createjs.Container {
       this.togglePause();
     } else {
       this.hero.flap();
+      dataManager.actions[this.step] = true;
     }
   }
   togglePause() {
@@ -144,6 +150,7 @@ export default class MainScreen extends createjs.Container {
     }
     this.moveWorld();
     this.moveHero();
+    this.step += 1;
   }
   destroy() {
     window.removeEventListener('keydown', this.onKeyDown);
