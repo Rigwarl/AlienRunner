@@ -70,6 +70,7 @@ export default class EndScreen extends createjs.Container {
       console.warn(record);
       if (r.spikes.length * 0.5 < record.spikes.length &&
           JSON.stringify(record).length < 4096) {
+        console.warn(true);
         serverManager.set(field, record, 1);
       }
     });
