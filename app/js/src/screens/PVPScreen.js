@@ -36,10 +36,10 @@ export default class MainScreen extends createjs.Container {
 
     dataManager.pos = randomInt(1);
     const enemyRange = dataManager.fields.normal[1 - dataManager.pos];
-    const enemyPos = randomInt(enemyRange[0], enemyRange[1]);
+    const enemyField = `pvp${randomInt(enemyRange[0], enemyRange[1])}`;
 
     Promise.all([
-      serverManager.get(`pvp${enemyPos}`, 1).then(r => this.initData(r)),
+      serverManager.get(enemyField, 1).then(r => this.initData(r)),
       new Promise(resolve => setTimeout(resolve, Math.random() * 2000 + 500)),
     ]).then(() => {
       this.init();
