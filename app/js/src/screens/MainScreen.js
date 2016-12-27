@@ -60,7 +60,7 @@ export default class MainScreen extends createjs.Container {
     this.addChild(this.hudDistance);
   }
   resetSpike(spike) {
-    spike.scaleY = 0.7 + (Math.random() * 0.45);
+    spike.scaleY = 0.7 + Math.floor(Math.random() * 10) * 0.05;
     spike.x += this.width + spike.bounds.width;
     if (Math.random() > 0.5) {
       spike.y = this.height - GROUND_HEIGHT;
@@ -96,7 +96,7 @@ export default class MainScreen extends createjs.Container {
       this.togglePause();
     } else {
       this.hero.flap();
-      dataManager.actions[this.step] = true;
+      dataManager.actions[this.step] = 1;
     }
   }
   togglePause() {

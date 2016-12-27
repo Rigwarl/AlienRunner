@@ -139,7 +139,7 @@ export default class MainScreen extends createjs.Container {
         spike.y = 0;
       }
     } else {
-      spike.scaleY = 0.7 + (Math.random() * 0.45);
+      spike.scaleY = 0.7 + Math.floor(Math.random() * 10) * 0.05;
       if (Math.random() > 0.5) {
         spike.y = this.height - GROUND_HEIGHT;
       } else {
@@ -163,7 +163,7 @@ export default class MainScreen extends createjs.Container {
       return;
     }
     this.hero.flap();
-    dataManager.actions[this.step] = true;
+    dataManager.actions[this.step] = 1;
   }
   moveWorld() {
     this.moveSpikes(this.speed);
