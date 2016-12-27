@@ -62,7 +62,6 @@ export default class MainScreen extends createjs.Container {
       spike.y = 0;
       spike.scaleY = -spike.scaleY;
     }
-    dataManager.pvpRecord.spikes.push(spike.scaleY);
   }
   pause(text) {
     this.paused = true;

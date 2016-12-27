@@ -77,7 +77,7 @@ export default class MainScreen extends createjs.Container {
       spike.y = 0;
       spike.scaleY = -spike.scaleY;
     }
-    dataManager.pvpRecord.spikes.push(spike.scaleY);
+    // dataManager.pvpRecord.spikes.push(spike.scaleY);
     // spike.x += this.width + spike.bounds.width;
     // spike.scaleY = dataManager.pvpRecord.spikes.shift();
     // if (spike.scaleY > 0) {
