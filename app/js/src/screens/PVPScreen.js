@@ -27,6 +27,10 @@ export default class MainScreen extends createjs.Container {
     this.record = record;
     dataManager.pvp.enemy = record.user;
 
+    if (dataManager.user.id === record.user.id) {
+      record.user.name = 'Призрачный птиц';
+    }
+
     this.spikeIndex = 0;
     this.step = 0;
     this.distance = 0;
