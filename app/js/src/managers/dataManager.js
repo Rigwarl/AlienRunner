@@ -1,5 +1,5 @@
 const dataManager = {
-  score: 0,
+  score: null,
   maxScore: null,
   heroType: 'monster',
   user: {
