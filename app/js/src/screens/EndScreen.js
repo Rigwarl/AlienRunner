@@ -1,3 +1,4 @@
+import randomInt from 'random-int';
 import assetsManager from '../managers/assetsManager';
 import screensManager from '../managers/screensManager';
 import serverManager from '../managers/serverManager';
@@ -42,14 +43,14 @@ export default class EndScreen extends createjs.Container {
     }
 
     if (dataManager.gameType === 'pvp') {
-      const enemy = dataManager.pvp.enemy;
+      const enemy = dataManager.enemy;
       this.pvpText = new createjs.Text('', '25px Guerilla', '#000');
       this.pvpText.textAlign = 'center';
       this.pvpText.x = width / 2;
       this.pvpText.y = 230;
       this.addChild(this.pvpText);
 
-      if (dataManager.pvp.win) {
+      if (dataManager.win) {
         this.pvpText.text += `${enemy.name} был${enemy.sex !== 2 ? 'а' : ''} повержен${enemy.sex !== 2 ? 'а' : ''}`;
       } else {
         this.pvpText.text += `${enemy.name} поверг${enemy.sex !== 2 ? 'ла' : ''} Вас`;
@@ -57,15 +58,13 @@ export default class EndScreen extends createjs.Container {
 
       const record = {
         user: dataManager.user,
-        spikes: dataManager.pvp.spikes,
-        actions: dataManager.pvp.actions,
+        spikes: dataManager.spikes,
+        actions: dataManager.actions,
       };
+      const range = dataManager.fields.normal[dataManager.pos];
+      const pos = randomInt(range[0], range[1]);
 
-      if (dataManager.pvp.pos === 1) {
-        serverManager.set('pvp100', record, 1);
-      } else {
-        serverManager.set('pvp0', record, 1);
-      }
+      serverManager.set(`pvp${pos}`, record, 1);
     }
 
     this.bindEvents();

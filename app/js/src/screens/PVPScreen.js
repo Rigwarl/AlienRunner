@@ -1,3 +1,4 @@
+import randomInt from 'random-int';
 import screensManager from '../managers/screensManager';
 import serverManager from '../managers/serverManager';
 import dataManager from '../managers/dataManager';
@@ -33,31 +34,31 @@ export default class MainScreen extends createjs.Container {
 
     this.addChild(watingText, cancelBtn);
 
-    dataManager.pvp.pos = Math.floor(Math.random() * 2);
-    const recordIndex = dataManager.pvp.pos ? 'pvp0' : 'pvp100';
+    dataManager.pos = randomInt(1);
+    const range = dataManager.fields.normal[dataManager.pos];
+    const pos = randomInt(range[0], range[1]);
 
     Promise.all([
-      serverManager.get(recordIndex, 1).then(r => this.initData(r)),
+      serverManager.get(`pvp${pos}`, 1).then(r => this.initData(r)),
       new Promise(resolve => setTimeout(resolve, Math.random() * 2000 + 500)),
     ]).then(() => {
       this.init();
       this.removeChild(watingText, cancelBtn);
-    }).catch(() => {
+    }).catch(e => {
       watingText.text = 'PVP временно недоступно :(';
+      console.error(e);
     });
 
     this.bindEvents();
   }
   initData(record) {
-    this.record = record;
-    if (dataManager.user.id === record.user.id) {
-      record.user.name = 'Призрачный птиц';
-    }
     dataManager.gameType = 'pvp';
-    dataManager.pvp.win = false;
-    dataManager.pvp.enemy = record.user;
-    dataManager.pvp.spikes = [...record.spikes];
-    dataManager.pvp.actions = {};
+    dataManager.win = false;
+    dataManager.enemy = record.user;
+    dataManager.spikes = [...record.spikes];
+    if (dataManager.user.id === record.user.id) {
+      dataManager.enemy.name = 'Призрачный птиц';
+    }
   }
   init() {
     this.spikeIndex = 0;
@@ -83,8 +84,8 @@ export default class MainScreen extends createjs.Container {
       }
     }, 1000);
 
-    this.hero = this.createHero(1 - dataManager.pvp.pos, dataManager.user.name);
-    this.enemy = this.createHero(dataManager.pvp.pos, this.record.user.name);
+    this.hero = this.createHero(1 - dataManager.pos, dataManager.user.name);
+    this.enemy = this.createHero(dataManager.pos, dataManager.enemy.name);
     this.enemy.alpha = 0.5;
   }
   createBg() {
@@ -126,8 +127,8 @@ export default class MainScreen extends createjs.Container {
   resetSpike(spike) {
     spike.x += this.width + spike.bounds.width;
 
-    if (this.record.spikes[this.spikeIndex]) {
-      spike.scaleY = this.record.spikes[this.spikeIndex];
+    if (dataManager.spikes[this.spikeIndex]) {
+      spike.scaleY = dataManager.spikes[this.spikeIndex];
       this.spikeIndex += 1;
 
       if (spike.scaleY > 0) {
@@ -143,7 +144,7 @@ export default class MainScreen extends createjs.Container {
         spike.y = 0;
         spike.scaleY = -spike.scaleY;
       }
-      dataManager.pvp.spikes.push(spike.scaleY);
+      dataManager.spikes.push(spike.scaleY);
     }
   }
   bindEvents() {
@@ -160,7 +161,7 @@ export default class MainScreen extends createjs.Container {
       return;
     }
     this.hero.flap();
-    dataManager.pvp.actions[this.step] = true;
+    dataManager.actions[this.step] = true;
   }
   moveWorld() {
     this.moveSpikes(this.speed);
@@ -190,7 +191,7 @@ export default class MainScreen extends createjs.Container {
       if (hero === this.hero) {
         screensManager.change('EndScreen');
       } else {
-        dataManager.pvp.win = true;
+        dataManager.win = true;
       }
     } else if (hero.y > this.height - (GROUND_HEIGHT + hero.bounds.height / 2)) {
       hero.die();
@@ -208,7 +209,7 @@ export default class MainScreen extends createjs.Container {
     this.moveHero(this.enemy);
 
     this.step += 1;
-    if (this.record.actions[this.step]) {
+    if (dataManager.actions[this.step]) {
       this.enemy.flap();
     }
   }
