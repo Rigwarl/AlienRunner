@@ -23,6 +23,7 @@ export default class StartScreen extends createjs.Container {
     this.pvpBtn = new Btn('PVP');
     this.pvpBtn.x = width / 2;
     this.pvpBtn.y = 410;
+    this.pvpBtn.disable();
 
     this.inviteBtn = new Btn('Позвать бро', 'orange');
     this.inviteBtn.x = width / 2;
