@@ -16,19 +16,23 @@ export default class StartScreen extends createjs.Container {
     this.bg = new createjs.Bitmap(assetsManager.getResult('start'));
     this.gui = new Gui(width);
 
-    this.startBtn = new Btn('Играть');
+    this.startBtn = new Btn('Тренировка');
     this.startBtn.x = width / 2;
-    this.startBtn.y = 350;
+    this.startBtn.y = 320;
+
+    this.pvpBtn = new Btn('PVP');
+    this.pvpBtn.x = width / 2;
+    this.pvpBtn.y = 410;
 
     this.inviteBtn = new Btn('Позвать бро', 'orange');
     this.inviteBtn.x = width / 2;
-    this.inviteBtn.y = 450;
+    this.inviteBtn.y = 500;
 
     this.hero = new Hero('monster');
     this.hero.x = width / 2;
     this.hero.y = 190;
 
-    this.addChild(this.bg, this.gui, this.hero, this.startBtn, this.inviteBtn);
+    this.addChild(this.bg, this.gui, this.hero, this.startBtn, this.pvpBtn, this.inviteBtn);
 
     if (dataManager.maxScore) {
       this.score = new createjs.Text(`Лучший счет: ${dataManager.maxScore} м`, '25px Guerilla', '#000');
@@ -83,6 +87,8 @@ export default class StartScreen extends createjs.Container {
   bindEvents() {
     this.startBtn.addEventListener('click', () =>
       screensManager.change('MainScreen'));
+    this.pvpBtn.addEventListener('click', () =>
+      screensManager.change('PVPScreen'));
     this.inviteBtn.addEventListener('click', () =>
       serverManager.invite());
 

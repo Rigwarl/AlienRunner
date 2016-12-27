@@ -23,7 +23,7 @@ export default class EndScreen extends createjs.Container {
 
     this.shareBtn = new Btn('Поделиться', 'orange');
     this.shareBtn.x = width / 2;
-    this.shareBtn.y = 450;
+    this.shareBtn.y = 440;
     this.shareBtn.addEventListener('click', () => serverManager.share(dataManager.score, dataManager.user.sex));
 
     this.addChild(this.bg, this.gui, this.score, this.replayBtn, this.shareBtn);
@@ -36,8 +36,6 @@ export default class EndScreen extends createjs.Container {
 
       serverManager.get('ratingTable', 1).then(recalcRatingTable);
     }
-
-    // serverManager.set('pvp0', dataManager.pvpRecord, 1);
 
     this.bindEvents();
   }

@@ -14,7 +14,6 @@ Promise.all([
       name: `${user.first_name} ${user.last_name}`,
       sex: user.sex,
     })),
-    serverManager.get('pvp0', 1).then(r => dataManager.set('pvpRecord', r)),
     serverManager.get('maxScore').then(r => dataManager.set('maxScore', +r)),
     serverManager.get('sound').then(r => soundManager.init(r === '' ? true : !!r)),
   ]))

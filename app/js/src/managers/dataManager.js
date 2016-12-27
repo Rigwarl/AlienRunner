@@ -7,11 +7,6 @@ const dataManager = {
     name: null,
     sex: null,
   },
-  pvpRecord: {
-    user: null,
-    spikes: [],
-    actions: {},
-  },
   set(key, value) {
     this[key] = value;
   },

@@ -1,5 +1,6 @@
 import StartScreen from '../screens/StartScreen';
 import MainScreen from '../screens/MainScreen';
+import PVPScreen from '../screens/PVPScreen';
 import EndScreen from '../screens/EndScreen';
 import RatingScreen from '../screens/RatingScreen';
 
@@ -10,6 +11,7 @@ const screenManager = {
     this.screens = {
       StartScreen,
       MainScreen,
+      PVPScreen,
       EndScreen,
       RatingScreen,
     };

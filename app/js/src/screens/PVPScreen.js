@@ -12,6 +12,21 @@ export default class MainScreen extends createjs.Container {
   constructor(width, height) {
     super();
 
+    // serverManager.get('pvp0', 1).then(r => dataManager.set('pvpRecord', r)),
+    // serverManager.set('pvp0', dataManager.pvpRecord, 1);
+      // spike.x += this.width + spike.bounds.width;
+    // spike.scaleY = dataManager.pvpRecord.spikes.shift();
+    // if (spike.scaleY > 0) {
+    //   spike.y = this.height - GROUND_HEIGHT;
+    // } else {
+    //   spike.y = 0;
+    // }
+    // pvpRecord: {
+    //   user: null,
+    //   spikes: [],
+    //   actions: {},
+    // },
+
     this.width = width;
     this.height = height;
 
@@ -63,6 +78,13 @@ export default class MainScreen extends createjs.Container {
       spike.scaleY = -spike.scaleY;
     }
     dataManager.pvpRecord.spikes.push(spike.scaleY);
+    // spike.x += this.width + spike.bounds.width;
+    // spike.scaleY = dataManager.pvpRecord.spikes.shift();
+    // if (spike.scaleY > 0) {
+    //   spike.y = this.height - GROUND_HEIGHT;
+    // } else {
+    //   spike.y = 0;
+    // }
   }
   pause(text) {
     this.paused = true;
