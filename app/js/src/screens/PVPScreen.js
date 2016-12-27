@@ -139,7 +139,7 @@ export default class MainScreen extends createjs.Container {
         spike.y = 0;
       }
     } else {
-      spike.scaleY = 0.7 + Math.floor(Math.random() * 10) * 0.05;
+      spike.scaleY = +(0.7 + Math.random() * 0.5).toFixed(2);
       if (Math.random() > 0.5) {
         spike.y = this.height - GROUND_HEIGHT;
       } else {
@@ -180,7 +180,7 @@ export default class MainScreen extends createjs.Container {
       spike.x -= this.speed;
       if (spike.x < -spike.bounds.width / 2) {
         this.resetSpike(spike);
-        this.speed += 0.03;
+        this.speed += 0.04;
       }
     });
   }

@@ -60,7 +60,7 @@ export default class MainScreen extends createjs.Container {
     this.addChild(this.hudDistance);
   }
   resetSpike(spike) {
-    spike.scaleY = 0.7 + Math.floor(Math.random() * 10) * 0.05;
+    spike.scaleY = +(0.7 + Math.random() * 0.5).toFixed(2);
     spike.x += this.width + spike.bounds.width;
     if (Math.random() > 0.5) {
       spike.y = this.height - GROUND_HEIGHT;
@@ -126,7 +126,7 @@ export default class MainScreen extends createjs.Container {
       spike.x -= this.speed;
       if (spike.x < -spike.bounds.width / 2) {
         this.resetSpike(spike);
-        this.speed += 0.03;
+        this.speed += 0.04;
       }
       if (ndgmr.checkPixelCollision(this.hero, spike)) {
         this.hero.die();
