@@ -1,3 +1,9 @@
+// VK.api('storage.get', { key: 'pvp0', global: 1 }, r => {
+//   for (let i = 1; i <= 2; i += 1) {
+//     VK.api('storage.set', { key: `pvp${i}`, value: r.response, global: 1 });
+//   }
+// });
+
 const serverManager = {
   init() {
     return new Promise((resolve, reject) => VK.init(
