@@ -1,9 +1,9 @@
 import screensManager from '../managers/screensManager';
+import serverManager from '../managers/serverManager';
 import dataManager from '../managers/dataManager';
 import Background from '../display/Background';
 import Hero from '../display/Hero';
 import Spike from '../display/Spike';
-import ShadowOverlay from '../display/ShadowOverlay';
 
 const GROUND_HEIGHT = 82;
 const START_SPEED = 5;
@@ -12,34 +12,29 @@ export default class MainScreen extends createjs.Container {
   constructor(width, height) {
     super();
 
-    // serverManager.get('pvp0', 1).then(r => dataManager.set('pvpRecord', r)),
-    // serverManager.set('pvp0', dataManager.pvpRecord, 1);
-      // spike.x += this.width + spike.bounds.width;
-    // spike.scaleY = dataManager.pvpRecord.spikes.shift();
-    // if (spike.scaleY > 0) {
-    //   spike.y = this.height - GROUND_HEIGHT;
-    // } else {
-    //   spike.y = 0;
-    // }
-    // pvpRecord: {
-    //   user: null,
-    //   spikes: [],
-    //   actions: {},
-    // },
+    serverManager.get('pvp0', 1).then(r => this.init(r));
 
     this.width = width;
     this.height = height;
 
     this.speed = START_SPEED;
+    this.started = false;
+  }
+  init(record) {
+    this.record = record;
+
+    this.spikeIndex = 0;
+    this.step = 0;
     this.distance = 0;
-    this.shadowOverlay = new ShadowOverlay(this.width, this.height);
+    this.started = true;
 
     this.createBg();
     this.createSpikes();
-    this.createHero();
     this.createHud();
 
-    this.pause('Пробел - взмах крыльями, esc - пауза');
+    this.enemy = this.createHero(0);
+    this.hero = this.createHero(1);
+
     this.bindEvents();
   }
   createBg() {
@@ -56,11 +51,13 @@ export default class MainScreen extends createjs.Container {
     this.spikes.forEach(spike => this.resetSpike(spike));
     this.addChild(...this.spikes);
   }
-  createHero() {
-    this.hero = new Hero(dataManager.heroType);
-    this.hero.x = this.width / 2;
-    this.hero.y = 190;
-    this.addChild(this.hero);
+  createHero(pos) {
+    const hero = new Hero(dataManager.heroType);
+    hero.x = this.width / 2 - 180 * pos;
+    hero.y = 190;
+    this.addChild(hero);
+
+    return hero;
   }
   createHud() {
     this.hudDistance = new createjs.Text('0 м', '25px Guerilla', '#000');
@@ -69,72 +66,48 @@ export default class MainScreen extends createjs.Container {
     this.addChild(this.hudDistance);
   }
   resetSpike(spike) {
-    spike.scaleY = 0.7 + (Math.random() * 0.45);
     spike.x += this.width + spike.bounds.width;
-    if (Math.random() > 0.5) {
-      spike.y = this.height - GROUND_HEIGHT;
+
+    if (this.record.spikes[this.spikeIndex]) {
+      spike.scaleY = this.record.spikes[this.spikeIndex];
+      this.spikeIndex += 1;
+
+      if (spike.scaleY > 0) {
+        spike.y = this.height - GROUND_HEIGHT;
+      } else {
+        spike.y = 0;
+      }
     } else {
-      spike.y = 0;
-      spike.scaleY = -spike.scaleY;
+      spike.scaleY = 0.7 + (Math.random() * 0.45);
+      if (Math.random() > 0.5) {
+        spike.y = this.height - GROUND_HEIGHT;
+      } else {
+        spike.y = 0;
+        spike.scaleY = -spike.scaleY;
+      }
     }
-    // dataManager.pvpRecord.spikes.push(spike.scaleY);
-    // spike.x += this.width + spike.bounds.width;
-    // spike.scaleY = dataManager.pvpRecord.spikes.shift();
-    // if (spike.scaleY > 0) {
-    //   spike.y = this.height - GROUND_HEIGHT;
-    // } else {
-    //   spike.y = 0;
-    // }
-  }
-  pause(text) {
-    this.paused = true;
-    this.shadowOverlay.setText(text);
-    this.addChild(this.shadowOverlay);
   }
   bindEvents() {
     this.addEventListener('click', () => this.handleAction());
     this.onKeyDown = e => {
-      switch (e.keyCode) {
-        case 32:
-          this.handleAction();
-          e.preventDefault();
-          break;
-        case 27:
-          this.togglePause();
-          break;
-      }
+      this.handleAction();
+      e.preventDefault();
     };
 
     window.addEventListener('keydown', this.onKeyDown);
   }
   handleAction() {
-    if (this.paused) {
-      this.togglePause();
-    } else {
-      this.hero.flap();
-    }
-  }
-  togglePause() {
-    if (this.paused) {
-      this.paused = false;
-      this.removeChild(this.shadowOverlay);
-    } else {
-      this.pause('Нажмите пробел или esc');
-    }
+    this.hero.flap();
   }
   moveWorld() {
-    if (this.hero.dead) {
-      this.hero.x += this.speed * 0.5;
-    } else {
-      this.moveSpikes(this.speed);
-      this.bgSky.move(this.speed * 0.1);
-      this.bgMountain.move(this.speed * 0.3);
-      this.bgGround.move(this.speed);
+    this.moveSpikes(this.speed);
+    this.bgSky.move(this.speed * 0.1);
+    this.bgMountain.move(this.speed * 0.3);
+    this.bgGround.move(this.speed);
 
-      this.distance += this.speed;
-      dataManager.score = Math.floor(this.distance / 25);
-      this.hudDistance.text = `${dataManager.score} м`;
-    }
+    this.distance += this.speed;
+    dataManager.score = Math.floor(this.distance / 25);
+    this.hudDistance.text = `${dataManager.score} м`;
   }
   moveSpikes() {
     this.spikes.forEach(spike => {
@@ -143,28 +116,34 @@ export default class MainScreen extends createjs.Container {
         this.resetSpike(spike);
         this.speed += 0.02;
       }
-      if (ndgmr.checkPixelCollision(this.hero, spike)) {
-        this.hero.die();
-      }
     });
   }
-  moveHero() {
-    this.hero.move();
-    if (this.hero.y < 0) {
-      this.hero.vY = 0;
-      this.hero.y = 0;
-    } else if (this.hero.y > this.height + this.hero.bounds.height / 2) {
+  moveHero(hero) {
+    hero.move();
+    if (hero.y < 0) {
+      hero.vY = 0;
+      hero.y = 0;
+    } else if (hero.y > this.height + hero.bounds.height / 2) {
       screensManager.change('EndScreen');
-    } else if (this.hero.y > this.height - (GROUND_HEIGHT + this.hero.bounds.height / 2)) {
-      this.hero.die();
+    } else if (hero.y > this.height - (GROUND_HEIGHT + hero.bounds.height / 2)) {
+      hero.die();
+    }
+    if (this.spikes.some(spike => ndgmr.checkPixelCollision(hero, spike))) {
+      hero.die();
     }
   }
   tick() {
-    if (this.paused) {
+    if (!this.started) {
       return;
     }
     this.moveWorld();
-    this.moveHero();
+    this.moveHero(this.hero);
+    this.moveHero(this.enemy);
+
+    this.step += 1;
+    if (this.record.actions[this.step]) {
+      this.enemy.flap();
+    }
   }
   destroy() {
     window.removeEventListener('keydown', this.onKeyDown);
