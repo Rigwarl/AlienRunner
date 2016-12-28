@@ -16,14 +16,13 @@ export default class StartScreen extends createjs.Container {
     this.bg = new createjs.Bitmap(assetsManager.getResult('start'));
     this.gui = new Gui(width);
 
-    this.startBtn = new Btn('Тренировка');
+    this.startBtn = new Btn('Играть');
     this.startBtn.x = width / 2;
     this.startBtn.y = 320;
 
     this.pvpBtn = new Btn('PVP');
     this.pvpBtn.x = width / 2;
     this.pvpBtn.y = 410;
-    this.pvpBtn.disable();
 
     this.inviteBtn = new Btn('Позвать бро', 'orange');
     this.inviteBtn.x = width / 2;
