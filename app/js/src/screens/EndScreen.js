@@ -43,7 +43,6 @@ export default class EndScreen extends createjs.Container {
     }
 
     if (dataManager.gameType === 'pvp') {
-      const enemy = dataManager.enemy;
       this.pvpText = new createjs.Text('', '25px Guerilla', '#000');
       this.pvpText.textAlign = 'center';
       this.pvpText.x = width / 2;
@@ -51,9 +50,9 @@ export default class EndScreen extends createjs.Container {
       this.addChild(this.pvpText);
 
       if (dataManager.win) {
-        this.pvpText.text += `${enemy.name} был${enemy.sex !== 2 ? 'а' : ''} повержен${enemy.sex !== 2 ? 'а' : ''}`;
+        this.pvpText.text += `${dataManager.enemy.name} был${dataManager.enemy.sex !== 2 ? 'а' : ''} повержен${dataManager.enemy.sex !== 2 ? 'а' : ''}`;
       } else {
-        this.pvpText.text += `${enemy.name} поверг${enemy.sex !== 2 ? 'ла' : ''} Вас`;
+        this.pvpText.text += `${dataManager.enemy.name} поверг${dataManager.enemy.sex !== 2 ? 'ла' : ''} Вас`;
       }
     }
 
@@ -80,7 +79,7 @@ export default class EndScreen extends createjs.Container {
   }
   bindEvents() {
     this.replayBtn.addEventListener('click', replay);
-    this.shareBtn.addEventListener('click', () => serverManager.share(dataManager.score, dataManager.user.sex));
+    this.shareBtn.addEventListener('click', share);
 
     this.onKeyDown = e => {
       if (e.keyCode === 32) {
@@ -104,6 +103,31 @@ function replay() {
       screensManager.change('PVPScreen');
       break;
   }
+}
+
+function share () {
+  let message = '';
+  switch (dataManager.gameType) {
+    case 'single':
+      message = `Я пролетел${dataManager.user.sex !== 2 ? 'а' : ''} ${dataManager.score} м в игре Flappy Monster!`;
+      if (dataManager.score === dataManager.maxScore) {
+        message += '\nЭто мой новый рекорд! ';
+      }
+      message += '\nА сколько сможешь ты?';
+      break;
+    case 'pvp':
+      if (dataManager.win) {
+        message += `${dataManager.enemy.name} был${dataManager.enemy.sex !== 2 ? 'а' : ''} повержен${dataManager.enemy.sex !== 2 ? 'а' : ''} мной в игре Flappy Monster!`;
+      } else {
+        message += `${dataManager.enemy.name} поверг${dataManager.enemy.sex !== 2 ? 'ла' : ''} меня в игре Flappy Monster,
+                   ну ничего, еще увидимся...`;
+      }
+      if (dataManager.score === dataManager.maxScore) {
+        message += `\nМой новый рекорд ${dataManager.score} м!`;
+      }
+      break;
+  }
+  serverManager.share(message, dataManager.gameType);
 }
 
 function recalcRatingTable(ratingTable) {
