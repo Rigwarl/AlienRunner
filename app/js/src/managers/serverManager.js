@@ -34,7 +34,7 @@ const serverManager = {
   share(message, photo) {
     const photos = {
       single: 'photo-135563388_456239017',
-      pvp: 'photo-135563388_456239024',
+      pvp: 'photo-135563388_456239026',
     };
     VK.api('wall.post', {
       message: message,
