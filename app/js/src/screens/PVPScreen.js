@@ -56,9 +56,10 @@ export default class MainScreen extends createjs.Container {
     dataManager.gameType = 'pvp';
     dataManager.win = false;
     dataManager.actions = {};
-    dataManager.spikes = record.spikes;
-    dataManager.enemyActions = record.actions;
+    dataManager.spikes = [];
     dataManager.enemy = record.user;
+    this.enemySpikes = record.spikes;
+    this.enemyActions = record.actions;
     if (dataManager.user.id === record.user.id) {
       dataManager.enemy.name = 'Призрачный птиц';
     }
@@ -130,8 +131,8 @@ export default class MainScreen extends createjs.Container {
   resetSpike(spike) {
     spike.x += this.width + spike.bounds.width;
 
-    if (dataManager.spikes[this.spikeIndex]) {
-      spike.scaleY = dataManager.spikes[this.spikeIndex];
+    if (this.enemySpikes[this.spikeIndex]) {
+      spike.scaleY = this.enemySpikes[this.spikeIndex];
       this.spikeIndex += 1;
 
       if (spike.scaleY > 0) {
@@ -147,8 +148,8 @@ export default class MainScreen extends createjs.Container {
         spike.y = 0;
         spike.scaleY = -spike.scaleY;
       }
-      dataManager.spikes.push(spike.scaleY);
     }
+    dataManager.spikes.push(spike.scaleY);
   }
   bindEvents() {
     this.addEventListener('click', () => this.handleAction());
@@ -212,7 +213,7 @@ export default class MainScreen extends createjs.Container {
     this.moveHero(this.enemy);
 
     this.step += 1;
-    if (dataManager.enemyActions[this.step]) {
+    if (this.enemyActions[this.step]) {
       this.enemy.flap();
     }
   }
