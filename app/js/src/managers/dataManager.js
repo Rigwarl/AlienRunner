@@ -15,7 +15,7 @@ const dataManager = {
   },
   enemy: null,
   fields: {
-    normal: [[0, 49], [100, 149]],
+    normal: [[0, 99], [100, 199]],
   },
   set(key, value) {
     this[key] = value;
