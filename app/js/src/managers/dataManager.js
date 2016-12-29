@@ -7,7 +7,6 @@ const dataManager = {
   win: null,
   spikes: null,
   actions: null,
-  enemyActions: null,
   user: {
     id: null,
     name: null,
