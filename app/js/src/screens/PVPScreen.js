@@ -7,7 +7,7 @@ import Hero from '../display/Hero';
 import Spike from '../display/Spike';
 import Btn from '../display/Btn';
 
-const GROUND_HEIGHT = 82;
+const GROUND_HEIGHT = 80;
 const START_SPEED = 5;
 
 export default class MainScreen extends createjs.Container {
@@ -37,6 +37,7 @@ export default class MainScreen extends createjs.Container {
     dataManager.pos = randomInt(1);
     const enemyRange = dataManager.fields.normal[1 - dataManager.pos];
     const enemyField = `pvp${randomInt(enemyRange[0], enemyRange[1])}`;
+    console.warn(enemyField);
 
     Promise.all([
       serverManager.get(enemyField, 1).then(r => this.initData(r)),
@@ -139,7 +140,7 @@ export default class MainScreen extends createjs.Container {
         spike.y = 0;
       }
     } else {
-      spike.scaleY = +(0.7 + Math.random() * 0.5).toFixed(2);
+      spike.scaleY = +(0.7 + Math.random() * 0.45).toFixed(2);
       if (Math.random() > 0.5) {
         spike.y = this.height - GROUND_HEIGHT;
       } else {

@@ -5,7 +5,7 @@ import Hero from '../display/Hero';
 import Spike from '../display/Spike';
 import ShadowOverlay from '../display/ShadowOverlay';
 
-const GROUND_HEIGHT = 82;
+const GROUND_HEIGHT = 80;
 const START_SPEED = 5;
 
 export default class MainScreen extends createjs.Container {
@@ -60,7 +60,7 @@ export default class MainScreen extends createjs.Container {
     this.addChild(this.hudDistance);
   }
   resetSpike(spike) {
-    spike.scaleY = +(0.7 + Math.random() * 0.5).toFixed(2);
+    spike.scaleY = +(0.7 + Math.random() * 0.45).toFixed(2);
     spike.x += this.width + spike.bounds.width;
     if (Math.random() > 0.5) {
       spike.y = this.height - GROUND_HEIGHT;
