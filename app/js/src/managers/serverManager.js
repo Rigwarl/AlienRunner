@@ -31,11 +31,14 @@ const serverManager = {
   set(key, value, global = 0) {
     VK.api('storage.set', { key, value: JSON.stringify(value), global });
   },
-  share(score, sex = 2) {
+  share(message, photo) {
+    const photos = {
+      single: 'photo-135563388_456239017',
+      pvp: 'photo-135563388_456239024',
+    };
     VK.api('wall.post', {
-      message: `Я пролетел${sex !== 2 ? 'а' : ''} ${score} м в игре Flappy Monster!
-                A сколько сможешь ты?`,
-      attachments: 'photo-135563388_456239017, https://vk.com/app5782118',
+      message: message,
+      attachments: `${photos[photo]}, https://vk.com/app5782118`,
       services: 'twitter',
     });
   },
