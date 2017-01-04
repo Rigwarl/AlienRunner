@@ -17,6 +17,7 @@ export default class MainScreen extends createjs.Container {
     this.height = height;
 
     this.speed = START_SPEED;
+    this.spikeScale = 0.7;
     this.step = 0;
     this.distance = 0;
     this.shadowOverlay = new ShadowOverlay(this.width, this.height);
@@ -41,10 +42,10 @@ export default class MainScreen extends createjs.Container {
     this.title.y = 225;
     this.addChild(this.title);
 
-    switch (randomInt(2, 2)) {
+    switch (randomInt(10)) {
       case 0:
-        dataManager.gameMode = 'reverseVer';
-        this.title.text = 'Переворот!';
+        dataManager.gameMode = 'upsideDown';
+        this.title.text = 'Вверх ногами!';
         this.title.y = height - this.title.y;
         this.hudDistance.y = height - this.hudDistance.y;
         this.hudDistance.color = '#fff';
@@ -52,17 +53,30 @@ export default class MainScreen extends createjs.Container {
         this.scaleY = this.shadowOverlay.scaleY = this.title.scaleY = this.hudDistance.scaleY = -1;
         break;
       case 1:
-        dataManager.gameMode = 'reverseHor';
-        this.title.text = 'Встречный ветер!';
+        dataManager.gameMode = 'backward';
+        this.title.text = 'Ураган!';
         this.title.x = width - this.title.x;
         this.hudDistance.x = width - this.hudDistance.x;
         this.x = this.shadowOverlay.x = width;
         this.scaleX = this.hero.scaleX = this.shadowOverlay.scaleX = this.title.scaleX = this.hudDistance.scaleX = -1;
         break;
+      case 2:
+        dataManager.gameMode = 'fast';
+        this.title.text = 'Попутный ветер!';
+        this.speed += 2;
+        this.spikeScale -= 0.25;
+        break;
+      case 3:
+        dataManager.gameMode = 'slow';
+        this.title.text = 'Встречный ветер!';
+        this.speed -= 1;
+        this.spikeScale += 0.075;
+        break;
       default:
         dataManager.gameMode = 'normal';
         break;
     }
+    this.spikes.forEach(spike => this.resetSpike(spike));
     console.log(dataManager.gameMode);
   }
   createBg() {
@@ -76,7 +90,6 @@ export default class MainScreen extends createjs.Container {
     this.spikes = [new Spike(), new Spike()];
     this.spikes[0].x = -this.spikes[0].bounds.width / 2;
     this.spikes[1].x = this.width / 2;
-    this.spikes.forEach(spike => this.resetSpike(spike));
     this.addChild(...this.spikes);
   }
   createHero() {
@@ -92,7 +105,7 @@ export default class MainScreen extends createjs.Container {
     this.addChild(this.hudDistance);
   }
   resetSpike(spike) {
-    spike.scaleY = +(0.7 + Math.random() * 0.45).toFixed(2);
+    spike.scaleY = +(this.spikeScale + Math.random() * 0.45).toFixed(2);
     spike.x += this.width + spike.bounds.width;
     if (Math.random() > 0.5) {
       spike.y = this.height - GROUND_HEIGHT;

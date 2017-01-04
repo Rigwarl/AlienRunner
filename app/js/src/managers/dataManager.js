@@ -16,8 +16,10 @@ const dataManager = {
   enemy: null,
   fields: {
     normal: [[0, 99], [100, 199]],
-    reverseVer: [[200, 224], [225, 249]],
-    reverseHor: [[250, 274], [275, 299]],
+    upsideDown: [[200, 224], [225, 249]],
+    backward: [[250, 274], [275, 299]],
+    fast: [[300, 324], [325, 349]],
+    slow: [[350, 374], [375, 399]],
   },
   set(key, value) {
     this[key] = value;
