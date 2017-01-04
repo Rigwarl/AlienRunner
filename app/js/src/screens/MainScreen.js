@@ -1,3 +1,4 @@
+import randomInt from 'random-int';
 import screensManager from '../managers/screensManager';
 import dataManager from '../managers/dataManager';
 import Background from '../display/Background';
@@ -32,6 +33,37 @@ export default class MainScreen extends createjs.Container {
 
     this.pause('Пробел - взмах крыльями, esc - пауза');
     this.bindEvents();
+
+    this.title = new createjs.Text('', '65px Guerilla', '#fff');
+    this.title.textAlign = 'center';
+    this.title.textBaseline = 'middle';
+    this.title.x = width / 2;
+    this.title.y = 225;
+    this.addChild(this.title);
+
+    switch (randomInt(2, 2)) {
+      case 0:
+        dataManager.gameMode = 'reverseVer';
+        this.title.text = 'Переворот!';
+        this.title.y = height - this.title.y;
+        this.hudDistance.y = height - this.hudDistance.y;
+        this.hudDistance.color = '#fff';
+        this.y = this.shadowOverlay.y = height;
+        this.scaleY = this.shadowOverlay.scaleY = this.title.scaleY = this.hudDistance.scaleY = -1;
+        break;
+      case 1:
+        dataManager.gameMode = 'reverseHor';
+        this.title.text = 'Встречный ветер!';
+        this.title.x = width - this.title.x;
+        this.hudDistance.x = width - this.hudDistance.x;
+        this.x = this.shadowOverlay.x = width;
+        this.scaleX = this.hero.scaleX = this.shadowOverlay.scaleX = this.title.scaleX = this.hudDistance.scaleX = -1;
+        break;
+      default:
+        dataManager.gameMode = 'normal';
+        break;
+    }
+    console.log(dataManager.gameMode);
   }
   createBg() {
     this.bgSky = new Background('sky', this.width);
@@ -93,6 +125,10 @@ export default class MainScreen extends createjs.Container {
   }
   handleAction() {
     if (this.paused) {
+      if (this.title) {
+        this.removeChild(this.title);
+        this.title = null;
+      }
       this.togglePause();
     } else {
       this.hero.flap();
