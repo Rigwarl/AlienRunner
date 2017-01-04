@@ -56,7 +56,7 @@ export default class EndScreen extends createjs.Container {
       }
     }
 
-    const range = dataManager.fields.normal[dataManager.pos];
+    const range = dataManager.fields[dataManager.gameMode][dataManager.pos];
     const field = `pvp${randomInt(range[0], range[1])}`;
     const record = {
       user: dataManager.user,

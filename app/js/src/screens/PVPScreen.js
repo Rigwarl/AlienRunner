@@ -35,7 +35,7 @@ export default class MainScreen extends createjs.Container {
     this.addChild(watingText, cancelBtn);
 
     dataManager.pos = randomInt(1);
-    const enemyRange = dataManager.fields.normal[1 - dataManager.pos];
+    const enemyRange = dataManager.fields[dataManager.gameMode][1 - dataManager.pos];
     const enemyField = `pvp${randomInt(enemyRange[0], enemyRange[1])}`;
     console.warn(enemyField);
 
@@ -54,6 +54,7 @@ export default class MainScreen extends createjs.Container {
   }
   initData(record) {
     dataManager.gameType = 'pvp';
+    dataManager.gameMode = 'normal';
     dataManager.win = false;
     dataManager.actions = {};
     dataManager.spikes = [];
