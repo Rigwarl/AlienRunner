@@ -43,7 +43,7 @@ export default class MainScreen extends createjs.Container {
     this.addChild(this.title);
 
     // normal mode on first fly
-    switch (dataManager.maxScore ? randomInt(10) : 10) {
+    switch (dataManager.maxScore ? 5 : 10) {
       case 0:
         dataManager.gameMode = 'upsideDown';
         this.title.text = 'Вверх ногами!';
@@ -73,7 +73,7 @@ export default class MainScreen extends createjs.Container {
       case 3:
         dataManager.gameMode = 'slow';
         this.title.text = 'Встречный ветер!';
-        this.shadowOverlay.setText('Скорость полета понижена');
+        this.shadowOverlay.setText('Скорость полета снижена');
         this.speed -= 1;
         this.spikeScale += 0.075;
         break;
@@ -89,6 +89,24 @@ export default class MainScreen extends createjs.Container {
         break;
       case 5:
         dataManager.gameMode = 'fog';
+        this.title.text = 'Туман!';
+        this.shadowOverlay.setText('Видимость снижена');
+        this.speed -= 1.2;
+        this.fog = new createjs.Shape();
+        this.fog.graphics
+          .beginRadialGradientFill(
+            ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, .7)', 'rgba(255, 255, 255, .95)', '#fff'],
+            [0, 0.5, 0.7, 1], 0, 0, 0, 0, 0, 380)
+          .drawRect(-this.width / 2, -this.height, this.width, this.height * 2);
+        this.fog.x = this.hero.x;
+        this.fog.y = this.hero.y;
+        this.fog.addEventListener('tick', () => {
+          if (!this.hero.dead) {
+            this.fog.y = this.hero.y;
+          }
+        });
+        this.addChild(this.fog);
+        break;
       default:
         dataManager.gameMode = 'normal';
         break;
