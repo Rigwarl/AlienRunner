@@ -1,3 +1,4 @@
+import randomInt from 'random-int';
 import screensManager from '../managers/screensManager';
 import dataManager from '../managers/dataManager';
 import Background from '../display/Background';
@@ -16,15 +17,16 @@ export default class MainScreen extends createjs.Container {
     this.height = height;
 
     this.speed = START_SPEED;
+    this.spikeScale = 0.7;
     this.step = 0;
     this.distance = 0;
-    this.shadowOverlay = new ShadowOverlay(this.width, this.height);
 
     dataManager.gameType = 'single';
     dataManager.actions = {};
     dataManager.spikes = [];
     dataManager.pos = 0;
 
+    this.shadowOverlay = new ShadowOverlay(this.width, this.height);
     this.createBg();
     this.createSpikes();
     this.createHero();
@@ -32,6 +34,86 @@ export default class MainScreen extends createjs.Container {
 
     this.pause('Пробел - взмах крыльями, esc - пауза');
     this.bindEvents();
+
+    this.title = new createjs.Text('', '65px Guerilla', '#fff');
+    this.title.textAlign = 'center';
+    this.title.textBaseline = 'middle';
+    this.title.x = width / 2;
+    this.title.y = 225;
+    this.addChild(this.title);
+
+    // normal mode on first fly
+    switch (dataManager.maxScore ? randomInt(10) : 10) {
+      case 0:
+        dataManager.gameMode = 'upsideDown';
+        this.title.text = 'Вверх ногами!';
+        this.title.y = height - this.title.y;
+        this.shadowOverlay.setText('Мир перевернулся');
+        this.hudDistance.y = height - this.hudDistance.y;
+        this.hudDistance.color = '#fff';
+        this.y = this.shadowOverlay.y = height;
+        this.scaleY = this.shadowOverlay.scaleY = this.title.scaleY = this.hudDistance.scaleY = -1;
+        break;
+      case 1:
+        dataManager.gameMode = 'backward';
+        this.title.text = 'Ураган!';
+        this.shadowOverlay.setText('Птицу сдувает назад');
+        this.title.x = width - this.title.x;
+        this.hudDistance.x = width - this.hudDistance.x;
+        this.x = this.shadowOverlay.x = width;
+        this.scaleX = this.hero.scaleX = this.shadowOverlay.scaleX = this.title.scaleX = this.hudDistance.scaleX = -1;
+        break;
+      case 2:
+        dataManager.gameMode = 'fast';
+        this.title.text = 'Попутный ветер!';
+        this.shadowOverlay.setText('Скорость полета повышена');
+        this.speed += 2;
+        this.spikeScale -= 0.25;
+        break;
+      case 3:
+        dataManager.gameMode = 'slow';
+        this.title.text = 'Встречный ветер!';
+        this.shadowOverlay.setText('Скорость полета снижена');
+        this.speed -= 1;
+        this.spikeScale += 0.075;
+        break;
+      case 4:
+        dataManager.gameMode = 'earthquake';
+        this.title.text = 'Землетрясение!';
+        this.shadowOverlay.setText('Колья раскачиваются');
+        this.spikes.forEach((spike, i) => {
+          spike.tween = createjs.Tween.get(spike, { loop: true, paused: true })
+            .to({ skewX: 9 }, 900 + i * 100)
+            .to({ skewX: -9 }, 1800 + i * 200)
+            .to({ skewX: 0 }, 900 + i * 100);
+        });
+        break;
+      case 5:
+        dataManager.gameMode = 'fog';
+        this.title.text = 'Туман!';
+        this.shadowOverlay.setText('Видимость снижена');
+        this.speed -= 1.2;
+        this.fog = new createjs.Shape();
+        this.fog.graphics
+          .beginRadialGradientFill(
+            ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, .65)', 'rgba(255, 255, 255, .85)', 'rgba(255, 255, 255, .97)', '#fff'],
+            [0, 0.5, 0.7, 0.9, 1], 0, 0, 0, 0, 0, 380)
+          .drawRect(-this.width / 2, -this.height, this.width, this.height * 2);
+        this.fog.x = this.hero.x;
+        this.fog.y = this.hero.y;
+        this.fog.addEventListener('tick', () => {
+          if (!this.hero.dead) {
+            this.fog.y = this.hero.y;
+          }
+        });
+        this.addChild(this.fog);
+        break;
+      default:
+        dataManager.gameMode = 'normal';
+        break;
+    }
+    this.spikes.forEach(spike => this.resetSpike(spike));
+    console.log(dataManager.gameMode);
   }
   createBg() {
     this.bgSky = new Background('sky', this.width);
@@ -44,7 +126,6 @@ export default class MainScreen extends createjs.Container {
     this.spikes = [new Spike(), new Spike()];
     this.spikes[0].x = -this.spikes[0].bounds.width / 2;
     this.spikes[1].x = this.width / 2;
-    this.spikes.forEach(spike => this.resetSpike(spike));
     this.addChild(...this.spikes);
   }
   createHero() {
@@ -60,7 +141,7 @@ export default class MainScreen extends createjs.Container {
     this.addChild(this.hudDistance);
   }
   resetSpike(spike) {
-    spike.scaleY = +(0.7 + Math.random() * 0.45).toFixed(2);
+    spike.scaleY = +(this.spikeScale + Math.random() * 0.45).toFixed(2);
     spike.x += this.width + spike.bounds.width;
     if (Math.random() > 0.5) {
       spike.y = this.height - GROUND_HEIGHT;
@@ -93,6 +174,10 @@ export default class MainScreen extends createjs.Container {
   }
   handleAction() {
     if (this.paused) {
+      if (this.title) {
+        this.removeChild(this.title);
+        this.title = null;
+      }
       this.togglePause();
     } else {
       this.hero.flap();
@@ -105,6 +190,9 @@ export default class MainScreen extends createjs.Container {
       this.removeChild(this.shadowOverlay);
     } else {
       this.pause('Нажмите пробел или esc');
+    }
+    if (dataManager.gameMode === 'earthquake') {
+      this.spikes.forEach(spike => spike.tween.setPaused(this.paused));
     }
   }
   moveWorld() {

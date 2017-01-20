@@ -56,7 +56,7 @@ export default class EndScreen extends createjs.Container {
       }
     }
 
-    const range = dataManager.fields.normal[dataManager.pos];
+    const range = dataManager.fields[dataManager.gameMode][dataManager.pos];
     const field = `pvp${randomInt(range[0], range[1])}`;
     const record = {
       user: dataManager.user,
@@ -68,9 +68,10 @@ export default class EndScreen extends createjs.Container {
       console.warn(field);
       console.warn(record);
       console.warn(r);
-      console.warn(r.spikes.length * 0.5 < record.spikes.length);
-      if (r.spikes.length * 0.5 < record.spikes.length &&
+
+      if ((!r || r.spikes.length * 0.5 < record.spikes.length) &&
           JSON.stringify(record).length < 4096) {
+        console.warn(true);
         serverManager.set(field, record, 1);
       }
     });
