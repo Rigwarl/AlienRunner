@@ -43,7 +43,7 @@ export default class MainScreen extends createjs.Container {
     this.addChild(this.title);
 
     // normal mode on first fly
-    switch (dataManager.maxScore ? 5 : 10) {
+    switch (dataManager.maxScore ? randomInt(10) : 10) {
       case 0:
         dataManager.gameMode = 'upsideDown';
         this.title.text = 'Вверх ногами!';
@@ -81,11 +81,12 @@ export default class MainScreen extends createjs.Container {
         dataManager.gameMode = 'earthquake';
         this.title.text = 'Землетрясение!';
         this.shadowOverlay.setText('Колья раскачиваются');
-        this.spikes.forEach((spike, i) =>
-          createjs.Tween.get(spike, { loop: true })
+        this.spikes.forEach((spike, i) => {
+          spike.tween = createjs.Tween.get(spike, { loop: true, paused: true })
             .to({ skewX: 9 }, 900 + i * 100)
             .to({ skewX: -9 }, 1800 + i * 200)
-            .to({ skewX: 0 }, 900 + i * 100));
+            .to({ skewX: 0 }, 900 + i * 100);
+        });
         break;
       case 5:
         dataManager.gameMode = 'fog';
@@ -189,6 +190,9 @@ export default class MainScreen extends createjs.Container {
       this.removeChild(this.shadowOverlay);
     } else {
       this.pause('Нажмите пробел или esc');
+    }
+    if (dataManager.gameMode === 'earthquake') {
+      this.spikes.forEach(spike => spike.tween.setPaused(this.paused));
     }
   }
   moveWorld() {
