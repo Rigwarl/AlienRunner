@@ -95,8 +95,8 @@ export default class MainScreen extends createjs.Container {
         this.fog = new createjs.Shape();
         this.fog.graphics
           .beginRadialGradientFill(
-            ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, .7)', 'rgba(255, 255, 255, .95)', '#fff'],
-            [0, 0.5, 0.7, 1], 0, 0, 0, 0, 0, 380)
+            ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, .65)', 'rgba(255, 255, 255, .85)', 'rgba(255, 255, 255, .97)', '#fff'],
+            [0, 0.5, 0.7, 0.9, 1], 0, 0, 0, 0, 0, 380)
           .drawRect(-this.width / 2, -this.height, this.width, this.height * 2);
         this.fog.x = this.hero.x;
         this.fog.y = this.hero.y;
