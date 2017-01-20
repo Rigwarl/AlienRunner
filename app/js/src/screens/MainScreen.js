@@ -20,13 +20,13 @@ export default class MainScreen extends createjs.Container {
     this.spikeScale = 0.7;
     this.step = 0;
     this.distance = 0;
-    this.shadowOverlay = new ShadowOverlay(this.width, this.height);
 
     dataManager.gameType = 'single';
     dataManager.actions = {};
     dataManager.spikes = [];
     dataManager.pos = 0;
 
+    this.shadowOverlay = new ShadowOverlay(this.width, this.height);
     this.createBg();
     this.createSpikes();
     this.createHero();
@@ -42,11 +42,13 @@ export default class MainScreen extends createjs.Container {
     this.title.y = 225;
     this.addChild(this.title);
 
-    switch (randomInt(10)) {
+    // normal mode on first fly
+    switch (dataManager.maxScore ? randomInt(10) : 10) {
       case 0:
         dataManager.gameMode = 'upsideDown';
         this.title.text = 'Вверх ногами!';
         this.title.y = height - this.title.y;
+        this.shadowOverlay.setText('Мир перевернулся');
         this.hudDistance.y = height - this.hudDistance.y;
         this.hudDistance.color = '#fff';
         this.y = this.shadowOverlay.y = height;
@@ -55,6 +57,7 @@ export default class MainScreen extends createjs.Container {
       case 1:
         dataManager.gameMode = 'backward';
         this.title.text = 'Ураган!';
+        this.shadowOverlay.setText('Птицу сдувает назад');
         this.title.x = width - this.title.x;
         this.hudDistance.x = width - this.hudDistance.x;
         this.x = this.shadowOverlay.x = width;
@@ -63,12 +66,14 @@ export default class MainScreen extends createjs.Container {
       case 2:
         dataManager.gameMode = 'fast';
         this.title.text = 'Попутный ветер!';
+        this.shadowOverlay.setText('Скорость полета повышена');
         this.speed += 2;
         this.spikeScale -= 0.25;
         break;
       case 3:
         dataManager.gameMode = 'slow';
         this.title.text = 'Встречный ветер!';
+        this.shadowOverlay.setText('Скорость полета понижена');
         this.speed -= 1;
         this.spikeScale += 0.075;
         break;
