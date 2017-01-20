@@ -77,6 +77,18 @@ export default class MainScreen extends createjs.Container {
         this.speed -= 1;
         this.spikeScale += 0.075;
         break;
+      case 4:
+        dataManager.gameMode = 'earthquake';
+        this.title.text = 'Землетрясение!';
+        this.shadowOverlay.setText('Колья раскачиваются');
+        this.spikes.forEach((spike, i) =>
+          createjs.Tween.get(spike, { loop: true })
+            .to({ skewX: 9 }, 900 + i * 100)
+            .to({ skewX: -9 }, 1800 + i * 200)
+            .to({ skewX: 0 }, 900 + i * 100));
+        break;
+      case 5:
+        dataManager.gameMode = 'fog';
       default:
         dataManager.gameMode = 'normal';
         break;
