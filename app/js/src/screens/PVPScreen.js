@@ -34,7 +34,23 @@ export default class MainScreen extends createjs.Container {
 
     this.addChild(watingText, cancelBtn);
 
+    const modes = {
+      0: 'upsideDown',
+      1: 'backward',
+      2: 'fast',
+      3: 'slow',
+      4: 'earthquake',
+      5: 'fog',
+      6: 'normal',
+      7: 'normal',
+      8: 'normal',
+      9: 'normal',
+      10: 'normal',
+    };
+    dataManager.gameMode = modes[dataManager.maxScore > 50 ? 2 : 10];
+    console.log(dataManager.gameMode);
     dataManager.pos = randomInt(1);
+
     const enemyRange = dataManager.fields[dataManager.gameMode][1 - dataManager.pos];
     const enemyField = `pvp${randomInt(enemyRange[0], enemyRange[1])}`;
     console.warn(enemyField);
@@ -54,7 +70,6 @@ export default class MainScreen extends createjs.Container {
   }
   initData(record) {
     dataManager.gameType = 'pvp';
-    dataManager.gameMode = 'normal';
     dataManager.win = false;
     dataManager.actions = {};
     dataManager.spikes = [];
@@ -85,6 +100,7 @@ export default class MainScreen extends createjs.Container {
       if (counter.text < 0) {
         this.removeChild(counter);
         this.started = true;
+        this.removeChild(this.title, this.shadowText);
         clearInterval(interval);
       }
     }, 1000);
@@ -92,6 +108,89 @@ export default class MainScreen extends createjs.Container {
     this.hero = this.createHero(dataManager.pos, dataManager.user.name);
     this.enemy = this.createHero(1 - dataManager.pos, dataManager.enemy.name);
     this.enemy.alpha = 0.5;
+
+    this.title = new createjs.Text('', '65px Guerilla', '#000');
+    this.title.textAlign = 'center';
+    this.title.textBaseline = 'middle';
+    this.title.x = this.width / 2;
+    this.title.y = 225;
+    this.addChild(this.title);
+
+    this.shadowText = new createjs.Text('', '30px Guerilla', '#000');
+    this.shadowText.y = this.height / 2;
+    this.shadowText.x = this.width / 2;
+    this.shadowText.textAlign = 'center';
+    this.shadowText.textBaseline = 'middle';
+    this.addChild(this.shadowText);
+
+    this.title.y += 55;
+    this.shadowText.y += 40;
+    counter.y += 50;
+
+    switch (dataManager.gameMode) {
+      case 'upsideDown':
+        this.title.text = 'Вверх ногами!';
+        this.shadowText.text = 'Мир перевернулся';
+        this.hudDistance.y = this.height - this.hudDistance.y;
+        this.hudDistance.color = '#fff';
+        this.y = this.height;
+        counter.y = 550;
+        this.title.y += 85;
+        this.shadowText.y -= 45;
+        this.scaleY = counter.scaleY = this.shadowText.scaleY = this.title.scaleY = this.hudDistance.scaleY = -1;
+        break;
+      case 'backward':
+        this.title.text = 'Ураган!';
+        this.shadowText.text = 'Птицу сдувает назад';
+        this.title.x = this.width - this.title.x;
+        this.hudDistance.x = this.width - this.hudDistance.x;
+        this.x = this.width;
+        this.scaleX = counter.scaleX = this.hero.scaleX = this.enemy.scaleX = this.shadowText.scaleX = this.title.scaleX = this.hudDistance.scaleX = -1;
+        break;
+      case 'fast':
+        this.title.text = 'Попутный ветер!';
+        this.shadowText.text = 'Скорость полета повышена';
+        this.speed += 2;
+        this.spikeScale -= 0.25;
+        break;
+      case 'slow':
+        this.title.text = 'Встречный ветер!';
+        this.shadowText.text = 'Скорость полета снижена';
+        this.speed -= 1;
+        this.spikeScale += 0.075;
+        break;
+      case 'earthquake':
+        this.title.text = 'Землетрясение!';
+        this.shadowText.text = 'Колья раскачиваются';
+        this.spikes.forEach((spike, i) => {
+          spike.tween = createjs.Tween.get(spike, { loop: true, paused: true })
+            .to({ skewX: 9 }, 900 + i * 100)
+            .to({ skewX: -9 }, 1800 + i * 200)
+            .to({ skewX: 0 }, 900 + i * 100);
+        });
+        break;
+      case 'fog':
+        this.title.text = 'Туман!';
+        this.shadowText.text = 'Видимость снижена';
+        this.speed -= 1.2;
+        this.fog = new createjs.Shape();
+        this.fog.graphics
+          .beginRadialGradientFill(
+            ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, .65)', 'rgba(255, 255, 255, .85)', 'rgba(255, 255, 255, .97)', '#fff'],
+            [0, 0.5, 0.7, 0.9, 1], 0, 0, 0, 0, 0, 380)
+          .drawRect(-this.width / 2, -this.height, this.width, this.height * 2);
+        this.fog.cache(-this.width / 2, -this.height, this.width, this.height * 2);
+        this.fog.x = this.hero.x;
+        this.fog.y = this.hero.y;
+        this.fog.addEventListener('tick', () => {
+          if (!this.hero.dead) {
+            this.fog.y = this.hero.y;
+          }
+        });
+        this.addChild(this.fog, this.hudDistance);
+        break;
+    }
+    this.spikes.forEach(spike => this.resetSpike(spike));
   }
   createBg() {
     this.bgSky = new Background('sky', this.width);
@@ -104,7 +203,6 @@ export default class MainScreen extends createjs.Container {
     this.spikes = [new Spike(), new Spike()];
     this.spikes[0].x = -this.spikes[0].bounds.width / 2;
     this.spikes[1].x = this.width / 2;
-    this.spikes.forEach(spike => this.resetSpike(spike));
     this.addChild(...this.spikes);
   }
   createHero(pos, name) {
@@ -116,6 +214,13 @@ export default class MainScreen extends createjs.Container {
     heroName.textAlign = 'center';
     heroName.y = hero.y - 100;
     heroName.x = hero.x;
+    if (dataManager.gameMode === 'upsideDown') {
+      heroName.scaleY = -1;
+      heroName.y += 30;
+    }
+    if (dataManager.gameMode === 'backward') {
+      heroName.scaleX = -1;
+    }
     this.addChild(hero, heroName);
 
     createjs.Tween.get(heroName).wait(2400).to({ alpha: 0 }, 800)
