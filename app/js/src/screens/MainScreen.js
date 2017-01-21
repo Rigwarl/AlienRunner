@@ -42,8 +42,8 @@ export default class MainScreen extends createjs.Container {
     this.title.y = 225;
     this.addChild(this.title);
 
-    // normal mode on first fly
-    switch (dataManager.maxScore ? randomInt(10) : 10) {
+    // normal mode for noobs
+    switch (dataManager.maxScore > 50 ? randomInt(10) : 10) {
       case 0:
         dataManager.gameMode = 'upsideDown';
         this.title.text = 'Вверх ногами!';
