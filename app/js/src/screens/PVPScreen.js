@@ -47,7 +47,7 @@ export default class MainScreen extends createjs.Container {
       9: 'normal',
       10: 'normal',
     };
-    dataManager.gameMode = modes[dataManager.maxScore > 50 ? 2 : 10];
+    dataManager.gameMode = modes[dataManager.maxScore > 50 ? randomInt(10) : 10];
     console.log(dataManager.gameMode);
     dataManager.pos = randomInt(1);
 
@@ -100,6 +100,9 @@ export default class MainScreen extends createjs.Container {
       if (counter.text < 0) {
         this.removeChild(counter);
         this.started = true;
+        if (dataManager.gameMode === 'earthquake') {
+          this.spikes.forEach(spike => spike.tween.setPaused(false));
+        }
         this.removeChild(this.title, this.shadowText);
         clearInterval(interval);
       }
@@ -178,8 +181,8 @@ export default class MainScreen extends createjs.Container {
           .beginRadialGradientFill(
             ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, .65)', 'rgba(255, 255, 255, .85)', 'rgba(255, 255, 255, .97)', '#fff'],
             [0, 0.5, 0.7, 0.9, 1], 0, 0, 0, 0, 0, 380)
-          .drawRect(-this.width / 2, -this.height, this.width, this.height * 2);
-        this.fog.cache(-this.width / 2, -this.height, this.width, this.height * 2);
+          .drawRect(-this.width / 2, -this.height, this.width * 1.5, this.height * 2);
+        this.fog.cache(-this.width / 2, -this.height, this.width * 1.5, this.height * 2);
         this.fog.x = this.hero.x;
         this.fog.y = this.hero.y;
         this.fog.addEventListener('tick', () => {
@@ -187,7 +190,7 @@ export default class MainScreen extends createjs.Container {
             this.fog.y = this.hero.y;
           }
         });
-        this.addChild(this.fog, this.hudDistance);
+        this.addChild(this.fog, this.hudDistance, counter);
         break;
     }
     this.spikes.forEach(spike => this.resetSpike(spike));
