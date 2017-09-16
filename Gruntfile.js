@@ -9,7 +9,7 @@ module.exports = grunt => {
           browserifyOptions: {
             debug: true,
           },
-          transform: [['babelify', { presets: ['es2015'] }]],
+          transform: [['babelify', { presets: ['env'] }]],
         },
         files: {
           'app/js/build/app.js': 'app/js/src/app.js',
